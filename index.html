@@ -60,7 +60,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .nbtn:hover{background:rgba(200,150,26,0.3);}
 .tbar{position:fixed;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);border:1px solid rgba(200,150,26,0.3);border-radius:20px;padding:2px 12px;font-size:0.68rem;color:var(--gold);z-index:60;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;}
 
-.board{width:100vw;height:100vh;display:grid;grid-template-areas:"top top top" "left center right" "bot bot bot";grid-template-columns:90px 1fr 90px;grid-template-rows:auto 1fr auto;padding:58px 3px 3px 3px;gap:3px;}
+.board{width:100vw;height:100vh;display:grid;grid-template-areas:"top top top" "left center right" "bot bot bot";grid-template-columns:90px 1fr 90px;grid-template-rows:auto 1fr auto;padding:58px 3px 2px 3px;gap:2px;}
 .pa{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .pa.top{grid-area:top;}.pa.left{grid-area:left;justify-content:center;}.pa.right{grid-area:right;justify-content:center;}.pa.bot{grid-area:bot;padding-bottom:4px;}
 .palabel{font-size:0.62rem;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:2px 8px;white-space:nowrap;line-height:1.5;transition:all 0.3s;}
@@ -89,23 +89,65 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .wt.used{background:linear-gradient(145deg,#2a4a3a,#1a3028)!important;border-color:#1a4a2a!important;opacity:0.4;}
 
 /* ══ TILES ══ */
-.tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#fdf9ec,#f0e8c0);border:1.5px solid #a07018;border-radius:4px;box-shadow:1px 2px 6px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(0,0,0,0.1);cursor:default;transition:transform 0.13s ease,box-shadow 0.13s ease,border-color 0.13s;position:relative;line-height:1;flex-shrink:0;}
-.tc{font-weight:700;line-height:1;}.ts{line-height:1;color:#5a4a2a;}
-.t-lg{width:40px;height:56px;}.t-lg .tc{font-size:1.05rem;}.t-lg .ts{font-size:0.52rem;}
-.t-md{width:32px;height:44px;}.t-md .tc{font-size:0.85rem;}.t-md .ts{font-size:0.45rem;}
-.t-sm{width:24px;height:32px;}.t-sm .tc{font-size:0.65rem;}.t-sm .ts{font-size:0.35rem;}
-.t-xs{width:18px;height:24px;}.t-xs .tc{font-size:0.52rem;}.t-xs .ts{font-size:0;}
-.s-man .tc{color:var(--man);}.s-pin .tc{color:var(--pin);}.s-sou .tc{color:var(--sou);}
-.s-honor .tc{color:var(--ink);}.s-honor.hchun .tc{color:#c41a1a;}.s-honor.hhatsu .tc{color:#1a7a30;}.s-honor.hhaku .tc{color:#333;}
+.tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#fffef5 0%,#fdf5d0 60%,#f5e89a 100%);border:2px solid #8a6010;border-radius:5px;box-shadow:2px 3px 8px rgba(0,0,0,0.65),inset 0 1px 0 rgba(255,255,255,1),inset 0 -2px 0 rgba(0,0,0,0.12);cursor:default;transition:transform 0.13s ease,box-shadow 0.13s ease,border-color 0.13s;position:relative;line-height:1;flex-shrink:0;}
+.tc{font-weight:900;line-height:1;letter-spacing:-0.03em;}
+.ts{line-height:1;font-weight:700;opacity:0.75;letter-spacing:0;}
+
+/* Player hand tiles — LARGE & readable */
+.t-lg{width:44px;height:62px;gap:1px;}
+.t-lg .tc{font-size:1.25rem;}
+.t-lg .ts{font-size:0.62rem;}
+
+/* Meld tiles */
+.t-md{width:34px;height:48px;gap:1px;}
+.t-md .tc{font-size:1rem;}
+.t-md .ts{font-size:0.5rem;}
+
+/* AI top tiles */
+.t-sm{width:26px;height:36px;gap:0px;}
+.t-sm .tc{font-size:0.78rem;}
+.t-sm .ts{font-size:0.38rem;}
+
+/* Tiny side tiles */
+.t-xs{width:20px;height:27px;}
+.t-xs .tc{font-size:0.6rem;}
+.t-xs .ts{font-size:0.3rem;}
+
+/* Discard pile — medium-small but very readable */
+.t-disc{width:30px;height:42px;gap:0px;}
+.t-disc .tc{font-size:0.88rem;}
+.t-disc .ts{font-size:0.44rem;}
+
+/* Suit colours — strong, high contrast */
+.s-man .tc{color:#cc1111;}.s-man .ts{color:#aa2222;}
+.s-pin .tc{color:#1133cc;}.s-pin .ts{color:#2244aa;}
+.s-sou .tc{color:#116611;}.s-sou .ts{color:#226622;}
+.s-honor .tc{color:#1a1208;font-size:110%;}
+.s-honor.hchun .tc{color:#cc1111;}
+.s-honor.hhatsu .tc{color:#116611;}
+.s-honor.hhaku .tc{color:#445;font-size:90%;}
+
 .tile.ck{cursor:pointer;}
-.tile.ck:hover{transform:translateY(-12px);box-shadow:1px 14px 22px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.9);z-index:10;}
-.tile.sel{transform:translateY(-16px)!important;border-color:#e03030!important;box-shadow:0 0 14px rgba(220,50,50,0.8),1px 16px 24px rgba(0,0,0,0.6)!important;z-index:11;}
-.tile.drawn{border-color:var(--gold)!important;box-shadow:0 0 16px rgba(200,150,26,0.9),1px 2px 6px rgba(0,0,0,0.6)!important;animation:dra 0.4s ease-out;}
+.tile.ck:hover{transform:translateY(-14px);box-shadow:2px 16px 24px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,1);z-index:10;}
+.tile.sel{transform:translateY(-18px)!important;border-color:#e03030!important;box-shadow:0 0 16px rgba(220,50,50,0.9),2px 18px 26px rgba(0,0,0,0.65)!important;z-index:11;}
+.tile.drawn{border-color:#d4a010!important;box-shadow:0 0 18px rgba(200,150,20,0.95),2px 3px 8px rgba(0,0,0,0.65)!important;animation:dra 0.4s ease-out;}
 @keyframes dra{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
 .tile.clm{border-color:var(--gold-lt)!important;box-shadow:0 0 18px rgba(240,192,64,0.9)!important;animation:clma 0.8s ease-in-out infinite alternate;}
 @keyframes clma{from{box-shadow:0 0 8px rgba(240,192,64,0.5)!important}to{box-shadow:0 0 22px rgba(240,192,64,1)!important}}
 .tback{background:linear-gradient(145deg,#1c4a8a,#0e2a60)!important;border-color:#2a5aaa!important;}
-.tback .tc{font-size:0.75rem;color:#4a7acc!important;}
+.tback .tc{font-size:0.9rem!important;color:#6a9acc!important;}
+
+/* ══ PLAYER DISCARD TRAY ══ */
+.player-discard-tray{
+  width:100%;max-width:520px;
+  background:rgba(0,0,0,0.35);
+  border:1px solid rgba(200,150,26,0.25);
+  border-radius:8px;
+  padding:4px 6px;
+  margin-top:3px;
+}
+.pdt-label{font-size:0.58rem;color:#7a9a7a;margin-bottom:3px;text-align:left;letter-spacing:0.04em;}
+.pdt-tiles{display:flex;flex-wrap:wrap;gap:2px;min-height:28px;align-items:flex-start;}
 
 .meldrow{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;}
 .mgrp{display:flex;gap:1px;background:rgba(0,0,0,0.3);padding:2px;border-radius:4px;border:1px solid rgba(200,150,26,0.15);}
@@ -115,7 +157,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .dsep{width:10px;flex-shrink:0;}
 
 /* ══ ACTION PANEL ══ */
-.actpanel{position:fixed;bottom:118px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:100;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);padding:8px 12px;border-radius:14px;border:1px solid rgba(200,150,26,0.4);flex-wrap:wrap;justify-content:center;max-width:400px;animation:rise-up 0.25s ease-out;}
+.actpanel{position:fixed;bottom:150px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:100;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);padding:8px 12px;border-radius:14px;border:1px solid rgba(200,150,26,0.4);flex-wrap:wrap;justify-content:center;max-width:400px;animation:rise-up 0.25s ease-out;}
 @keyframes rise-up{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
 .actpanel.hidden{display:none;}
 .abtn{padding:0.4em 0.9em;border-radius:7px;border:2px solid transparent;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;text-align:center;line-height:1.25;}
@@ -157,7 +199,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 
 /* ══ ABILITY HINT BANNER ══ */
 .ability-hint{
-  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
+  position:fixed;bottom:108px;left:50%;transform:translateX(-50%);
   background:linear-gradient(135deg,rgba(0,30,60,0.95),rgba(0,10,30,0.95));
   border:2px solid var(--gold-lt);border-radius:14px;
   padding:8px 16px;z-index:95;max-width:340px;width:90%;
@@ -303,8 +345,15 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .invcount{background:var(--gold);color:#1a0e00;border-radius:50%;width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:900;}
 @keyframes light-flash{0%{opacity:0.3}100%{opacity:1}}
 
-@media(max-width:480px){.t-lg{width:32px;height:46px;}.t-lg .tc{font-size:0.88rem;}.board{grid-template-columns:72px 1fr 72px;}.hcard{width:116px;}}
-@media(max-width:360px){.t-lg{width:26px;height:38px;}.t-lg .tc{font-size:0.72rem;}.board{grid-template-columns:60px 1fr 60px;}}
+@media(max-width:480px){
+  .t-lg{width:34px;height:50px;}.t-lg .tc{font-size:1rem;}.t-lg .ts{font-size:0.5rem;}
+  .t-disc{width:24px;height:34px;}.t-disc .tc{font-size:0.7rem;}.t-disc .ts{font-size:0.35rem;}
+  .board{grid-template-columns:72px 1fr 72px;}.hcard{width:116px;}
+}
+@media(max-width:360px){
+  .t-lg{width:28px;height:42px;}.t-lg .tc{font-size:0.85rem;}.t-lg .ts{font-size:0.42rem;}
+  .board{grid-template-columns:60px 1fr 60px;}
+}
 </style>
 </head>
 <body>
@@ -312,8 +361,8 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 <!-- TITLE -->
 <div id="scr-title" class="screen">
   <div class="tdeco">
-    <div class="ttile">中</div><div class="ttile">发</div>
-    <div><div class="title-logo">麻将传奇</div><div class="title-sub">✦ Mahjong Legend RPG ✦</div></div>
+    <div class="ttile">中</div><div class="ttile">發</div>
+    <div><div class="title-logo">麻將傳奇</div><div class="title-sub">✦ Mahjong Legend RPG ✦</div></div>
     <div class="ttile">白</div><div class="ttile">🀄</div>
   </div>
   <div class="btnrow">
@@ -386,6 +435,11 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
       <div id="th-bot" class="handrow"></div>
       <div class="palabel" id="lbl-bot" style="margin-top:2px;"><span class="lz">你 / You</span></div>
       <div id="skbtn"></div>
+      <!-- Player discard tray — always visible -->
+      <div class="player-discard-tray">
+        <div class="pdt-label">🗑️ 你打出的牌 / Your Discards</div>
+        <div id="td-bot" class="pdt-tiles"></div>
+      </div>
     </div>
   </div>
   <div class="actpanel hidden" id="actpanel"></div>
@@ -533,8 +587,10 @@ function playHeroAbility(hero){
 }
 
 /* ═══════════════════════════════ DATA ════════════════════════════════ */
-const TILE_ZH={man:['一万','二万','三万','四万','五万','六万','七万','八万','九万'],pin:['一饼','二饼','三饼','四饼','五饼','六饼','七饼','八饼','九饼'],sou:['一条','二条','三条','四条','五条','六条','七条','八条','九条'],east:'东',south:'南',west:'西',north:'北',haku:'白',hatsu:'发',chun:'中'};
-const TILE_EN={man:['1M','2M','3M','4M','5M','6M','7M','8M','9M'],pin:['1P','2P','3P','4P','5P','6P','7P','8P','9P'],sou:['1S','2S','3S','4S','5S','6S','7S','8S','9S'],east:'East',south:'South',west:'West',north:'North',haku:'White',hatsu:'Green',chun:'Red'};
+const TILE_ZH={man:['一','二','三','四','五','六','七','八','九'],pin:['①','②','③','④','⑤','⑥','⑦','⑧','⑨'],sou:['1','2','3','4','5','6','7','8','9'],east:'東',south:'南',west:'西',north:'北',haku:'白',hatsu:'發',chun:'中'};
+const TILE_SUIT_ZH={man:'萬',pin:'餅',sou:'條'};
+const TILE_ZH_FULL={man:['一萬','二萬','三萬','四萬','五萬','六萬','七萬','八萬','九萬'],pin:['一餅','二餅','三餅','四餅','五餅','六餅','七餅','八餅','九餅'],sou:['一條','二條','三條','四條','五條','六條','七條','八條','九條'],east:'東',south:'南',west:'西',north:'北',haku:'白',hatsu:'發',chun:'中'};
+const TILE_EN={man:['1-Man','2-Man','3-Man','4-Man','5-Man','6-Man','7-Man','8-Man','9-Man'],pin:['1-Pin','2-Pin','3-Pin','4-Pin','5-Pin','6-Pin','7-Pin','8-Pin','9-Pin'],sou:['1-Sou','2-Sou','3-Sou','4-Sou','5-Sou','6-Sou','7-Sou','8-Sou','9-Sou'],east:'East 東',south:'South 南',west:'West 西',north:'North 北',haku:'White 白',hatsu:'Green 發',chun:'Red 中'};
 const HONORS=['east','south','west','north','haku','hatsu','chun'];
 const SUITS=['man','pin','sou'];
 const WIND_SYMBOLS={east:'東',south:'南',west:'西',north:'北'};
@@ -657,14 +713,25 @@ function teq(a,b){return a.suit===b.suit&&a.num===b.num;}
 const SO={man:0,pin:1,sou:2,honor:3},HO={east:0,south:1,west:2,north:3,haku:4,hatsu:5,chun:6};
 function tcmp(a,b){if(SO[a.suit]!==SO[b.suit])return SO[a.suit]-SO[b.suit];const an=a.suit==='honor'?HO[a.num]:a.num,bn=b.suit==='honor'?HO[b.num]:b.num;return an-bn;}
 function sortH(t){return[...t].sort(tcmp);}
-function tzh(t){return t.suit==='honor'?TILE_ZH[t.num]:TILE_ZH[t.suit][t.num-1];}
+function tzh(t){return t.suit==='honor'?TILE_ZH[t.num]:TILE_ZH_FULL[t.suit][t.num-1];}
+function tzh_short(t){return t.suit==='honor'?TILE_ZH[t.num]:TILE_ZH[t.suit][t.num-1];}
+function tzh_suit(t){return t.suit==='honor'?'':TILE_SUIT_ZH[t.suit]||'';}
 function ten(t){return t.suit==='honor'?TILE_EN[t.num]:TILE_EN[t.suit][t.num-1];}
 function tileCls(t){if(t.suit==='honor'){let c='s-honor';if(t.num==='chun')c+=' hchun';else if(t.num==='hatsu')c+=' hhatsu';else if(t.num==='haku')c+=' hhaku';return c;}return 's-'+t.suit;}
 function tileEl(t,sz,extra,onclick){
-  const zh=tzh(t);let tc,ts;
-  if(t.suit==='honor'){tc=zh;ts='';}else{tc=zh[0];ts=zh.slice(1);}
-  const d=document.createElement('div');d.className=`tile ${sz} ${tileCls(t)} ${extra||''}`;d.title=`${zh} / ${ten(t)}`;
-  d.innerHTML=`<span class="tc">${tc}</span><span class="ts">${ts}</span>`;
+  const full=tzh(t);
+  const d=document.createElement('div');
+  d.className=`tile ${sz} ${tileCls(t)} ${extra||''}`;
+  d.title=`${full} / ${ten(t)}`;
+  if(t.suit==='honor'){
+    // Honor tiles: big single character, centered
+    d.innerHTML=`<span class="tc">${TILE_ZH[t.num]}</span>`;
+  } else {
+    // Numbered tiles: big number on top, suit label below
+    const num=TILE_ZH[t.suit][t.num-1];
+    const suit=TILE_SUIT_ZH[t.suit];
+    d.innerHTML=`<span class="tc">${num}</span><span class="ts">${suit}</span>`;
+  }
   if(onclick)d.onclick=onclick;return d;
 }
 function backEl(sz){const d=document.createElement('div');d.className=`tile ${sz} tback`;d.innerHTML=`<span class="tc">🀫</span>`;return d;}
@@ -793,7 +860,7 @@ function initRound(){
   if(PD.hero?.passive==='bamboo'&&G.wall.length>0){
     heroAbilityAnim('bamboo');
     const pk=G.wall[G.wall.length-1];
-    setTimeout(()=>showModal('🎋','竹仙特技 / Bamboo Sage Peek',`<strong style="color:#88ffaa">你偷看了墙顶！/ You peeked!</strong><br><br><span style="font-size:1.2rem">${tzh(pk)} / ${ten(pk)}</span>`,[{lz:'明白了',le:'Got it!',fn:()=>{hideModal();phaseDraw();}}]),700);
+    setTimeout(()=>showModal('🎋','竹仙特技 / Bamboo Sage Peek',`<strong style="color:#88ffaa">你偷看了墙顶！/ You peeked!</strong><br><br><span style="font-size:1.4rem;font-weight:900">${tzh(pk)}</span><br><span style="font-size:0.8rem;color:#88ccff">${ten(pk)}</span>`,[{lz:'明白了',le:'Got it!',fn:()=>{hideModal();phaseDraw();}}]),700);
   } else setTimeout(()=>phaseDraw(),400);
   renderAll();
 }
@@ -864,7 +931,7 @@ function doDiscard(idx,isDrawn){
 }
 function clickHand(i){if(G.phase!=='discard'||G.cur!==0)return;if(G.selIdx===i&&!G.selDrawn){doDiscard(i,false);}else{G.selIdx=i;G.selDrawn=false;playClick();renderAll();updSelHint();}}
 function clickDrawn(){if(G.phase!=='discard'||G.cur!==0)return;if(G.selDrawn){doDiscard(null,true);}else{G.selDrawn=true;G.selIdx=null;playClick();renderAll();updSelHint();}}
-function updSelHint(){const el=document.getElementById('skhint');let t=G.selDrawn?G.drawn:(G.selIdx!==null?G.hands[0][G.selIdx]:null);if(!t){el.textContent='';return;}el.textContent=`选中：${tzh(t)} — 再次点击打出 / ${ten(t)} — Tap again to discard`;}
+function updSelHint(){const el=document.getElementById('skhint');let t=G.selDrawn?G.drawn:(G.selIdx!==null?G.hands[0][G.selIdx]:null);if(!t){el.textContent='';return;}el.textContent=`选中：${tzh(t)} — 再点一次打出 / ${ten(t)} — Tap again to discard`;}
 
 /* ═══════════════════════════════ AI TURN ════════════════════════════ */
 function aiTurn(pi){
@@ -1007,6 +1074,8 @@ function renderBot(){
   G.hands[0].forEach((t,i)=>{const isSel=G.selIdx===i&&!G.selDrawn;th.appendChild(tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i)));});
   if(G.drawn){const sep=document.createElement('div');sep.className='dsep';th.appendChild(sep);th.appendChild(tileEl(G.drawn,'t-lg','ck drawn'+(G.selDrawn?' sel':''),clickDrawn));}
   renderMelds('tm-bot',0,'t-sm');
+  // Render player discards in the tray
+  renderDisc('td-bot',0,'t-disc');
 }
 function renderMelds(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.melds[pi].forEach(m=>{const g=document.createElement('div');g.className='mgrp';m.tiles.forEach(t=>g.appendChild(tileEl(t,sz)));el.appendChild(g);});}
 function renderDisc(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.discards[pi].forEach((t,i)=>{const last=i===G.discards[pi].length-1&&G.pendingFrom===pi;el.appendChild(tileEl(t,sz,last?'clm':''));});}
