@@ -368,6 +368,148 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .pet-tooltip{position:fixed;bottom:215px;right:8px;background:rgba(0,0,0,0.9);border:1px solid var(--gold);border-radius:10px;padding:6px 10px;font-size:0.65rem;color:var(--gold-lt);z-index:75;max-width:140px;text-align:center;display:none;}
 .pet-companion:hover+.pet-tooltip{display:block;}
 
+/* ══ AI ROSTER PICKER (pre-game) ══ */
+.ai-roster-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:250;}
+.ai-roster-overlay.hidden{display:none;}
+.ai-roster-box{background:linear-gradient(145deg,#08180a,#0b2210);border:2px solid var(--gold);border-radius:20px;padding:1.4rem 1.2rem;max-width:380px;width:92%;max-height:90vh;overflow-y:auto;box-shadow:0 0 60px rgba(200,150,26,0.4);animation:pin 0.35s cubic-bezier(0.34,1.56,0.64,1);}
+.ai-roster-title{font-size:1.1rem;font-weight:900;color:var(--gold-lt);text-align:center;margin-bottom:0.2rem;}
+.ai-roster-sub{font-size:0.65rem;color:#5a9a6a;text-align:center;margin-bottom:0.9rem;letter-spacing:0.06em;}
+.ai-roster-seats{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem;}
+.ai-seat-row{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px 10px;}
+.ai-seat-dir{font-size:0.68rem;color:#5a886a;width:28px;text-align:center;flex-shrink:0;}
+.ai-seat-pick{flex:1;display:flex;gap:4px;flex-wrap:wrap;}
+.ai-char-chip{padding:3px 7px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.4);font-size:0.62rem;cursor:pointer;transition:all 0.15s;white-space:nowrap;color:#ccc;}
+.ai-char-chip:hover{filter:brightness(1.3);transform:translateY(-1px);}
+.ai-char-chip.active-chip{border-width:2px;font-weight:700;color:#fff;}
+
+/* ══ VOICE INDICATOR ══ */
+.voice-indicator{position:fixed;top:52px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);border:1px solid rgba(200,150,26,0.4);border-radius:8px;padding:3px 12px;font-size:0.62rem;color:var(--gold);z-index:130;pointer-events:none;display:none;animation:voice-pulse 0.5s ease-in-out infinite alternate;}
+@keyframes voice-pulse{from{opacity:0.6}to{opacity:1;box-shadow:0 0 10px rgba(200,150,26,0.6)}}
+.voice-waves{display:inline-flex;gap:2px;align-items:flex-end;height:10px;margin-right:4px;}
+.voice-wave{width:3px;background:var(--gold);border-radius:2px;animation:wave-bounce 0.4s ease-in-out infinite alternate;}
+.voice-wave:nth-child(1){height:4px;animation-delay:0s}
+.voice-wave:nth-child(2){height:8px;animation-delay:0.1s}
+.voice-wave:nth-child(3){height:6px;animation-delay:0.2s}
+.voice-wave:nth-child(4){height:10px;animation-delay:0.05s}
+@keyframes wave-bounce{from{transform:scaleY(0.4)}to{transform:scaleY(1)}}
+
+/* ══ TILE ANIMATIONS (enhanced) ══ */
+@keyframes tile-deal{0%{transform:translateY(-120px) rotate(-8deg) scale(0.5);opacity:0}60%{transform:translateY(6px) rotate(2deg) scale(1.05);opacity:1}100%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}}
+@keyframes tile-win-glow{0%,100%{box-shadow:0 0 8px rgba(240,192,64,0.4)}50%{box-shadow:0 0 28px rgba(240,192,64,1),0 0 50px rgba(240,192,64,0.6)}}
+@keyframes tile-discard-bounce{0%{transform:translateY(0)}30%{transform:translateY(-8px) scale(1.05)}60%{transform:translateY(3px)}100%{transform:translateY(0)}}
+@keyframes pong-slam{0%{transform:scale(1.5) rotate(-5deg);filter:brightness(2)}50%{transform:scale(1.1) rotate(1deg)}100%{transform:scale(1) rotate(0deg)}}
+.tile.pong-new{animation:pong-slam 0.4s ease-out;}
+@keyframes draw-sparkle{0%{box-shadow:0 0 0 0 rgba(255,220,50,0)}40%{box-shadow:0 0 0 8px rgba(255,220,50,0.4)}100%{box-shadow:0 0 0 16px rgba(255,220,50,0);border-color:#f0c040!important;}}
+.tile.drawn{animation:dra 0.35s ease-out, draw-sparkle 0.6s ease-out;}
+
+/* ══ WIN SCREEN ANIMATION ══ */
+.win-overlay{position:fixed;inset:0;z-index:185;pointer-events:none;display:flex;align-items:center;justify-content:center;}
+.win-overlay.hidden{display:none;}
+.win-burst{font-size:6rem;animation:win-burst-anim 1s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+@keyframes win-burst-anim{0%{transform:scale(0);opacity:0}40%{transform:scale(1.4);opacity:1}70%{transform:scale(1.1);opacity:1}100%{transform:scale(4);opacity:0}}
+.win-rays{position:absolute;inset:0;overflow:hidden;}
+.win-ray{position:absolute;top:50%;left:50%;height:3px;width:55vw;background:linear-gradient(90deg,rgba(240,192,64,0.8),transparent);transform-origin:left center;border-radius:2px;}
+
+/* ══ AI PERSONALITY LABELS ══ */
+.ai-name-badge {
+  font-size:0.6rem;font-weight:700;
+  background:rgba(0,0,0,0.55);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;padding:1px 6px;
+  margin-bottom:2px;white-space:nowrap;
+  letter-spacing:0.02em;
+  transition:color 0.3s,border-color 0.3s;
+}
+.pa.top .ai-name-badge { font-size:0.62rem; }
+
+/* ══ AI CHAT BUBBLES ══ */
+.ai-bubble {
+  position:fixed;
+  background:linear-gradient(135deg,rgba(10,25,45,0.97),rgba(6,16,30,0.97));
+  border:1.5px solid;
+  border-radius:14px;
+  padding:7px 12px;
+  font-size:0.72rem;
+  line-height:1.45;
+  max-width:190px;
+  min-width:120px;
+  z-index:120;
+  pointer-events:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.6);
+  animation:bubble-in 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  word-break:break-word;
+}
+.ai-bubble::after {
+  content:'';position:absolute;
+  border:8px solid transparent;
+}
+/* South (top AI) — arrow points up */
+.ai-bubble.from-top::after {
+  top:-16px;left:50%;transform:translateX(-50%);
+  border-bottom-color:inherit;border-top:none;
+}
+/* East/Right AI — arrow points right */
+.ai-bubble.from-right::after {
+  right:-16px;top:50%;transform:translateY(-50%);
+  border-left-color:inherit;border-right:none;
+}
+/* West/Left AI — arrow points left */
+.ai-bubble.from-left::after {
+  left:-16px;top:50%;transform:translateY(-50%);
+  border-right-color:inherit;border-left:none;
+}
+@keyframes bubble-in {
+  from{transform:scale(0.7) translateY(6px);opacity:0}
+  to{transform:scale(1) translateY(0);opacity:1}
+}
+@keyframes bubble-out {
+  from{opacity:1;transform:scale(1)}
+  to{opacity:0;transform:scale(0.85) translateY(-4px)}
+}
+.ai-bubble.dying { animation:bubble-out 0.35s ease-in forwards; }
+.ai-bubble-name { font-weight:800;display:block;margin-bottom:2px;font-size:0.75rem; }
+.ai-bubble-zh  { display:block;font-size:0.72rem; }
+.ai-bubble-en  { display:block;font-size:0.6rem;opacity:0.7;margin-top:1px; }
+
+/* Streak / addiction bar */
+.streak-bar-wrap {
+  position:fixed;top:52px;right:6px;z-index:75;
+  display:flex;flex-direction:column;align-items:flex-end;gap:1px;
+}
+.streak-label { font-size:0.58rem;color:#888;white-space:nowrap; }
+.streak-bar {
+  width:52px;height:6px;background:rgba(255,255,255,0.08);
+  border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);
+}
+.streak-fill {
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,#44cc44,#f0c040,#ff4444);
+  transition:width 0.4s ease;
+}
+/* Combo flash */
+.combo-pop {
+  position:fixed;top:40%;left:50%;transform:translateX(-50%) scale(0);
+  font-size:2.2rem;font-weight:900;
+  color:#f0c040;text-shadow:0 0 30px rgba(240,192,64,0.9);
+  z-index:185;pointer-events:none;
+  animation:combo-anim 1.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes combo-anim {
+  0%{transform:translateX(-50%) scale(0);opacity:0}
+  20%{transform:translateX(-50%) scale(1.3);opacity:1}
+  60%{transform:translateX(-50%) scale(1.0);opacity:1}
+  100%{transform:translateX(-50%) scale(0.7) translateY(-60px);opacity:0}
+}
+
+/* Round win streak counter */
+.win-streak-badge {
+  position:fixed;top:52px;left:6px;z-index:75;
+  background:linear-gradient(135deg,rgba(200,100,0,0.85),rgba(150,60,0,0.85));
+  border:1px solid #f0c040;border-radius:8px;
+  padding:2px 7px;font-size:0.62rem;color:#f0c040;font-weight:700;
+  display:none;
+  box-shadow:0 0 8px rgba(240,192,64,0.4);
+}
 /* ══ SLOT MACHINE ════════════════════════════════════════════════════ */
 #scr-gacha{
   background:
@@ -540,18 +682,19 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
     <span class="hud-hero" id="hhero"></span>
     <button class="nbtn" onclick="openGacha();playClick()">🎰</button>
     <button class="nbtn" onclick="showTaiRules();playClick()" style="background:rgba(200,150,26,0.2);border-color:rgba(200,150,26,0.55);color:#ffdd88;">🀄 台</button>
+    <button class="nbtn" onclick="openAIRoster();playClick()" style="background:rgba(100,180,100,0.15);border-color:rgba(100,180,100,0.4);color:#aaffaa;">👥 对手</button>
     <button class="nbtn" onclick="goTitle();playClick()" style="color:#aa8888;">菜单</button>
   </div>
   <div class="tbar" id="tbar">准备中…</div>
   <div class="board">
     <div class="pa top" id="pa-top">
-      <div class="palabel" id="lbl-top"><span class="lz">北 AI</span> <span class="le">North</span></div>
+      <div class="palabel" id="lbl-top"><span class="lz" id="ai-name-2">北 North</span></div>
       <div id="th-top" class="airow"></div>
       <div id="tm-top" class="meldrow"></div>
       <div id="td-top" class="discm" style="margin-top:2px;"></div>
     </div>
     <div class="pa left" id="pa-left">
-      <div class="palabel" id="lbl-left"><span class="lz">西</span><br><span class="le">West</span></div>
+      <div class="palabel" id="lbl-left"><span class="lz" id="ai-name-3">西<br>West</span></div>
       <div id="th-left" class="aicol"></div>
       <div id="td-left" class="discm" style="flex-direction:column;max-width:28px;"></div>
     </div>
@@ -574,7 +717,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
       <div class="wall-strip south" id="wall-s"></div>
     </div>
     <div class="pa right" id="pa-right">
-      <div class="palabel" id="lbl-right"><span class="lz">东</span><br><span class="le">East</span></div>
+      <div class="palabel" id="lbl-right"><span class="lz" id="ai-name-1">东<br>East</span></div>
       <div id="th-right" class="aicol"></div>
       <div id="td-right" class="discm" style="flex-direction:column;max-width:28px;"></div>
     </div>
@@ -596,6 +739,28 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   <!-- Pet companion widget -->
   <div class="pet-companion hidden" id="pet-widget" onclick="petActivate()"></div>
   <div class="pet-tooltip" id="pet-tooltip"></div>
+
+  <!-- Win streak badge -->
+  <div class="win-streak-badge" id="win-streak-badge">🔥 <span id="wstreak-num">0</span> 连胜</div>
+  <!-- Streak bar -->
+  <div class="streak-bar-wrap" id="streak-bar-wrap">
+    <div class="streak-label" id="streak-label">连胜奖励进度</div>
+    <div class="streak-bar"><div class="streak-fill" id="streak-fill" style="width:0%"></div></div>
+  </div>
+  <!-- AI chat bubbles container -->
+  <div id="ai-bubbles"></div>
+
+  <!-- Voice indicator -->
+  <div class="voice-indicator" id="voice-indicator">
+    <span class="voice-waves"><span class="voice-wave"></span><span class="voice-wave"></span><span class="voice-wave"></span><span class="voice-wave"></span></span>
+    <span id="voice-indicator-name">Speaking…</span>
+  </div>
+
+  <!-- Win rays overlay -->
+  <div class="win-overlay hidden" id="win-overlay">
+    <div class="win-rays" id="win-rays"></div>
+    <div class="win-burst" id="win-burst"></div>
+  </div>
 
   <!-- Ability hint banner -->
   <div class="ability-hint hidden" id="ability-hint">
@@ -638,6 +803,20 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   </div>
 </div>
 <div class="cfc" id="cfc"></div>
+
+<!-- AI ROSTER PICKER -->
+<div class="ai-roster-overlay hidden" id="ai-roster-overlay">
+  <div class="ai-roster-box">
+    <div class="ai-roster-title">🀄 选择对手 / Choose Opponents</div>
+    <div class="ai-roster-sub">为每个方位选择 AI 对手 · Pick your opponents for each seat</div>
+    <div class="ai-roster-seats" id="ai-roster-seats"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-gold" onclick="confirmAIRoster();playClick()" style="font-size:0.85rem;padding:0.5em 1.4em;">确认 / Confirm</button>
+      <button class="btn btn-out" onclick="randomizeRoster();playClick()" style="font-size:0.85rem;">🎲 随机 / Random</button>
+      <button class="btn btn-out" onclick="closeAIRoster();playClick()" style="font-size:0.82rem;padding:0.5em 1em;">取消 / Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- HERO ANIM OVERLAY -->
 <div class="hero-anim-overlay hidden" id="hero-anim-overlay">
@@ -731,6 +910,29 @@ function playKong(){for(let i=0;i<4;i++)setTimeout(()=>{playNoise(0.06,0.4);play
 function playWin(){const n=[523,659,784,1047];n.forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.25,0.35,0.2),i*120));setTimeout(()=>[523,659,784].forEach(f=>playTone(f,'sine',0.6,0.25,0.5)),600);}
 function playLose(){[440,392,349,330].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.25,0.2,0.25),i*150));}
 function playRon(){playTone(880,'sawtooth',0.08,0.4);setTimeout(()=>playTone(1100,'sawtooth',0.1,0.35),100);setTimeout(()=>playTone(1320,'sine',0.3,0.3,0.25),200);}
+// Enhanced: dramatic win fanfare
+function playWinBig(){
+  const melody=[523,659,784,1047,1319,1047,784,1047];
+  melody.forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.3,0.4,0.25),i*90));
+  setTimeout(()=>{
+    [523,659,784,1047].forEach(f=>playTone(f,'sine',0.8,0.35,0.6));
+    playNoise(0.15,0.3,2000);
+  },800);
+}
+// Tile deal whoosh
+function playTileDeal(){playNoise(0.04,0.2,1800);playTone(1400,'sine',0.03,0.12,0.03);}
+// Pong slam
+function playPongSlam(){
+  playTone(440,'square',0.06,0.4);setTimeout(()=>playTone(550,'square',0.06,0.35),60);
+  setTimeout(()=>playTone(660,'square',0.1,0.3),130);
+  setTimeout(()=>playNoise(0.08,0.45,800),30);
+  setTimeout(()=>playTone(880,'triangle',0.04,0.2),200);
+}
+// Combo burst
+function playCombo(){
+  [880,1100,1320,1760].forEach((f,i)=>setTimeout(()=>playTone(f,'sawtooth',0.06,0.4,0.05),i*60));
+  setTimeout(()=>playNoise(0.1,0.3,1500),280);
+}
 function playSlotSpin(){
   let t=0;
   for(let i=0;i<8;i++){
@@ -1486,8 +1688,10 @@ function taiToCoins(tai){
   return ladder[tai]||100;
 }
 function aiScore(tile,hand){let sc=0;const o=hand.filter(t=>!teq(t,tile));sc+=o.filter(t=>teq(t,tile)).length*5;if(tile.suit!=='honor'){[-2,-1,1,2].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=2;});[-1,1].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=1;});}return sc;}
-function aiDiscard(pi){const h=G.hands[pi];let min=Infinity,pick=h[0];h.forEach(t=>{const s=aiScore(t,h);if(s<min){min=s;pick=t;}});return pick;}
-function aiWantPong(pi,tile){return G.hands[pi].filter(t=>teq(t,tile)).length>=2;}
+function aiDiscardBase(pi){const h=G.hands[pi];let min=Infinity,pick=h[0];h.forEach(t=>{const s=aiScore(t,h);if(s<min){min=s;pick=t;}});return pick;}
+function aiDiscard(pi){return aiDiscardBase(pi);}
+function aiWantPongBase(pi,tile){return G.hands[pi].filter(t=>teq(t,tile)).length>=2;}
+function aiWantPong(pi,tile){return aiWantPongBase(pi,tile);}
 function aiWantChi(pi,tile,from){if((from+1)%4!==pi||tile.suit==='honor')return null;const h=G.hands[pi];for(const[a,b]of[[tile.num-2,tile.num-1],[tile.num-1,tile.num+1],[tile.num+1,tile.num+2]]){if(a<1||b>9)continue;if(h.some(t=>t.suit===tile.suit&&t.num===a)&&h.some(t=>t.suit===tile.suit&&t.num===b))return[a,b];}return null;}
 
 /* ═══════════════════════════════ COINS ══════════════════════════════ */
@@ -1744,7 +1948,7 @@ function checkClaims2(tile,from){
 }
 
 function aiDoPong(pi,tile,from){
-  playPong();floatNotif(`${['南','北','西'][pi-1]} 碰！`);
+  playPongSlam();floatNotif(`${['南','北','西'][pi-1]} 碰！`);
   let rm=0;const nh=[...G.hands[pi]];
   for(let i=0;i<nh.length&&rm<2;i++)if(teq(nh[i],tile)){nh.splice(i,1);i--;rm++;}
   G.hands[pi]=nh;G.melds[pi].push({type:'pong',tiles:[tile,tile,tile]});G.pending=null;
@@ -1810,7 +2014,7 @@ function endRound(winner,label,coins,tai,reasons){
     }
     PD.coins+=coins;PD.slotStreak=0;
     if(PD.hero?.passive==='thunder')for(let p=1;p<=3;p++)PD.coins+=10;
-    playWin();spawnConfetti();
+    playWinBig();spawnConfetti();
     const taiStr = tai!=null?`<div style="margin:4px 0;padding:4px 8px;background:rgba(200,150,26,0.15);border-radius:8px;font-size:0.72rem;color:#ffdd88;line-height:1.6;"><strong>🀄 台数: ${tai} 台</strong><br>${(reasons||[]).join(' · ')}</div>`:'';
     body=`${taiStr}<strong>获得 / Gained: 🪙 ${coins} 金币</strong><br>总计 / Total: ${PD.coins} 金币`;
   } else if(winner===null){
@@ -2129,6 +2333,584 @@ function resolveSlot(results,numSpins){
     setTimeout(()=>spinSlots(numSpins-1),1200);
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   AI ROSTER — 11 Singaporean characters, fully voiced
+   Each has: name, style, lines, voice params, colour theme
+═══════════════════════════════════════════════════════════════════ */
+const AI_ROSTER = [
+  {
+    id:'lily', name:'Auntie Lily', nameZh:'莉莉阿姨', emoji:'👵',
+    style:'aggressive', borderColor:'#ff6644', textColor:'#ffaa88',
+    voice:{pitch:1.3,rate:1.2,lang:'zh-TW'},  // high pitched, fast
+    bio:'碰什么都碰！超aggressive！',
+    lines:{
+      draw:[['哎哟！好牌！','Aiyoh! Good tile lah!'],['来来来！','Lai lai lai!'],['每次都这样！','Every time like this!'],['哇，不错不错！','Wah, not bad not bad!']],
+      discard:[['不要你了！','Don\'t want you lah!'],['打出去！Throw!','Throw out!'],['这张没用！','This tile useless one!'],['不要不要！','No need no need!']],
+      pong:[['碰！碰！碰！哈哈哈！','PONG PONG PONG! Hahaha!'],['碰啦！我早等着呢！','PONG LAH! I been waiting!'],['你给我的！谢谢你！','You give me! Thank you ah!']],
+      chi:[['吃！吃掉你！','Chi! Eat you!'],['吃吃吃！','Chi chi chi!']],
+      win:[['和了！！我赢了！哈哈！','WIN LIAO!! Hahaha!'],['太厉害了我！和牌！','I damn power! Hu pai!']],
+      lose:[['哎哟，输了…再来！','Aiyoh lose… play again!'],['你运气好，下次我赢！','You lucky, next time I win!'],['不行不行，再来！','Cannot cannot, again!']],
+      human_win:[['你赢了？！不可能！','You win?! Cannot be!'],['今天你运气好啦。','Today you lucky lah.']],
+      low_tiles:[['快结束了！赶快！','Almost finish! Hurry!'],['牌不多了！加油！','Not many tiles! Jiayou!']],
+      idle:[['你在想什么？快点啦！','What you thinking? Faster!'],['哎，那么慢！','Eh, so slow one!'],['我在等你哦！','I waiting for you leh!']],
+    }
+  },
+  {
+    id:'beng', name:'Uncle Beng', nameZh:'阿炳叔叔', emoji:'👴',
+    style:'defensive', borderColor:'#4488ff', textColor:'#aaccff',
+    voice:{pitch:0.85,rate:0.9,lang:'zh-CN'},
+    bio:'冷静分析，等大牌',
+    lines:{
+      draw:[['嗯。','Mm.'],['等等先。','Wait first.'],['我有策略的。','I got strategy one.'],['继续等，不急。','Continue wait, no rush.']],
+      discard:[['打这张。有原因的。','Throw this. Got reason.'],['不合我的牌形。','Not fit my hand.'],['嗯，出去。','Mm, go out.'],['按计划来。','According to plan.']],
+      pong:[['碰。','Pong.'],['好，碰了。按计划。','Okay, ponged. According to plan.'],['碰，继续。','Pong, continue.']],
+      chi:[['吃。顺序对了。','Chi. Sequence correct.'],['按计划吃牌。','Chi according to plan.']],
+      win:[['和了。我就知道。','Win. I knew it.'],['稳稳当当。','Steady steady.'],['按计划。','According to plan.']],
+      lose:[['今天运气不好。','Today luck not good.'],['没关系。下一局。','Never mind. Next round.'],['算了，继续。','Forget it, continue.']],
+      human_win:[['不错，打得好。','Not bad, played well.'],['你的手牌很强。','Your hand very strong.']],
+      low_tiles:[['要决定了。','Must decide now.'],['最后阶段。','Final stage.']],
+      idle:[['慢慢来。','Take your time.'],['想清楚再打。','Think clearly then throw.'],['不急。','No rush.']],
+    }
+  },
+  {
+    id:'wei', name:'Xiao Wei', nameZh:'小薇', emoji:'😊',
+    style:'chaotic', borderColor:'#cc44ff', textColor:'#ee99ff',
+    voice:{pitch:1.5,rate:1.3,lang:'zh-TW'},
+    bio:'随机乱打，运气好',
+    lines:{
+      draw:[['哇哦！','Wahhhh!'],['Ooh摸到了！','Ooh drew one!'],['哈哈！','Haha!'],['我感觉今天要赢！','I feel going to win today!']],
+      discard:[['这个不要！Byebye！','Don\'t want! Byebye!'],['扔出去！','Throw out!'],['不管了！','Never mind!'],['随便啦！','Anyhow lah!']],
+      pong:[['碰碰碰！哈哈！','Pong pong pong! Haha!'],['好开心！碰！','So happy! Pong!'],['Lucky me！碰到了！','Lucky me! Ponged!']],
+      chi:[['吃！Yay！','Chi! Yay!'],['哇吃到了！','Wah chi liao!']],
+      win:[['赢了赢了！Yayyy！','WIN WIN WIN! Yayyy!'],['YESSSS！！！','YESSSS!!!'],['哇我赢了！','Wah I win!']],
+      lose:[['Nooo！输了！','Nooo! Lose liao!'],['下次一定赢！','Next time sure win!'],['Okay okay再来！','Okay okay play again!']],
+      human_win:[['哇你好厉害！','Wah you so pro!'],['Next time我也要这样！','Next time I also want like this!']],
+      low_tiles:[['快快快！要结束了！','Fast fast fast! Ending!'],['只剩那么少！','Only so little left!']],
+      idle:[['Eh快点啦！','Eh faster lah!'],['Helloooo还在吗？','Helloooo still there?'],['好闷啊等你！','So boring waiting leh!']],
+    }
+  },
+  {
+    id:'muthu', name:'Muthu', nameZh:'木图', emoji:'🧔',
+    style:'strategic', borderColor:'#ff9900', textColor:'#ffcc66',
+    voice:{pitch:0.95,rate:1.0,lang:'en-US'},
+    bio:'Wahlao, steady pom pee pee',
+    lines:{
+      draw:[['Wahlao eh, this one…','Wahlao eh, this one…'],['Okay okay, let me see.','Okay okay, let me see.'],['Shiok!','Shiok!'],['Not bad leh.','Not bad leh.']],
+      discard:[['This one no use lah.','This one no use lah.'],['Alamak, throw this.','Alamak, throw this.'],['Cannot keep everything.','Cannot keep everything.'],['Steady, throw this one.','Steady, throw this one.']],
+      pong:[['Pong! Steady pom pee pee!','Pong! Steady pom pee pee!'],['Wah pong kena!','Wah pong kena!'],['Aiyo so lucky!','Aiyo so lucky!']],
+      chi:[['Chi! Alamak!','Chi! Alamak!'],['Got sequence! Nice!','Got sequence! Nice!']],
+      win:[['Win liao la! Steady!','Win liao la! Steady!'],['Wah I so power leh!','Wah I so power leh!']],
+      lose:[['Aiyo, suay lah today.','Aiyo, suay lah today.'],['Nvm lah, next round.','Nvm lah, next round.'],['Like that also can lose…','Like that also can lose…']],
+      human_win:[['Wah you damn good leh!','Wah you damn good leh!'],['Okay lah, you win today.','Okay lah, you win today.']],
+      low_tiles:[['Oi, almost finish liao!','Oi, almost finish liao!'],['Faster lah, not many tiles!','Faster lah, not many tiles!']],
+      idle:[['Oi you sleeping or what?','Oi you sleeping or what?'],['Come on lah, faster!','Come on lah, faster!'],['Waiting for you sia.','Waiting for you sia.']],
+    }
+  },
+  {
+    id:'granny_tan', name:'Granny Tan', nameZh:'陈婆婆', emoji:'👸',
+    style:'lucky', borderColor:'#ff88cc', textColor:'#ffccee',
+    voice:{pitch:1.4,rate:0.85,lang:'zh-TW'},
+    bio:'年纪大，手气好，经验丰富',
+    lines:{
+      draw:[['摸到了…让婆婆看看。','Drew one… let granny see.'],['嗯，婆婆有感觉。','Mm, granny has feeling.'],['这张…有缘分！','This tile… has fate!'],['婆婆的直觉从不会错。','Granny intuition never wrong.']],
+      discard:[['打这个，婆婆有数。','Throw this, granny knows.'],['走吧，不要你了。','Go lah, don\'t want you.'],['婆婆打牌不会错的。','Granny play tiles never wrong.'],['嗯，就这个了。','Mm, this one lah.']],
+      pong:[['碰！婆婆等很久了！','Pong! Granny waited long!'],['好好好，碰了！','Good good good, ponged!'],['哈，婆婆命中注定！','Ha, granny destined!']],
+      chi:[['吃！婆婆手气好！','Chi! Granny lucky hand!']],
+      win:[['和了！婆婆赢了！嘻嘻！','Win liao! Granny win! Heehee!'],['哈哈！年纪大，手气更好！','Haha! Older, luckier!']],
+      lose:[['唉，今天菩萨没保佑。','Aiya, Buddha not bless today.'],['没关系，婆婆不计较。','Never mind, granny not calculative.'],['下次烧香保佑！','Next time burn incense!']],
+      human_win:[['不错不错，你很厉害！','Not bad not bad, you very good!'],['年轻人有前途！','Young people got future!']],
+      low_tiles:[['快结束了！婆婆感觉到了！','Almost done! Granny can feel!']],
+      idle:[['慢慢来，不急的。','Slowly slowly, no rush.'],['婆婆等你哦，乖。','Granny waiting, good boy/girl.']],
+    }
+  },
+  {
+    id:'jason', name:'Jason', nameZh:'阿杰', emoji:'😎',
+    style:'bluffer', borderColor:'#00ddff', textColor:'#88eeff',
+    voice:{pitch:1.1,rate:1.15,lang:'en-SG'},
+    bio:'Eh bro, I damn pro one',
+    lines:{
+      draw:[['Bro, watch and learn.','Bro, watch and learn.'],['This is the one.','This is the one.'],['Eh siao, not bad!','Eh siao, not bad!'],['Okay I see your game.','Okay I see your game.']],
+      discard:[['Sacrifice la, it\'s strategy.','Sacrifice la, it\'s strategy.'],['This one I don\'t need.','This one I don\'t need.'],['Calculated move.','Calculated move.'],['Part of the plan.','Part of the plan.']],
+      pong:[['Pong! Called it.','Pong! Called it.'],['Bro I been waiting for that.','Bro I been waiting for that.'],['Pong! Too easy.','Pong! Too easy.']],
+      chi:[['Chi! Read your discard.','Chi! Read your discard.'],['Exactly what I needed.','Exactly what I needed.']],
+      win:[['GG! Ez win!','GG! Ez win!'],['Told you I was pro.','Told you I was pro.'],['WIN! Skill issue for you.','WIN! Skill issue for you.']],
+      lose:[['Eh that was rigged lah.','Eh that was rigged lah.'],['I let you win actually.','I let you win actually.'],['Lag spike cause me lose.','Lag spike cause me lose.']],
+      human_win:[['Okay ngl that was good.','Okay ngl that was good.'],['Lucky only lah.','Lucky only lah.'],['One time thing.','One time thing.']],
+      low_tiles:[['Endgame bro, focus up!','Endgame bro, focus up!'],['Crunch time!','Crunch time!']],
+      idle:[['Bro you AFK ah?','Bro you AFK ah?'],['GGWP come already!','GGWP come already!'],['Unresponsive player detected.','Unresponsive player detected.']],
+    }
+  },
+  {
+    id:'mdm_wong', name:'Mdm Wong', nameZh:'黄老师', emoji:'👩‍🏫',
+    style:'methodical', borderColor:'#44cc88', textColor:'#88ffcc',
+    voice:{pitch:1.1,rate:0.95,lang:'zh-TW'},
+    bio:'按规矩来，台数王',
+    lines:{
+      draw:[['嗯，检查一下手牌。','Mm, check the hand.'],['策略性摸牌。','Strategic draw.'],['这张加入计算。','This tile enters calculation.'],['好的，继续。','Good, continue.']],
+      discard:[['根据牌型，打这张。','By hand shape, throw this.'],['此牌价值最低。','This tile least valuable.'],['优化手牌结构。','Optimizing hand structure.'],['打出去，符合策略。','Throw out, fits strategy.']],
+      pong:[['碰牌，提高台数。','Pong, increase tai.'],['碰！这是正确决定。','Pong! Correct decision.'],['好，役牌碰到了。','Good, yakuhai ponged.']],
+      chi:[['吃牌，完善顺子。','Chi, complete sequence.'],['吃！按计划执行。','Chi! Execute the plan.']],
+      win:[['和了。计算正确。','Win. Calculation correct.'],['台数充足，和牌成功。','Sufficient tai, win achieved.'],['标准打法，标准结果。','Standard play, standard result.']],
+      lose:[['计算有误，下次修正。','Calculation error, correct next time.'],['需要重新评估策略。','Need to re-evaluate strategy.']],
+      human_win:[['你的手法值得学习。','Your technique worth learning.'],['不错的和牌结构。','Good winning hand structure.']],
+      low_tiles:[['进入终局阶段，需要加快决策。','Entering endgame, faster decisions needed.']],
+      idle:[['请您尽快做出决定。','Please make decision promptly.'],['效率很重要哦。','Efficiency is important.']],
+    }
+  },
+  {
+    id:'ah_kow', name:'Ah Kow', nameZh:'阿狗', emoji:'🐶',
+    style:'aggressive', borderColor:'#ff4444', textColor:'#ff9999',
+    voice:{pitch:0.9,rate:1.25,lang:'zh-CN'},
+    bio:'打牌最凶，专门出难牌',
+    lines:{
+      draw:[['来！','Come!'],['嗯！','Mmph!'],['哼，摸到了。','Heh, drew one.'],['看我怎么玩你们。','Watch how I play you all.']],
+      discard:[['出！','Out!'],['滚！','Get lost!'],['不需要你！','Don\'t need you!'],['滚出去！','Roll out!']],
+      pong:[['碰！！！','PONG!!!'],['碰你没商量！','Pong no discussion!'],['哈！碰到！','Ha! Got pong!']],
+      chi:[['吃！哈！','Chi! Ha!'],['吃了！','Ate it!']],
+      win:[['我赢！！！哈哈！','I WIN!!! Haha!'],['输给我！！','Lose to me!!'],['太弱了你们！','You all too weak!']],
+      lose:[['什么！我输了？！','What! I lose?!'],['不可能！作弊！','Impossible! Cheating!'],['重来！','Again!']],
+      human_win:[['哦，你很厉害嘛。','Oh, you quite good huh.'],['运气成分！','Just luck!']],
+      low_tiles:[['快了！准备好！','Almost! Get ready!'],['终局！不能输！','Endgame! Cannot lose!']],
+      idle:[['出牌啊！！','Play tiles!!'],['你在干嘛！','What you doing!'],['快！！','Faster!!']],
+    }
+  },
+  {
+    id:'poh_poh', name:'Poh Poh', nameZh:'婆婆', emoji:'🧓',
+    style:'slow', borderColor:'#cc9933', textColor:'#eeddaa',
+    voice:{pitch:1.2,rate:0.7,lang:'zh-TW'},
+    bio:'打得慢，但经验老到',
+    lines:{
+      draw:[['让婆婆看看…哎，这张…','Let granny see… aiya this tile…'],['哦，摸到了。婆婆看看。','Oh, drew one. Granny see.'],['这张啊……','This one ah……'],['嗯……考虑考虑。','Mm…… think think.']],
+      discard:[['婆婆不要这张了。','Granny don\'t want this.'],['这张出去吧。','This one go out lah.'],['嗯…打这个。','Mm…throw this.'],['不需要了，走吧。','Don\'t need, go lah.']],
+      pong:[['哦！碰！婆婆碰！','Oh! Pong! Granny pong!'],['碰了碰了！','Ponged ponged!'],['哈哈，碰！','Haha, pong!']],
+      chi:[['吃！婆婆也会吃！','Chi! Granny can chi too!']],
+      win:[['婆婆赢了哦！嘻嘻嘻！','Granny win liao! Heeheeheee!'],['年纪大，本事也大！','Old age, big skill!']],
+      lose:[['哎，今天菩萨不保佑。','Aiya, Buddha not bless today.'],['没关系，婆婆不生气。','Never mind, granny not angry.']],
+      human_win:[['好孩子！打得好！','Good child! Play well!'],['以后多来陪婆婆玩！','Next time come play with granny more!']],
+      low_tiles:[['快了快了，婆婆加油！','Almost almost, granny gambatte!']],
+      idle:[['呀，婆婆在想事情…你先打。','Aiya granny thinking… you play first.'],['哦！哦！婆婆准备好了。','Oh! Oh! Granny ready.']],
+    }
+  },
+  {
+    id:'raj', name:'Raj', nameZh:'拉吉', emoji:'🧑‍💼',
+    style:'calculated', borderColor:'#ffaa00', textColor:'#ffdd88',
+    voice:{pitch:1.0,rate:1.05,lang:'en-IN'},
+    bio:'Systematic and efficient play',
+    lines:{
+      draw:[['Very good, very good.','Very good, very good.'],['Interesting draw.','Interesting draw.'],['Okay let me analyse.','Okay let me analyse.'],['This could work!','This could work!']],
+      discard:[['This is the correct discard.','This is the correct discard.'],['Optimum play.','Optimum play.'],['Systematic elimination.','Systematic elimination.'],['Yes yes, this one.','Yes yes, this one.']],
+      pong:[['Pong! Beautiful!','Pong! Beautiful!'],['Yes! This is what I wanted!','Yes! This is what I wanted!'],['Pong! Systematic!','Pong! Systematic!']],
+      chi:[['Chi! The sequence!','Chi! The sequence!'],['Excellent, chi!','Excellent, chi!']],
+      win:[['WIN! As calculated!','WIN! As calculated!'],['Mathematics don\'t lie!','Mathematics don\'t lie!'],['Systematic victory!','Systematic victory!']],
+      lose:[['Variance is part of the game.','Variance is part of the game.'],['Recalibrating strategy.','Recalibrating strategy.'],['Acceptable outcome. Next round.','Acceptable outcome. Next round.']],
+      human_win:[['Well played, well played.','Well played, well played.'],['Good strategy!','Good strategy!']],
+      low_tiles:[['Critical phase approaching!','Critical phase approaching!'],['Few tiles remain, focus!','Few tiles remain, focus!']],
+      idle:[['Are you still there?','Are you still there?'],['Come come, your turn!','Come come, your turn!'],['No time for analysis paralysis!','No time for analysis paralysis!']],
+    }
+  },
+  {
+    id:'seng', name:'Ah Seng', nameZh:'阿成', emoji:'🧑',
+    style:'unpredictable', borderColor:'#aa66ff', textColor:'#cc99ff',
+    voice:{pitch:1.05,rate:1.1,lang:'zh-CN'},
+    bio:'听天由命，随机应变',
+    lines:{
+      draw:[['摸到了，随缘。','Drew one, fate decide.'],['哦，看看。','Oh, see see.'],['好不好都接受。','Good or bad, accept.'],['缘分到了。','Fate arrived.']],
+      discard:[['打这个，天意。','Throw this, destiny.'],['随便啦，出去。','Anyhow lah, go out.'],['听天由命！','Leave it to fate!'],['就这个了，不想了。','This one, don\'t want to think.']],
+      pong:[['碰！随缘碰！','Pong! Fate pong!'],['哦，碰到了。还不错。','Oh, ponged. Not bad.'],['碰！命中注定！','Pong! Destined!']],
+      chi:[['吃！有缘！','Chi! Fate!'],['命里有时终须有！','If it\'s meant to be, it will be!']],
+      win:[['赢了！天意！','Win! Destiny!'],['果然是我赢！命！','As expected, I win! Fate!'],['哈，随缘赢！','Ha, fate-win!']],
+      lose:[['输了也是天意。','Lose also destiny.'],['没事，下次缘分更好。','Never mind, next time better fate.'],['随缘，继续。','Whatever, continue.']],
+      human_win:[['你命好。','Your fate good.'],['今天是你的缘分。','Today is your fate.']],
+      low_tiles:[['要结束了，看命吧。','Ending soon, see fate lah.'],['最后阶段，随缘！','Final stage, let fate decide!']],
+      idle:[['你想多久就多久，没事。','Think as long as you want, no problem.'],['慢慢来，随缘。','Slowly slowly, fate.'],['等你，没问题。','Waiting for you, no problem.']],
+    }
+  },
+];
+
+// Current assignments for each seat (can be cycled)
+let AI_ASSIGNMENTS = { 1: 0, 2: 1, 3: 2 }; // seat -> roster index
+
+// Get current persona for seat
+function getPersona(pi) {
+  const idx = AI_ASSIGNMENTS[pi] ?? (pi - 1);
+  return AI_ROSTER[idx % AI_ROSTER.length];
+}
+
+// Backward compat: AI_PERSONAS mapped dynamically
+const AI_PERSONAS = new Proxy({}, {
+  get(_, pi) { return getPersona(parseInt(pi)); }
+});
+
+// Track per-AI state
+let AI_STATE = {
+  1: { lastBubble: 0, idleTimer: null, discardCount: 0, winStreak: 0 },
+  2: { lastBubble: 0, idleTimer: null, discardCount: 0, winStreak: 0 },
+  3: { lastBubble: 0, idleTimer: null, discardCount: 0, winStreak: 0 },
+};
+
+/* ══ WEB SPEECH API VOICE SYSTEM ══ */
+let speechSynth = window.speechSynthesis;
+let voicesLoaded = false;
+let voiceList = [];
+let speechEnabled = true;
+
+function initVoices() {
+  const load = () => {
+    voiceList = speechSynth.getVoices();
+    voicesLoaded = voiceList.length > 0;
+  };
+  load();
+  if (speechSynth.onvoiceschanged !== undefined) {
+    speechSynth.onvoiceschanged = load;
+  }
+}
+initVoices();
+
+function getBestVoice(lang) {
+  if (!voicesLoaded) voiceList = speechSynth.getVoices();
+  // Priority: exact lang match → lang prefix match → English → first
+  const exact = voiceList.find(v => v.lang === lang);
+  if (exact) return exact;
+  const prefix = voiceList.find(v => v.lang.startsWith(lang.split('-')[0]));
+  if (prefix) return prefix;
+  const english = voiceList.find(v => v.lang.startsWith('en'));
+  return english || voiceList[0] || null;
+}
+
+function speakAI(pi, text, persona) {
+  if (!speechEnabled || !speechSynth) return;
+  // Cancel if already speaking from this AI
+  try {
+    speechSynth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const vp = persona.voice || { pitch:1, rate:1, lang:'zh-CN' };
+    const voice = getBestVoice(vp.lang);
+    if (voice) utt.voice = voice;
+    utt.pitch = vp.pitch || 1;
+    utt.rate = vp.rate || 1;
+    utt.volume = 0.85;
+    utt.lang = vp.lang || 'zh-CN';
+    // Show voice indicator
+    const vi = document.getElementById('voice-indicator');
+    const vn = document.getElementById('voice-indicator-name');
+    if (vi && vn) {
+      vn.textContent = `${persona.emoji} ${persona.nameZh}`;
+      vi.style.display = 'block';
+      utt.onend = () => { vi.style.display = 'none'; };
+      utt.onerror = () => { vi.style.display = 'none'; };
+    }
+    speechSynth.speak(utt);
+  } catch(e) { /* voice not supported, silent */ }
+}
+
+/* ══ AI ROSTER PICKER UI ══ */
+function openAIRoster() {
+  buildRosterUI();
+  document.getElementById('ai-roster-overlay').classList.remove('hidden');
+}
+function closeAIRoster() {
+  document.getElementById('ai-roster-overlay').classList.add('hidden');
+}
+function confirmAIRoster() {
+  closeAIRoster();
+  updateAILabels();
+  floatNotif('✅ 对手已更新！/ Opponents updated!');
+  playClick();
+}
+function randomizeRoster() {
+  [1,2,3].forEach(seat => {
+    AI_ASSIGNMENTS[seat] = Math.floor(Math.random() * AI_ROSTER.length);
+  });
+  buildRosterUI();
+  playClick();
+}
+function buildRosterUI() {
+  const seats = document.getElementById('ai-roster-seats');
+  if (!seats) return;
+  seats.innerHTML = '';
+  const dirs = { 1:'🀄 东 East', 2:'北 North', 3:'西 West' };
+  [1,2,3].forEach(seat => {
+    const row = document.createElement('div');
+    row.className = 'ai-seat-row';
+    const dirLabel = document.createElement('div');
+    dirLabel.className = 'ai-seat-dir';
+    dirLabel.innerHTML = dirs[seat];
+    row.appendChild(dirLabel);
+    const pick = document.createElement('div');
+    pick.className = 'ai-seat-pick';
+    AI_ROSTER.forEach((p, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'ai-char-chip' + (AI_ASSIGNMENTS[seat] === idx ? ' active-chip' : '');
+      chip.style.borderColor = AI_ASSIGNMENTS[seat] === idx ? p.borderColor : 'rgba(255,255,255,0.15)';
+      chip.style.background = AI_ASSIGNMENTS[seat] === idx ? p.borderColor + '33' : '';
+      chip.textContent = p.emoji + ' ' + p.name;
+      chip.onclick = () => {
+        AI_ASSIGNMENTS[seat] = idx;
+        buildRosterUI(); // re-render
+        playClick();
+      };
+      pick.appendChild(chip);
+    });
+    row.appendChild(pick);
+    seats.appendChild(row);
+  });
+}
+
+/* ══ WIN STREAK ══ */
+let WIN_STREAK = 0;
+
+/* ══ BUBBLE TIMERS ══ */
+let _bubbleTimers = {};
+
+/* ── Show a chat bubble from an AI ── */
+function aiSay(pi, category, overrideLines) {
+  const persona = getPersona(pi);
+  if (!persona) return;
+  const now = Date.now();
+  if (now - AI_STATE[pi].lastBubble < 2500) return;
+  AI_STATE[pi].lastBubble = now;
+
+  const lines = overrideLines || persona.lines[category];
+  if (!lines || !lines.length) return;
+  const [zh, en] = lines[Math.floor(Math.random() * lines.length)];
+
+  // Speak the line
+  const textToSpeak = persona.voice?.lang?.startsWith('en') ? en : zh;
+  speakAI(pi, textToSpeak, persona);
+
+  // Remove old bubble
+  const old = document.getElementById('bubble-'+pi);
+  if (old) old.remove();
+
+  const bubble = document.createElement('div');
+  bubble.id = 'bubble-'+pi;
+  bubble.className = 'ai-bubble';
+
+  const positions = {
+    1: { right:'82px', top:'50%', transform:'translateY(-50%)' },
+    2: { left:'50%',   top:'62px', transform:'translateX(-50%)' },
+    3: { left:'82px',  top:'50%', transform:'translateY(-50%)' },
+  };
+  const fromClass = { 1:'from-right', 2:'from-top', 3:'from-left' };
+  Object.assign(bubble.style, positions[pi]);
+  bubble.style.borderColor = persona.borderColor;
+  bubble.classList.add(fromClass[pi]);
+
+  bubble.innerHTML = `<span class="ai-bubble-name" style="color:${persona.textColor}">${persona.emoji} ${persona.nameZh}</span>
+    <span class="ai-bubble-zh">${zh}</span>
+    <span class="ai-bubble-en">${en}</span>`;
+
+  document.getElementById('ai-bubbles').appendChild(bubble);
+
+  clearTimeout(_bubbleTimers[pi]);
+  _bubbleTimers[pi] = setTimeout(() => {
+    if (bubble.parentNode) {
+      bubble.classList.add('dying');
+      setTimeout(() => bubble.remove(), 350);
+    }
+  }, 4000);
+}
+
+function aiMaybeComment(pi, category, chance) {
+  if (Math.random() < (chance || 0.5)) aiSay(pi, category);
+}
+
+/* ── Update AI name labels ── */
+function updateAILabels() {
+  [1, 2, 3].forEach(pi => {
+    const p = getPersona(pi);
+    const el = document.getElementById('ai-name-' + pi);
+    if (el) {
+      el.innerHTML = `${p.emoji} ${p.nameZh}<br><span style="font-size:0.55rem;color:${p.textColor};opacity:0.9">${p.name}</span>`;
+    }
+  });
+}
+
+/* ── Win streak UI ── */
+function updateWinStreak(won) {
+  if (won) WIN_STREAK++;
+  else WIN_STREAK = 0;
+
+  const badge = document.getElementById('win-streak-badge');
+  const num = document.getElementById('wstreak-num');
+  if (!badge || !num) return;
+  if (WIN_STREAK >= 2) { badge.style.display='block'; num.textContent=WIN_STREAK; }
+  else badge.style.display='none';
+
+  const pct = Math.min(WIN_STREAK/5,1)*100;
+  const fill = document.getElementById('streak-fill');
+  if (fill) fill.style.width = pct+'%';
+  const lbl = document.getElementById('streak-label');
+  if (lbl) {
+    if (WIN_STREAK>=5) lbl.textContent='🔥 5连胜！奖励激活！';
+    else if (WIN_STREAK>0) lbl.textContent=`🔥 ${WIN_STREAK}连胜！再赢${5-WIN_STREAK}局奖励！`;
+    else lbl.textContent='连胜奖励进度';
+  }
+}
+
+/* ── Combo popup ── */
+function showComboPop(text) {
+  const el = document.createElement('div');
+  el.className = 'combo-pop';
+  el.textContent = text;
+  document.body.appendChild(el);
+  el.addEventListener('animationend', () => el.remove());
+}
+
+/* ── Win ray burst animation ── */
+function showWinRays() {
+  const ov = document.getElementById('win-overlay');
+  const rays = document.getElementById('win-rays');
+  const burst = document.getElementById('win-burst');
+  if (!ov) return;
+  rays.innerHTML='';
+  for (let i=0;i<12;i++) {
+    const ray = document.createElement('div');
+    ray.className='win-ray';
+    ray.style.transform=`rotate(${i*30}deg)`;
+    ray.style.animationDelay=`${i*0.04}s`;
+    ray.style.opacity=0.6+Math.random()*0.4;
+    rays.appendChild(ray);
+  }
+  burst.textContent='🎉';
+  ov.classList.remove('hidden');
+  setTimeout(()=>ov.classList.add('hidden'),1200);
+}
+
+/* ── Enhanced aiDiscard with personality ── */
+aiDiscard = function(pi) {
+  const persona = getPersona(pi);
+  if (!persona) return aiDiscardBase(pi);
+  const h = G.hands[pi];
+  if (persona.style==='chaotic'||persona.style==='unpredictable'||persona.style==='lucky') {
+    if (Math.random()<0.3) return h[Math.floor(Math.random()*h.length)];
+  }
+  if (persona.style==='defensive'||persona.style==='methodical'||persona.style==='calculated') {
+    let min=Infinity,pick=h[0];
+    h.forEach(t=>{let sc=aiScore(t,h);if(t.suit==='honor')sc-=2;if(sc<min){min=sc;pick=t;}});
+    return pick;
+  }
+  if (persona.style==='aggressive'||persona.style==='bluffer') {
+    // keep more dangerous tiles, discard safe ones
+    let min=Infinity,pick=h[0];
+    h.forEach(t=>{const sc=aiScore(t,h);if(sc<min){min=sc;pick=t;}});
+    return pick;
+  }
+  return aiDiscardBase(pi);
+};
+
+/* ── Enhanced aiWantPong ── */
+aiWantPong = function(pi, tile) {
+  const persona = getPersona(pi);
+  if (!persona) return aiWantPongBase(pi,tile);
+  const matches = G.hands[pi].filter(t=>teq(t,tile)).length;
+  if (matches<2) return false;
+  const rates = {aggressive:0.92, chaotic:0.75, defensive:0.25, methodical:0.55, strategic:0.65, calculated:0.6, bluffer:0.8, slow:0.7, lucky:0.8, unpredictable:0.55};
+  const r = rates[persona.style]??0.6;
+  // defensive players only pong dragons or when near win
+  if (persona.style==='defensive') {
+    const isDragon=tile.suit==='honor'&&['haku','hatsu','chun'].includes(tile.num);
+    return isDragon||G.hands[pi].length<=5||Math.random()<0.2;
+  }
+  return Math.random()<r;
+};
+
+/* ── Hook: aiDoPong ── */
+const _origAiDoPong = aiDoPong;
+aiDoPong = function(pi, tile, from) {
+  _origAiDoPong(pi, tile, from);
+  setTimeout(()=>aiSay(pi,'pong'),100);
+};
+
+/* ── Hook: aiDoChi ── */
+const _origAiDoChi = aiDoChi;
+aiDoChi = function(pi, tile, from, pair) {
+  _origAiDoChi(pi, tile, from, pair);
+  setTimeout(()=>aiSay(pi,'chi'),100);
+};
+
+/* ── Hook: aiTurn ── */
+const _origAiTurn = aiTurn;
+aiTurn = function(pi) {
+  _origAiTurn(pi);
+  setTimeout(()=>aiMaybeComment(pi,'draw',0.22),200);
+  setTimeout(()=>aiMaybeComment(pi,'discard',0.18),900);
+};
+
+/* ── Hook: endRound ── */
+const _origEndRound = endRound;
+endRound = function(winner, label, coins, tai, reasons) {
+  if (winner===0) {
+    updateWinStreak(true);
+    showWinRays();
+    if (WIN_STREAK===3) { showComboPop('🔥 3连胜！TRIPLE WIN!'); playCombo(); }
+    if (WIN_STREAK===5) { showComboPop('⚡ 5连胜！MEGA STREAK!'); playCombo(); PD.coins+=100; floatNotif('🏅 5连胜奖励！+100🪙'); }
+    setTimeout(()=>[1,2,3].forEach((pi,i)=>setTimeout(()=>aiMaybeComment(pi,'human_win',0.7),i*600)),300);
+  } else if (winner!==null&&winner>0) {
+    updateWinStreak(false);
+    setTimeout(()=>aiSay(winner,'win'),200);
+    setTimeout(()=>[1,2,3].filter(p=>p!==winner).forEach((pi,i)=>setTimeout(()=>aiMaybeComment(pi,'lose',0.5),i*500)),600);
+  } else {
+    updateWinStreak(false);
+  }
+  _origEndRound(winner, label, coins, tai, reasons);
+};
+
+/* ── Low tile chatter ── */
+function checkLowTileChatter() {
+  if (!G) return;
+  if (G.wall.length===15) [1,2,3].forEach((pi,i)=>setTimeout(()=>aiMaybeComment(pi,'low_tiles',0.6),i*700));
+}
+
+/* ── Hook: nextPlayer ── */
+const _origNextPlayer = nextPlayer;
+nextPlayer = function() { checkLowTileChatter(); _origNextPlayer(); };
+
+/* ── Idle nag ── */
+let _idleNagTimer = null;
+function resetIdleNag() {
+  clearTimeout(_idleNagTimer);
+  _idleNagTimer = setTimeout(()=>{
+    if (G&&G.cur===0&&G.phase==='discard') {
+      const pi=[1,2,3][Math.floor(Math.random()*3)];
+      aiSay(pi,'idle');
+    }
+  },8000);
+}
+
+/* ── Hook: humanDraw ── */
+const _origHumanDraw = humanDraw;
+humanDraw = function() { _origHumanDraw(); resetIdleNag(); };
+
+/* ── Hook: clickHand ── */
+const _origClickHand = clickHand;
+clickHand = function(i) { resetIdleNag(); _origClickHand(i); };
+
+/* ── Hook: initRound ── */
+const _origInitRound = initRound;
+initRound = function() {
+  updateAILabels();
+  const bc=document.getElementById('ai-bubbles');
+  if(bc)bc.innerHTML='';
+  if(speechSynth)speechSynth.cancel();
+  _origInitRound();
+  setTimeout(()=>{
+    const openers=[
+      [1,[['来，开始！','Come, start!'],['这局我一定赢！','This round I sure win!'],['Wah, new round!','Wah, new round!']]],
+      [2,[['嗯，开始。','Mm, begin.'],['新的一局。','New round.'],['Let\'s go.','Let\'s go.']]],
+      [3,[['Yay！新一局！','Yay! New round!'],['来来！','Lai lai!'],['Ready!','Ready!']]],
+    ];
+    openers.forEach(([pi,lines],i)=>setTimeout(()=>aiSay(pi,null,lines),i*900+600));
+  },400);
+};
+
+/* ── Hook: launchGame ── */
+const _origLaunchGame = launchGame;
+launchGame = function() { _origLaunchGame(); updateAILabels(); updateWinStreak(false); };
+
+
 
 function giveRandomItem(minRarity){
   const rarityOrder={common:0,rare:1,legendary:2};
