@@ -62,7 +62,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 
 .board{width:100vw;height:100vh;display:grid;grid-template-areas:"top top top" "left center right" "bot bot bot";grid-template-columns:90px 1fr 90px;grid-template-rows:auto 1fr auto;padding:58px 3px 2px 3px;gap:2px;}
 .pa{display:flex;flex-direction:column;align-items:center;gap:2px;}
-.pa.top{grid-area:top;}.pa.left{grid-area:left;justify-content:center;}.pa.right{grid-area:right;justify-content:center;}.pa.bot{grid-area:bot;padding-bottom:4px;}
+.pa.top{grid-area:top;}.pa.left{grid-area:left;justify-content:center;}.pa.right{grid-area:right;justify-content:center;}.pa.bot{grid-area:bot;padding-bottom:2px;overflow:visible;}
 .palabel{font-size:0.62rem;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:2px 8px;white-space:nowrap;line-height:1.5;transition:all 0.3s;}
 .palabel .lz{font-weight:700;}.palabel .le{color:#5a886a;font-size:0.56rem;}
 .pa.active .palabel{border-color:var(--gold);color:var(--gold-lt);box-shadow:0 0 10px rgba(240,192,64,0.35);animation:pulse-label 1s ease-in-out infinite alternate;}
@@ -151,7 +151,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 
 .meldrow{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;}
 .mgrp{display:flex;gap:1px;background:rgba(0,0,0,0.3);padding:2px;border-radius:4px;border:1px solid rgba(200,150,26,0.15);}
-.handrow{display:flex;align-items:flex-end;gap:2px;flex-wrap:nowrap;padding-bottom:2px;}
+.handrow{display:flex;align-items:flex-end;gap:2px;flex-wrap:nowrap;padding-bottom:2px;transform-origin:center bottom;transition:transform 0.15s;}
 .aicol{display:flex;flex-direction:column;gap:2px;}
 .airow{display:flex;gap:2px;}
 .dsep{width:10px;flex-shrink:0;}
@@ -1074,8 +1074,18 @@ function renderBot(){
   G.hands[0].forEach((t,i)=>{const isSel=G.selIdx===i&&!G.selDrawn;th.appendChild(tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i)));});
   if(G.drawn){const sep=document.createElement('div');sep.className='dsep';th.appendChild(sep);th.appendChild(tileEl(G.drawn,'t-lg','ck drawn'+(G.selDrawn?' sel':''),clickDrawn));}
   renderMelds('tm-bot',0,'t-sm');
-  // Render player discards in the tray
   renderDisc('td-bot',0,'t-disc');
+  // Scale hand to always fit screen width
+  requestAnimationFrame(()=>{
+    const available=window.innerWidth - 8;
+    const actual=th.scrollWidth;
+    if(actual>available){
+      const scale=available/actual;
+      th.style.transform=`scaleX(${scale})`;
+    } else {
+      th.style.transform='scaleX(1)';
+    }
+  });
 }
 function renderMelds(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.melds[pi].forEach(m=>{const g=document.createElement('div');g.className='mgrp';m.tiles.forEach(t=>g.appendChild(tileEl(t,sz)));el.appendChild(g);});}
 function renderDisc(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.discards[pi].forEach((t,i)=>{const last=i===G.discards[pi].length-1&&G.pendingFrom===pi;el.appendChild(tileEl(t,sz,last?'clm':''));});}
