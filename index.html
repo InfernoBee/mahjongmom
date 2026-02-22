@@ -20,19 +20,82 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 
 /* ══ TITLE ══════════════════════════════════════════════════════════ */
 #scr-title{background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(21,85,51,0.9) 0%,transparent 70%),repeating-linear-gradient(45deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 20px),linear-gradient(160deg,#071a10,#0e2e1c 50%,#071a10);}
-.tdeco{display:flex;align-items:center;gap:14px;margin-bottom:0.4rem;}
-.ttile{width:50px;height:68px;background:linear-gradient(145deg,#fdf8e8,#e8dfa8);border:2px solid var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:var(--red);box-shadow:2px 4px 10px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.8);animation:tfl 3s ease-in-out infinite;}
-.ttile:nth-child(2){animation-delay:.4s}.ttile:nth-child(4){animation-delay:.8s}.ttile:nth-child(5){animation-delay:1.2s}
+.tdeco{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:0.6rem;flex-wrap:nowrap;}
+.tdeco-tiles{display:flex;gap:8px;align-items:center;}
+/* ══ TITLE TILES — authentic mahjong look ══ */
+.ttile{
+  width:46px;height:62px;
+  background:linear-gradient(155deg,#fffef8 0%,#fdf6d0 55%,#f0e088 100%);
+  border:2px solid #8a6010;border-radius:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:2px 4px 0px #5a3a00,3px 6px 14px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.95);
+  animation:tfl 3s ease-in-out infinite;flex-shrink:0;position:relative;gap:1px;
+}
+.ttile:nth-child(1){animation-delay:0s}.ttile:nth-child(2){animation-delay:.5s}.ttile:nth-child(3){animation-delay:1.0s}.ttile:nth-child(4){animation-delay:1.5s}
 @keyframes tfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.title-logo{font-family:'Cinzel Decorative','Noto Serif SC',serif;font-size:clamp(1.8rem,5.5vw,3.5rem);font-weight:700;background:linear-gradient(135deg,#c8961a,#f5e060,#c8961a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(200,150,26,0.6));letter-spacing:0.04em;line-height:1.1;}
-.title-sub{font-size:clamp(0.7rem,2vw,0.9rem);color:#7ab89a;letter-spacing:0.12em;margin-top:0.25rem;margin-bottom:2rem;}
+/* 中 — red */
+.ttile.t-chun{color:#cc1111;font-size:1.75rem;font-weight:900;font-family:'Noto Serif SC',serif;}
+/* 發 — green */
+.ttile.t-hatsu{color:#0a6611;font-size:1.75rem;font-weight:900;font-family:'Noto Serif SC',serif;}
+/* 白 — ivory with blue border frame inset, no character */
+.ttile.t-haku{overflow:hidden;}
+.haku-inner{display:block;position:absolute;inset:6px;border:2.5px solid #223366;border-radius:2px;background:transparent;}
+/* 九萬 */
+.ttile.t-man9{flex-direction:column;}
+.ttile-num{color:#bb1111;font-size:1.4rem;font-weight:900;line-height:1;font-family:'Noto Serif SC',serif;}
+.ttile-suit{color:#881111;font-size:0.5rem;font-weight:700;line-height:1;font-family:'Noto Serif SC',serif;}
+.title-logo-wrap{text-align:center;flex-shrink:1;}
+.title-logo{font-family:'Cinzel Decorative','Noto Serif SC',serif;font-size:clamp(1.4rem,4.5vw,3.5rem);font-weight:700;background:linear-gradient(135deg,#c8961a,#f5e060,#c8961a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(200,150,26,0.6));letter-spacing:0.02em;line-height:1.1;white-space:nowrap;}
+.title-sub{font-size:clamp(0.6rem,1.8vw,0.85rem);color:#7ab89a;letter-spacing:0.1em;margin-top:0.2rem;margin-bottom:1.6rem;}
 .btnrow{display:flex;flex-direction:column;gap:10px;align-items:center;}
 .btn{padding:0.65em 2.2em;border:none;border-radius:50px;font-family:inherit;font-size:0.95rem;font-weight:600;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s,filter 0.15s;letter-spacing:0.02em;white-space:nowrap;}
 .btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.5);filter:brightness(1.1);}
 .btn:active{transform:translateY(-1px);}
 .btn-gold{background:linear-gradient(135deg,#b8820e,#f0c040,#b8820e);color:#1a0e00;box-shadow:0 4px 16px rgba(200,150,26,0.45);}
 .btn-out{background:rgba(255,255,255,0.05);border:1.5px solid rgba(200,150,26,0.5);color:var(--gold-lt);backdrop-filter:blur(4px);}
+.btn-promo{background:linear-gradient(135deg,#1a3a6a,#2a5aaa,#1a3a6a);color:#aaddff;border:1.5px solid #4a8acc;box-shadow:0 4px 16px rgba(40,100,200,0.35);}
 .tfooter{position:absolute;bottom:14px;font-size:0.68rem;color:#3a6a4a;letter-spacing:0.04em;}
+
+/* ══ PROMO MODAL ══ */
+.promo-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:300;}
+.promo-overlay.hidden{display:none;}
+.promo-box{
+  background:linear-gradient(145deg,#0a1e10,#0d2a18);
+  border:2px solid var(--gold);border-radius:18px;
+  padding:1.8rem 1.6rem;text-align:center;
+  max-width:340px;width:88%;
+  box-shadow:0 0 60px rgba(200,150,26,0.4);
+  animation:pin 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.promo-title{font-size:1.2rem;font-weight:900;color:var(--gold-lt);margin-bottom:0.2rem;}
+.promo-sub{font-size:0.72rem;color:#5a9a6a;margin-bottom:1.2rem;letter-spacing:0.06em;}
+.promo-input-wrap{position:relative;margin-bottom:1rem;}
+.promo-input{
+  width:100%;padding:0.7em 1em;
+  background:rgba(0,0,0,0.5);
+  border:2px solid rgba(200,150,26,0.4);border-radius:10px;
+  color:var(--gold-lt);font-size:1.1rem;font-family:'Noto Serif SC',monospace;
+  font-weight:700;letter-spacing:0.18em;text-align:center;
+  outline:none;transition:border-color 0.2s;caret-color:var(--gold-lt);
+}
+.promo-input:focus{border-color:var(--gold-lt);box-shadow:0 0 12px rgba(240,192,64,0.3);}
+.promo-input::placeholder{color:#3a6a4a;letter-spacing:0.06em;font-size:0.85rem;font-weight:400;}
+.promo-result{min-height:44px;margin-bottom:1rem;padding:8px 12px;border-radius:8px;font-size:0.82rem;line-height:1.5;display:none;}
+.promo-result.show{display:block;}
+.promo-result.success{background:rgba(20,100,40,0.5);border:1px solid #44aa66;color:#88ffaa;}
+.promo-result.error{background:rgba(100,20,20,0.5);border:1px solid #aa4444;color:#ffaaaa;}
+.promo-btns{display:flex;gap:8px;justify-content:center;}
+.promo-history{margin-top:1rem;font-size:0.65rem;color:#3a6a4a;min-height:16px;}
+/* Mobile title */
+@media(max-width:480px){
+  .tdeco{gap:5px;}
+  .ttile{width:36px;height:50px;}
+  .ttile.t-chun,.ttile.t-hatsu{font-size:1.3rem;}
+  .ttile-num{font-size:1.05rem;}
+  .ttile-suit{font-size:0.4rem;}
+  .haku-inner{inset:5px;}
+  .title-logo{font-size:clamp(1.1rem,6.5vw,2rem);}
+}
 
 /* ══ HERO ══ */
 #scr-hero{background:linear-gradient(160deg,#050d20,#0a1a38 50%,#050d20);padding:1.5rem;gap:0;}
@@ -70,27 +133,39 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 
 /* ══ LANDSCAPE ══ */
 @media (orientation:landscape){
-  .hud{padding:2px 8px;}
-  .tbar{top:26px;font-size:0.62rem;}
+  .hud{padding:2px 6px;font-size:0.68rem;}
+  .nbtn{font-size:0.6rem;padding:2px 6px;}
+  .hud-hero{max-width:80px;}
+  /* Hide verbose turn bar in landscape — saves critical vertical space */
+  .tbar{display:none;}
   .board{
-    grid-template-columns:58px 1fr 58px;
+    grid-template-columns:52px 1fr 52px;
     grid-template-rows:auto 1fr auto;
-    padding:46px 2px 2px 2px;
+    padding:30px 2px 2px 2px;
     padding-left:env(safe-area-inset-left,2px);
     padding-right:env(safe-area-inset-right,2px);
   }
-  .t-lg{width:36px;height:50px;}
-  .t-lg .tc{font-size:1rem;}
-  .t-lg .ts{font-size:0.52rem;}
-  .t-sm{width:20px;height:28px;}
-  .t-sm .tc{font-size:0.62rem;}
+  /* Smaller player tiles in landscape */
+  .t-lg{width:34px;height:48px;}
+  .t-lg .tc{font-size:0.95rem;}
+  .t-lg .ts{font-size:0.48rem;}
+  /* Opponent top tiles — give them more room */
+  .t-sm{width:22px;height:30px;}
+  .t-sm .tc{font-size:0.65rem;}
+  .t-sm .ts{font-size:0.35rem;}
   .t-xs{width:16px;height:22px;}
   .t-xs .tc{font-size:0.5rem;}
-  .actpanel{bottom:90px;}
-  .ability-hint{bottom:80px;}
-  .pet-companion{bottom:100px;}
-  .cleft{font-size:1.4rem;}
-  .cwind{font-size:1.6rem;}
+  /* Top player area — allow wrap so tiles don't clip */
+  .pa.top{overflow:visible;}
+  #th-top{flex-wrap:wrap;justify-content:center;max-width:100%;}
+  .actpanel{bottom:80px;}
+  .ability-hint{bottom:70px;}
+  .pet-companion{bottom:88px;}
+  .cleft{font-size:1.3rem;}
+  .cwind{font-size:1.5rem;}
+  /* Compact discard area in landscape */
+  .player-discard-tray{padding:2px 4px;margin-top:1px;}
+  .pdt-label{display:none;}
 }
 .pa{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:0;}
 .pa.top{grid-area:top;}.pa.left{grid-area:left;justify-content:center;}.pa.right{grid-area:right;justify-content:center;}.pa.bot{grid-area:bot;padding-bottom:2px;overflow:visible;flex-shrink:0;}
@@ -119,10 +194,17 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .wt{width:14px;height:18px;background:linear-gradient(145deg,#fdf9ec,#e8daa8);border:1px solid #a07018;border-radius:2px;box-shadow:1px 1.5px 3px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.7);flex-shrink:0;transition:all 0.3s;}
 .wt.used{background:linear-gradient(145deg,#2a4a3a,#1a3028)!important;border-color:#1a4a2a!important;opacity:0.4;}
 
-/* ══ TILES ══ */
-.tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#fffef5 0%,#fdf5d0 60%,#f5e89a 100%);border:2px solid #8a6010;border-radius:5px;box-shadow:2px 3px 8px rgba(0,0,0,0.65),inset 0 1px 0 rgba(255,255,255,1),inset 0 -2px 0 rgba(0,0,0,0.12);cursor:default;transition:transform 0.13s ease,box-shadow 0.13s ease,border-color 0.13s;position:relative;line-height:1;flex-shrink:0;}
-.tc{font-weight:900;line-height:1;letter-spacing:-0.03em;}
-.ts{line-height:1;font-weight:700;opacity:0.75;letter-spacing:0;}
+/* ══ TILES — authentic mahjong ivory look ══ */
+.tile{
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(155deg,#fffef8 0%,#fdf6d0 50%,#f0e080 100%);
+  border:1.5px solid #7a5808;border-radius:4px;
+  box-shadow:2px 3px 0px #5a3800,2px 4px 10px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.95),inset 0 -1px 0 rgba(0,0,0,0.08);
+  cursor:default;transition:transform 0.13s ease,box-shadow 0.13s ease,border-color 0.13s;
+  position:relative;line-height:1;flex-shrink:0;overflow:hidden;
+}
+.tc{font-weight:900;line-height:1;letter-spacing:-0.02em;}
+.ts{line-height:1;font-weight:700;opacity:0.85;letter-spacing:0;}
 
 /* Player hand tiles — LARGE & readable */
 .t-lg{width:44px;height:62px;gap:1px;}
@@ -149,16 +231,34 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .t-disc .tc{font-size:0.88rem;}
 .t-disc .ts{font-size:0.44rem;}
 
-/* Suit colours — strong, high contrast */
-.s-man .tc{color:#cc1111;}.s-man .ts{color:#aa2222;}
-.s-pin .tc{color:#1133cc;}.s-pin .ts{color:#2244aa;}
-.s-sou .tc{color:#116611;}.s-sou .ts{color:#226622;}
-.s-honor .tc{color:#1a1208;font-size:110%;}
-.s-honor.hchun .tc{color:#cc1111;}
-.s-honor.hhatsu .tc{color:#116611;}
-.s-honor.hhaku .tc{color:transparent;text-shadow:none;}
+/* Honor tile font sizes per size class */
+.t-lg.s-honor .tc{font-size:1.55rem;}
+.t-md.s-honor .tc{font-size:1.15rem;}
+.t-sm.s-honor .tc{font-size:0.82rem;}
+.t-xs.s-honor .tc{font-size:0.6rem;}
+.t-disc.s-honor .tc{font-size:1.0rem;}
+/* SVG tiles: no extra padding */
+.s-pin,.s-sou{padding:0!important;}
+.s-pin svg,.s-sou svg{display:block;}
+.s-man .tc{color:#cc1111;font-family:'Noto Serif SC',serif;}
+.s-man .ts{color:#991111;font-family:'Noto Serif SC',serif;}
+.s-pin .tc{color:#1133cc;}  /* circles/dots are blue */
+.s-pin .ts{color:#112299;}
+.s-sou .tc{color:#0a6611;} /* bamboo green */
+.s-sou .ts{color:#095510;}
+/* Honor tile colors */
+.s-honor .tc{color:#1a1208;font-family:'Noto Serif SC',serif;font-size:115%;}
+.s-honor.hchun .tc{color:#cc1111;}   /* 中 red */
+.s-honor.hhatsu .tc{color:#0a6611;}  /* 發 green */
+.s-honor.hhaku .tc{color:transparent;text-shadow:none;}  /* 白 invisible char */
 .s-honor.hhaku{position:relative;}
-.s-honor.hhaku::after{content:'';position:absolute;inset:3px;border:2px solid #445;border-radius:2px;background:transparent;}
+/* 白 gets a blue inset border frame — the authentic look */
+.s-honor.hhaku::after{content:'';position:absolute;inset:3px;border:2px solid #223366;border-radius:2px;background:transparent;}
+/* Wind tiles — dark navy/black */
+.s-honor.heast .tc,.s-honor.hsouth .tc,.s-honor.hwest .tc,.s-honor.hnorth .tc{color:#111122;}
+/* Sou tile bamboo/bird graphic styles */
+.sou-tile-graphic{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;gap:0px;position:relative;}
+.sou-stick{border-radius:2px;flex-shrink:0;}
 
 .tile.ck{cursor:pointer;}
 .tile.ck:hover{transform:translateY(-14px);box-shadow:2px 16px 24px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,1);z-index:10;}
@@ -167,8 +267,8 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 @keyframes dra{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
 .tile.clm{border-color:var(--gold-lt)!important;box-shadow:0 0 18px rgba(240,192,64,0.9)!important;animation:clma 0.8s ease-in-out infinite alternate;}
 @keyframes clma{from{box-shadow:0 0 8px rgba(240,192,64,0.5)!important}to{box-shadow:0 0 22px rgba(240,192,64,1)!important}}
-.tback{background:linear-gradient(145deg,#1c4a8a,#0e2a60)!important;border-color:#2a5aaa!important;}
-.tback .tc{font-size:0.9rem!important;color:#6a9acc!important;}
+.tback{background:linear-gradient(145deg,#1c4a8a,#0e2a60)!important;border-color:#2a5aaa!important;padding:0!important;}
+.tback svg{display:block;}
 
 /* ══ PLAYER DISCARD TRAY ══ */
 .player-discard-tray{
@@ -356,19 +456,22 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .pets-title{font-size:1.1rem;font-weight:900;color:#ffaa44;text-align:center;margin-bottom:6px;text-shadow:0 0 10px rgba(255,150,50,0.5);}
 .pets-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
 .pet-card{
-  width:88px;background:rgba(255,255,255,0.04);
-  border:2px solid;border-radius:10px;padding:0.5rem 0.3rem;
+  width:108px;background:linear-gradient(145deg,rgba(8,20,12,0.97),rgba(4,12,6,0.97));
+  border:2px solid;border-radius:12px;padding:0.55rem 0.35rem 0.45rem;
   text-align:center;position:relative;cursor:pointer;
   transition:all 0.2s;
 }
-.pet-card:hover{transform:translateY(-3px);}
-.pet-card.locked{opacity:0.45;filter:grayscale(0.7);border-color:#333;}
-.pet-card.active-pet{box-shadow:0 0 16px var(--gold-lt);}
-.pet-card .lock-badge{position:absolute;top:3px;right:3px;font-size:0.65rem;}
-.pet-emoji{font-size:1.8rem;display:block;margin-bottom:2px;}
-.pet-name{font-size:0.68rem;font-weight:700;}
-.pet-desc{font-size:0.55rem;color:#8aaa88;margin-top:2px;line-height:1.3;}
-.pet-rarity{font-size:0.55rem;margin-top:2px;}
+.pet-card:hover{transform:translateY(-4px);filter:brightness(1.08);}
+.pet-card.locked{opacity:0.6;border-color:#2a3a2a!important;}
+.pet-card.locked:hover{filter:brightness(0.9);}
+.pet-card.active-pet{box-shadow:0 0 22px rgba(255,215,0,0.5),inset 0 0 10px rgba(255,215,0,0.06);}
+.pet-card .lock-badge{position:absolute;top:4px;right:5px;font-size:0.65rem;}
+.pet-emoji{font-size:2rem;display:block;margin-bottom:3px;line-height:1;}
+.pet-svg-avatar{width:76px;height:76px;margin:0 auto 4px auto;display:flex;align-items:center;justify-content:center;overflow:visible;}
+.pet-svg-avatar svg{width:76px;height:76px;overflow:visible;}
+.pet-name{font-size:0.7rem;font-weight:700;margin-bottom:1px;}
+.pet-desc{font-size:0.54rem;color:#8aaa88;margin-top:2px;line-height:1.35;}
+.pet-rarity{font-size:0.52rem;margin-top:3px;letter-spacing:0.03em;}
 
 /* GACHA GENERAL */
 .gcbar{background:rgba(255,255,255,0.05);border:1px solid rgba(200,150,26,0.3);border-radius:10px;padding:5px 14px;font-size:0.88rem;color:var(--gold-lt);text-align:center;}
@@ -394,13 +497,24 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 <!-- TITLE -->
 <div id="scr-title" class="screen">
   <div class="tdeco">
-    <div class="ttile">中</div><div class="ttile">發</div>
-    <div><div class="title-logo">麻將傳奇</div><div class="title-sub">✦ Mahjong Legend RPG ✦</div></div>
-    <div class="ttile">白</div><div class="ttile">🀄</div>
+    <div class="tdeco-tiles">
+      <div class="ttile t-chun">中</div>
+      <div class="ttile t-hatsu">發</div>
+    </div>
+    <div class="title-logo-wrap">
+      <div class="title-logo">麻將傳奇</div>
+      <div class="title-sub">✦ Mahjong Legend RPG ✦</div>
+    </div>
+    <div class="tdeco-tiles">
+      <div class="ttile t-haku"><span class="haku-inner"></span></div>
+      <!-- 九萬 tile — no emoji, pure HTML -->
+      <div class="ttile t-man9"><span class="ttile-num">九</span><span class="ttile-suit">萬</span></div>
+    </div>
   </div>
   <div class="btnrow">
     <button class="btn btn-gold" onclick="goHeroSel();playClick()">⚔️ 开始游戏 / Start Game</button>
     <button class="btn btn-out" onclick="openGacha();playClick()">🎰 老虎机商店 / Slot Shop ・ 🪙 <span id="tcoins">200</span></button>
+    <button class="btn btn-promo" onclick="openPromo();playClick()">🎁 输入礼包码 / Promo Code</button>
   </div>
   <div class="tfooter">选择英雄 · 解锁宠物 · 赢取金币 | Choose Hero · Unlock Pets · Win Coins</div>
 </div>
@@ -425,6 +539,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
     <span class="hud-pet" id="hud-pet"></span>
     <span class="hud-hero" id="hhero"></span>
     <button class="nbtn" onclick="openGacha();playClick()">🎰</button>
+    <button class="nbtn" onclick="showTaiRules();playClick()" style="background:rgba(200,150,26,0.2);border-color:rgba(200,150,26,0.55);color:#ffdd88;">🀄 台</button>
     <button class="nbtn" onclick="goTitle();playClick()" style="color:#aa8888;">菜单</button>
   </div>
   <div class="tbar" id="tbar">准备中…</div>
@@ -499,6 +614,27 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
     <div class="mbody" id="mbody"></div>
     <div class="mtiles" id="mtiles"></div>
     <div class="mbtns" id="mbtns"></div>
+  </div>
+</div>
+
+<!-- PROMO CODE MODAL -->
+<div class="promo-overlay hidden" id="promo-overlay">
+  <div class="promo-box">
+    <div class="promo-title">🎁 礼包码 / Promo Code</div>
+    <div class="promo-sub">输入礼包码领取奖励 · Enter code to claim reward</div>
+    <div class="promo-input-wrap">
+      <input class="promo-input" id="promo-input" type="text" maxlength="20"
+        placeholder="输入礼包码…" autocomplete="off" autocorrect="off"
+        autocapitalize="off" spellcheck="false"
+        oninput="promoInputChange()"
+        onkeydown="if(event.key==='Enter')redeemPromo()"/>
+    </div>
+    <div class="promo-result" id="promo-result"></div>
+    <div class="promo-btns">
+      <button class="btn btn-gold" onclick="redeemPromo();playClick()" style="font-size:0.88rem;padding:0.5em 1.6em;">兑换 / Redeem</button>
+      <button class="btn btn-out" onclick="closePromo();playClick()" style="font-size:0.88rem;padding:0.5em 1.2em;">关闭 / Close</button>
+    </div>
+    <div class="promo-history" id="promo-history"></div>
   </div>
 </div>
 <div class="cfc" id="cfc"></div>
@@ -657,25 +793,282 @@ const HEROES=[
 ];
 
 /* ═══════════════════════════════ PETS ════════════════════════════════ */
+
+/* Bryan SVG avatar — legendary pet, stylised from face likeness */
+const BRYAN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+<defs>
+  <radialGradient id="face" cx="50%" cy="45%" r="52%">
+    <stop offset="0%" stop-color="#feebd4"/>
+    <stop offset="65%" stop-color="#f7c998"/>
+    <stop offset="100%" stop-color="#e8a96a"/>
+  </radialGradient>
+  <radialGradient id="aura" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#ffd700" stop-opacity="0.55"/>
+    <stop offset="100%" stop-color="#ff8800" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="blushL" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#ff8888" stop-opacity="0.5"/>
+    <stop offset="100%" stop-color="#ff8888" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="blushR" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#ff8888" stop-opacity="0.5"/>
+    <stop offset="100%" stop-color="#ff8888" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="hairG" x1="30%" y1="0%" x2="70%" y2="100%">
+    <stop offset="0%" stop-color="#332a1e"/>
+    <stop offset="100%" stop-color="#1a1410"/>
+  </linearGradient>
+  <linearGradient id="silv" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f2f5fa"/>
+    <stop offset="45%" stop-color="#8a9aaa"/>
+    <stop offset="100%" stop-color="#dde4ec"/>
+  </linearGradient>
+  <filter id="sh" x="-25%" y="-25%" width="150%" height="150%">
+    <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#7a3a10" flood-opacity="0.18"/>
+  </filter>
+  <filter id="glo" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="3" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+
+<!-- ground shadow -->
+<ellipse cx="40" cy="77" rx="18" ry="3" fill="#000" opacity="0.1"/>
+
+<!-- legendary aura -->
+<circle cx="40" cy="40" r="34" fill="url(#aura)" opacity="0.2">
+  <animate attributeName="r" values="30;36;30" dur="3s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0.12;0.26;0.12" dur="3s" repeatCount="indefinite"/>
+</circle>
+
+<!-- sparkles -->
+<circle cx="8" cy="14" r="1.3" fill="#ffd700">
+  <animate attributeName="opacity" values="0;1;0" dur="2.2s" begin="0s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="14;9;14" dur="2.2s" repeatCount="indefinite"/>
+</circle>
+<circle cx="72" cy="18" r="1.0" fill="#ffe066">
+  <animate attributeName="opacity" values="0;1;0" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="18;13;18" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>
+</circle>
+<circle cx="74" cy="55" r="1.2" fill="#ffd700">
+  <animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="1.5s" repeatCount="indefinite"/>
+</circle>
+<circle cx="6" cy="52" r="1.0" fill="#ffe066">
+  <animate attributeName="opacity" values="0;1;0" dur="2.8s" begin="0.4s" repeatCount="indefinite"/>
+</circle>
+
+<!-- float group -->
+<g>
+  <animateTransform attributeName="transform" type="translate"
+    values="0,0;0,-5;0,0" dur="3s" ease="ease-in-out" repeatCount="indefinite"/>
+
+  <!-- ── BIG SOFT ROUND HEAD ── -->
+  <!-- wide chibi head — full cheeks, round -->
+  <ellipse cx="40" cy="44" rx="26" ry="25" fill="url(#face)" filter="url(#sh)"/>
+
+  <!-- ── HAIR: dark bowl cut ──
+       Natural fringe falls across forehead unevenly, slightly parted
+       side curtains that frame the face -->
+  <!-- hair cap -->
+  <ellipse cx="40" cy="26" rx="26" ry="14" fill="url(#hairG)"/>
+  <!-- fringe: sweeps down, not a hard line — slightly more on left side -->
+  <path d="M14,36
+    Q15,19 40,18
+    Q65,19 66,36
+    Q60,27 52,29
+    Q46,31 40,30
+    Q35,31 28,29
+    Q20,27 14,36 Z"
+    fill="url(#hairG)"/>
+  <!-- left side curtain -->
+  <path d="M14,36 Q10,46 12,57 Q14,62 18,60 Q15,49 16,40 Z" fill="url(#hairG)"/>
+  <!-- right side curtain -->
+  <path d="M66,36 Q70,46 68,57 Q66,62 62,60 Q65,49 64,40 Z" fill="url(#hairG)"/>
+  <!-- fine fringe strands for softness -->
+  <path d="M26,29 Q24,36 25,41" stroke="#1a1410" stroke-width="1.1" fill="none" opacity="0.45"/>
+  <path d="M33,27 Q31,34 32,40" stroke="#1a1410" stroke-width="1.1" fill="none" opacity="0.35"/>
+  <path d="M47,27 Q49,34 48,40" stroke="#1a1410" stroke-width="1.1" fill="none" opacity="0.35"/>
+  <path d="M54,29 Q56,36 55,41" stroke="#1a1410" stroke-width="1.1" fill="none" opacity="0.45"/>
+  <!-- hair shine -->
+  <path d="M22,22 Q38,15 52,20" stroke="#4a3c2c" stroke-width="3"
+    fill="none" stroke-linecap="round" opacity="0.32"/>
+
+  <!-- ── CHEEK BLUSH ── -->
+  <ellipse cx="18" cy="54" rx="7" ry="5" fill="url(#blushL)"/>
+  <ellipse cx="62" cy="54" rx="7" ry="5" fill="url(#blushR)"/>
+
+  <!-- ── EYEBROWS: thin, soft, almost flat — monolid brows sit low ── -->
+  <path d="M21,35 Q29,33 36,34.5" stroke="#1e1610" stroke-width="1.6"
+    fill="none" stroke-linecap="round"/>
+  <path d="M44,34.5 Q51,33 59,35" stroke="#1e1610" stroke-width="1.6"
+    fill="none" stroke-linecap="round"/>
+
+  <!-- ── EYES: monolid almond shape — horizontal, calm, cute ──
+       Drawn as filled almond paths. Warm dark brown.
+       Small crisp glint. Defined upper lid, soft lower. -->
+
+  <!-- Left eye -->
+  <!-- white of eye visible inside almond -->
+  <path d="M20,42 Q28.5,37 38,42 Q28.5,47 20,42 Z" fill="white"/>
+  <!-- iris: warm dark brown -->
+  <ellipse cx="29" cy="42" rx="5" ry="4.2" fill="#2e1e10"/>
+  <!-- pupil -->
+  <ellipse cx="29" cy="42" rx="2.8" ry="2.8" fill="#100808"/>
+  <!-- iris sheen: subtle warm ring -->
+  <ellipse cx="29" cy="42" rx="5" ry="4.2" fill="none" stroke="#4a3020" stroke-width="0.7"/>
+  <!-- glint: top-left, crisp white -->
+  <ellipse cx="27" cy="40" rx="1.4" ry="1.7" fill="white" opacity="0.92"/>
+  <!-- small secondary glint -->
+  <circle cx="31.5" cy="44" r="0.8" fill="white" opacity="0.5"/>
+  <!-- upper lid line: clean dark arc defining the eye -->
+  <path d="M20,42 Q28.5,37 38,42" stroke="#140e08" stroke-width="1.6"
+    fill="none" stroke-linecap="round"/>
+  <!-- lower lid: softer, lighter -->
+  <path d="M21,42.5 Q28.5,46.5 37,42.5" stroke="#2e1e10" stroke-width="0.8"
+    fill="none" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- Right eye -->
+  <path d="M42,42 Q51.5,37 60,42 Q51.5,47 42,42 Z" fill="white"/>
+  <ellipse cx="51" cy="42" rx="5" ry="4.2" fill="#2e1e10"/>
+  <ellipse cx="51" cy="42" rx="2.8" ry="2.8" fill="#100808"/>
+  <ellipse cx="51" cy="42" rx="5" ry="4.2" fill="none" stroke="#4a3020" stroke-width="0.7"/>
+  <ellipse cx="49" cy="40" rx="1.4" ry="1.7" fill="white" opacity="0.92"/>
+  <circle cx="53.5" cy="44" r="0.8" fill="white" opacity="0.5"/>
+  <path d="M42,42 Q51.5,37 60,42" stroke="#140e08" stroke-width="1.6"
+    fill="none" stroke-linecap="round"/>
+  <path d="M43,42.5 Q51.5,46.5 59,42.5" stroke="#2e1e10" stroke-width="0.8"
+    fill="none" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- ── GLASSES: large hexagonal silver wire frames ──
+       Big frames that sit slightly over the eyes, matching the photo.
+       Hexagonal: clipped top corners. Thin silver wire. -->
+  <!-- left lens hex polygon -->
+  <polygon points="17,37 19,33 37,33 39,37 39,48 37,51 19,51 17,48"
+    fill="rgba(180,210,250,0.07)" stroke="url(#silv)" stroke-width="1.8"
+    stroke-linejoin="round"/>
+  <!-- right lens hex polygon -->
+  <polygon points="41,37 43,33 59,33 61,37 61,48 59,51 43,51 41,48"
+    fill="rgba(180,210,250,0.07)" stroke="url(#silv)" stroke-width="1.8"
+    stroke-linejoin="round"/>
+  <!-- nose bridge -->
+  <path d="M39,42 Q40,40.5 41,42" stroke="#aabbc8" stroke-width="1.5"
+    fill="none" stroke-linecap="round"/>
+  <!-- left temple arm -->
+  <path d="M17,43 Q12,42 10,41" stroke="#9aaab8" stroke-width="1.5"
+    fill="none" stroke-linecap="round"/>
+  <!-- right temple arm -->
+  <path d="M61,43 Q66,42 68,41" stroke="#9aaab8" stroke-width="1.5"
+    fill="none" stroke-linecap="round"/>
+  <!-- lens glare: two short white strokes top-left each lens -->
+  <path d="M19,35.5 L23,35.5" stroke="rgba(255,255,255,0.75)" stroke-width="1.2"
+    stroke-linecap="round"/>
+  <path d="M19,37.5 L21.5,37.5" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"
+    stroke-linecap="round"/>
+  <path d="M43,35.5 L47,35.5" stroke="rgba(255,255,255,0.75)" stroke-width="1.2"
+    stroke-linecap="round"/>
+  <path d="M43,37.5 L45.5,37.5" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"
+    stroke-linecap="round"/>
+
+  <!-- ── NOSE: two tiny soft dots ── -->
+  <circle cx="37.5" cy="57" r="1.2" fill="#c08060" opacity="0.4"/>
+  <circle cx="42.5" cy="57" r="1.2" fill="#c08060" opacity="0.4"/>
+
+  <!-- ── MOUTH: small relaxed smile, full lips ── -->
+  <!-- upper lip: cupid's bow -->
+  <path d="M34,62 Q36.5,60 40,61.5 Q43.5,60 46,62"
+    stroke="#b87060" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- lower lip: gentle curve, slightly filled -->
+  <path d="M33.5,62 Q40,67.5 46.5,62"
+    stroke="#c07858" stroke-width="1.5"
+    fill="rgba(220,140,110,0.2)" stroke-linecap="round"/>
+
+  <!-- ── LEGENDARY CROWN STAR ── -->
+  <g transform="translate(40,11)" filter="url(#glo)">
+    <!-- soft pulse ring -->
+    <circle cx="0" cy="0" r="7" fill="#ffd700" opacity="0.08">
+      <animate attributeName="r" values="5;10;5" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.05;0.2;0.05" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <!-- 5-point star -->
+    <polygon
+      points="0,-9 2.1,-3.1 8.6,-2.8 3.5,1.3 5.3,8.1 0,4.5 -5.3,8.1 -3.5,1.3 -8.6,-2.8 -2.1,-3.1"
+      fill="#ffd700" stroke="#e09000" stroke-width="0.6">
+      <animate attributeName="opacity" values="0.88;1;0.88" dur="1.8s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate"
+        values="0;12;0;-12;0" dur="4s" repeatCount="indefinite"/>
+    </polygon>
+    <!-- gem centre -->
+    <circle cx="0" cy="0" r="2.5" fill="#fff9cc"/>
+    <circle cx="-0.7" cy="-0.7" r="1" fill="white" opacity="0.7"/>
+  </g>
+
+</g>
+</svg>`;
+
 const PETS=[
-  {id:'cat',emoji:'🐱',zh:'幸运猫',en:'Lucky Cat',r:'rare',
-   dz:'每轮摸牌后有10%几率额外摸一张',de:'10% chance to draw an extra tile each turn',
-   effect:'extra_draw',lockedBy:'jackpot'},
-  {id:'dragon_pet',emoji:'🐲',zh:'小龙',en:'Baby Dragon',r:'legendary',
-   dz:'赢牌金币额外+80',de:'+80 bonus coins on win',
-   effect:'win_bonus_80',lockedBy:'jackpot'},
-  {id:'phoenix',emoji:'🦅',zh:'凤凰',en:'Phoenix',r:'legendary',
-   dz:'输掉时保留50%金币',de:'Keep 50% coins on a loss',
-   effect:'loss_shield',lockedBy:'jackpot'},
-  {id:'panda',emoji:'🐼',zh:'幸运熊猫',en:'Lucky Panda',r:'rare',
-   dz:'对子手牌时+20%金币',de:'+20% coins when winning with pairs',
-   effect:'pair_bonus',lockedBy:'jackpot'},
+  /* ── COMMON ── */
   {id:'koi',emoji:'🐟',zh:'锦鲤',en:'Koi Fish',r:'common',
    dz:'每局开始+15金币',de:'+15 coins at round start',
-   effect:'round_bonus_15',lockedBy:'triple7'},
+   effect:'round_bonus_15',lockedBy:'triple7',
+   unlockHint:'🎰 三连 7️⃣ 解锁'},
+
+  {id:'jade_turtle',emoji:'🐢',zh:'玉龟',en:'Jade Turtle',r:'common',
+   dz:'每10回合牌墙不减少一次（跳过一轮消耗）',de:'Every 10 turns, wall does not decrease once',
+   effect:'wall_save',lockedBy:'triple_mj',
+   unlockHint:'🀄 三连麻将解锁'},
+
+  {id:'sparrow',emoji:'🐦',zh:'麻雀',en:'Lucky Sparrow',r:'common',
+   dz:'弃牌后10%几率立得+5金币',de:'+5 coins on 10% of discards',
+   effect:'discard_bonus',lockedBy:'any_pair',
+   unlockHint:'🎰 任意配对解锁'},
+
+  /* ── RARE ── */
+  {id:'cat',emoji:'🐱',zh:'幸运猫',en:'Lucky Cat',r:'rare',
+   dz:'每轮摸牌后有10%几率额外摸一张',de:'10% chance to draw an extra tile each turn',
+   effect:'extra_draw',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
   {id:'fox',emoji:'🦊',zh:'九尾狐',en:'Nine-Tail Fox',r:'rare',
    dz:'碰牌后有25%几率再摸一张',de:'25% chance to draw after Pong',
-   effect:'pong_draw',lockedBy:'jackpot'},
+   effect:'pong_draw',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
+  {id:'panda',emoji:'🐼',zh:'幸运熊猫',en:'Lucky Panda',r:'rare',
+   dz:'对子手牌时+20%金币',de:'+20% coins when winning with pairs',
+   effect:'pair_bonus',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
+  {id:'white_rabbit',emoji:'🐰',zh:'月兔',en:'Moon Rabbit',r:'rare',
+   dz:'七对和牌时额外+120金币',de:'+120 bonus coins on Seven Pairs win',
+   effect:'seven_pairs_bonus',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
+  {id:'tiger',emoji:'🐯',zh:'白虎',en:'White Tiger',r:'rare',
+   dz:'赢牌时额外扣对手各15金币',de:'On win, deduct 15 coins from each opponent',
+   effect:'win_steal_15',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
+  /* ── LEGENDARY ── */
+  {id:'dragon_pet',emoji:'🐲',zh:'小龙',en:'Baby Dragon',r:'legendary',
+   dz:'赢牌金币额外+80',de:'+80 bonus coins on win',
+   effect:'win_bonus_80',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
+  {id:'phoenix',emoji:'🦅',zh:'凤凰',en:'Phoenix',r:'legendary',
+   dz:'输掉时保留50%金币',de:'Keep 50% coins on a loss',
+   effect:'loss_shield',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
+  {id:'golden_dragon',emoji:'🌟',zh:'金龙神',en:'Golden Dragon God',r:'legendary',
+   dz:'金币倍率永久×1.2，且每赢3局解锁一次金牌奖励',de:'Permanent ×1.2 coin mult; every 3 wins grants a gold reward',
+   effect:'golden_mult',lockedBy:'jackpot',
+   unlockHint:'🎰 三连🐉 JACKPOT解锁'},
+
+  {id:'bryan',emoji:'👓',zh:'Bryan',en:'Bryan',r:'legendary',
+   svgAvatar: BRYAN_SVG,
+   dz:'传说宠物！在场时金币+100%，且每局开始回复20金币',de:'Legendary! +100% coins & recover 20 coins each round start',
+   effect:'bryan_power',lockedBy:'promo',
+   unlockHint:'🎁 专属礼包码解锁 / Unlock via special promo code'},
 ];
 
 /* Pool items (non-pet) */
@@ -709,13 +1102,100 @@ let PD={coins:200,hero:null,inv:{},coinMult:1.0,round:1,pets:{},activePet:null,s
 let G=null,prevScr='scr-title';
 let slotSpinning=false;
 
-/* ═══════════════════════════════ NAV ════════════════════════════════ */
 function showScr(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
 function goTitle(){updTitleCoins();showScr('scr-title');}
 function goHeroSel(){buildHeroes();showScr('scr-hero');}
 function openGacha(){prevScr=document.querySelector('.screen:not(.hidden)')?.id||'scr-title';renderSlotGacha();showScr('scr-gacha');}
 function closeGacha(){renderSlotGacha();showScr(prevScr);}
 function updTitleCoins(){document.getElementById('tcoins').textContent=PD.coins;}
+
+/* ═══════════════════════════════ PROMO CODE SYSTEM ══════════════════ */
+// Each code: { reward: fn(PD)→string desc, once: bool }
+// Add new codes here whenever you want to give mom something special!
+const PROMO_CODES = {
+  // 5 free slot spins (stored as bonus spins)
+  '97988534': {
+    desc: '5次免费老虎机 / 5 Free Slot Spins 🎰',
+    reward(pd){
+      pd.freeSpins = (pd.freeSpins||0) + 5;
+      return '🎰 获得 5 次免费老虎机旋转！\nYou got 5 Free Slot Spins!';
+    }
+  },
+  // Unlock Bryan — the legendary personal pet
+  'Bryan1998': {
+    desc: '解锁传说宠物 Bryan！/ Unlock Legendary Pet Bryan!',
+    reward(pd){
+      pd.pets['bryan'] = true;
+      return '👓 传说宠物 Bryan 已解锁！\nLegendary Pet Bryan Unlocked!';
+    }
+  },
+  // ── Add more codes below this line ──
+  // Example template:
+  // 'YOURCODE': {
+  //   desc: 'What it gives',
+  //   reward(pd){ pd.coins += 500; return '🪙 +500 Gold Coins!'; }
+  // },
+};
+
+// Track redeemed codes in PD so they can't be used twice
+if(!PD.redeemedCodes) PD.redeemedCodes = [];
+
+function openPromo(){
+  document.getElementById('promo-input').value='';
+  document.getElementById('promo-result').className='promo-result';
+  document.getElementById('promo-result').textContent='';
+  updPromoHistory();
+  document.getElementById('promo-overlay').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('promo-input').focus(),120);
+}
+function closePromo(){
+  document.getElementById('promo-overlay').classList.add('hidden');
+}
+function promoInputChange(){
+  // Clear error styling when user types
+  const r=document.getElementById('promo-result');
+  r.className='promo-result';r.textContent='';
+}
+function redeemPromo(){
+  const raw=document.getElementById('promo-input').value.trim();
+  const code=raw.toUpperCase().replace(/\s/g,''); // normalize
+  // Also check original case
+  const key=PROMO_CODES[raw]?raw:(PROMO_CODES[code]?code:null);
+  const result=document.getElementById('promo-result');
+  if(!key){
+    result.className='promo-result error show';
+    result.innerHTML='❌ 无效礼包码 / Invalid code<br><span style="font-size:0.7rem;opacity:0.7;">请检查后重试 · Please check and try again</span>';
+    playTone(200,'sine',0.15,0.2,0.15);
+    return;
+  }
+  if(!PD.redeemedCodes) PD.redeemedCodes=[];
+  if(PD.redeemedCodes.includes(key)){
+    result.className='promo-result error show';
+    result.innerHTML='⚠️ 此礼包码已使用 / Code already redeemed<br><span style="font-size:0.7rem;opacity:0.7;">每个码只能使用一次 · Each code can only be used once</span>';
+    playTone(300,'sine',0.1,0.15,0.15);
+    return;
+  }
+  // Redeem!
+  const entry=PROMO_CODES[key];
+  const msg=entry.reward(PD);
+  PD.redeemedCodes.push(key);
+  updTitleCoins();
+  updPromoHistory();
+  // Celebration flash
+  result.className='promo-result success show';
+  result.innerHTML=`🎊 兑换成功！/ Redeemed!<br><strong style="font-size:0.9rem;">${msg.replace(/\n/,'<br>')}</strong>`;
+  document.getElementById('promo-input').value='';
+  // Play win sounds
+  playTone(523,'sine',0.12,0.3,0.1);
+  setTimeout(()=>playTone(659,'sine',0.12,0.28,0.1),120);
+  setTimeout(()=>playTone(784,'sine',0.15,0.25,0.15),240);
+  setTimeout(()=>spawnConfetti(),300);
+}
+function updPromoHistory(){
+  const el=document.getElementById('promo-history');
+  if(!PD.redeemedCodes||!PD.redeemedCodes.length){el.textContent='';return;}
+  el.textContent=`已兑换 / Redeemed: ${PD.redeemedCodes.length} 个码 · ${PD.freeSpins||0} 次免费旋转剩余`;
+}
 
 /* ═══════════════════════════════ HERO SELECT ════════════════════════ */
 function buildHeroes(){
@@ -750,24 +1230,148 @@ function tzh(t){return t.suit==='honor'?TILE_ZH[t.num]:TILE_ZH_FULL[t.suit][t.nu
 function tzh_short(t){return t.suit==='honor'?TILE_ZH[t.num]:TILE_ZH[t.suit][t.num-1];}
 function tzh_suit(t){return t.suit==='honor'?'':TILE_SUIT_ZH[t.suit]||'';}
 function ten(t){return t.suit==='honor'?TILE_EN[t.num]:TILE_EN[t.suit][t.num-1];}
-function tileCls(t){if(t.suit==='honor'){let c='s-honor';if(t.num==='chun')c+=' hchun';else if(t.num==='hatsu')c+=' hhatsu';else if(t.num==='haku')c+=' hhaku';return c;}return 's-'+t.suit;}
+function tileCls(t){
+  if(t.suit==='honor'){
+    let c='s-honor';
+    if(t.num==='chun')c+=' hchun';
+    else if(t.num==='hatsu')c+=' hhatsu';
+    else if(t.num==='haku')c+=' hhaku';
+    else if(t.num==='east')c+=' heast';
+    else if(t.num==='south')c+=' hsouth';
+    else if(t.num==='west')c+=' hwest';
+    else if(t.num==='north')c+=' hnorth';
+    return c;
+  }
+  return 's-'+t.suit;
+}
+
+/* ── Pin (餅/Circle) tile — SVG dot patterns, authentic ── */
+function pinSVG(num, w, h){
+  // Dot layouts: positions as [cx%, cy%] of the tile interior
+  const layouts = {
+    1:[[50,50]],
+    2:[[50,25],[50,75]],
+    3:[[50,20],[50,50],[50,80]],
+    4:[[28,28],[72,28],[28,72],[72,72]],
+    5:[[28,22],[72,22],[50,50],[28,78],[72,78]],
+    6:[[28,20],[72,20],[28,50],[72,50],[28,80],[72,80]],
+    7:[[28,16],[72,16],[28,46],[72,46],[28,76],[72,76],[50,31]],
+    8:[[25,18],[50,18],[75,18],[25,50],[75,50],[25,82],[50,82],[75,82]],
+    9:[[25,16],[50,16],[75,16],[25,50],[50,50],[75,50],[25,84],[50,84],[75,84]],
+  };
+  const dots = layouts[num]||[];
+  // Dot radius as % of tile width
+  const r = num===1?18:num<=4?11:num<=6?10:9;
+  const circles = dots.map(([cx,cy])=>{
+    const px = cx/100*w, py = cy/100*h;
+    const rd = r/100*Math.min(w,h);
+    return `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${rd.toFixed(1)}" fill="#1133cc" stroke="#0a2288" stroke-width="${(rd*0.15).toFixed(1)}"/>
+            <circle cx="${(px-rd*0.25).toFixed(1)}" cy="${(py-rd*0.25).toFixed(1)}" r="${(rd*0.35).toFixed(1)}" fill="rgba(255,255,255,0.4)"/>`;
+  }).join('');
+  // Red outer ring for 1-pin
+  const ring = num===1?`<circle cx="${(w/2).toFixed(1)}" cy="${(h/2).toFixed(1)}" r="${(18/100*Math.min(w,h)*1.55).toFixed(1)}" fill="none" stroke="#cc1111" stroke-width="${(1.5).toFixed(1)}"/>`:'';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${ring}${circles}</svg>`;
+}
+
+/* ── Sou (索/Bamboo) tile — SVG bamboo sticks + bird ── */
+function souSVG(num, w, h){
+  // Bamboo stick columns/rows layout
+  const cols = num===1?1:num<=3?1:num<=6?2:3;
+  const perCol = Math.ceil(num/cols);
+  const sw = Math.max(3, w*0.13); // stick width
+  const sh = Math.max(8, (h*0.72)/perCol - 2); // stick height
+  const gap = 2;
+  const totalW = cols*sw+(cols-1)*gap;
+  const totalH = perCol*(sh+gap)-gap;
+  const startX = (w-totalW)/2;
+  const startY = num===1?(h-sh)/2:(h*0.14); // for 1-sou center; others top area
+  let sticks='';
+  let drawn=0;
+  for(let c=0;c<cols;c++){
+    for(let r=0;r<perCol&&drawn<num;r++,drawn++){
+      const x=startX+c*(sw+gap);
+      const y=startY+r*(sh+gap);
+      // bamboo joint lines at 1/3 and 2/3 of stick
+      const j1=y+sh*0.33, j2=y+sh*0.67;
+      sticks+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${sw.toFixed(1)}" height="${sh.toFixed(1)}" rx="2" fill="#1a9933" stroke="#0a5518" stroke-width="0.8"/>
+        <rect x="${x.toFixed(1)}" y="${j1.toFixed(1)}" width="${sw.toFixed(1)}" height="${(sh*0.06).toFixed(1)}" fill="#0a5518" opacity="0.7"/>
+        <rect x="${x.toFixed(1)}" y="${j2.toFixed(1)}" width="${sw.toFixed(1)}" height="${(sh*0.06).toFixed(1)}" fill="#0a5518" opacity="0.7"/>
+        <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(sw*0.3).toFixed(1)}" height="${sh.toFixed(1)}" rx="2" fill="rgba(255,255,255,0.18)"/>`;
+    }
+  }
+  // Bird for all sou tiles: perched at top-center (1-sou: large centered bird)
+  const bx=w/2, by=num===1?h*0.28:h*0.11;
+  const br=num===1?w*0.22:w*0.14;
+  // Simple stylised bird: body ellipse + head + beak + tail
+  const bird=`
+    <ellipse cx="${bx}" cy="${(by+br*0.3).toFixed(1)}" rx="${(br*1.1).toFixed(1)}" ry="${(br*0.65).toFixed(1)}" fill="#1133cc" stroke="#0a2288" stroke-width="0.6"/>
+    <circle cx="${bx}" cy="${(by-br*0.1).toFixed(1)}" r="${(br*0.55).toFixed(1)}" fill="#1133cc" stroke="#0a2288" stroke-width="0.6"/>
+    <circle cx="${bx}" cy="${(by-br*0.1).toFixed(1)}" r="${(br*0.2).toFixed(1)}" fill="white"/>
+    <polygon points="${bx},${(by-br*0.62).toFixed(1)} ${(bx+br*0.6).toFixed(1)},${(by-br*0.85).toFixed(1)} ${(bx+br*0.15).toFixed(1)},${(by-br*0.3).toFixed(1)}" fill="#cc2211"/>
+    <polygon points="${(bx+br*0.8).toFixed(1)},${(by+br*0.5).toFixed(1)} ${(bx+br*1.8).toFixed(1)},${(by+br*1.1).toFixed(1)} ${(bx+br*0.6).toFixed(1)},${(by+br*0.9).toFixed(1)}" fill="#cc2211"/>`;
+  // For 1-sou: show one big bamboo stick behind bird
+  const onestick = num===1?`<rect x="${(w/2-sw/2).toFixed(1)}" y="${(h*0.2).toFixed(1)}" width="${sw.toFixed(1)}" height="${(h*0.65).toFixed(1)}" rx="2" fill="#1a9933" stroke="#0a5518" stroke-width="0.8"/>`:'';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${num===1?onestick:sticks}${bird}</svg>`;
+}
+
+/* ── Man (萬) tile — Chinese numeral + 萬 ── */
+function manHTML(num, sz){
+  const isLg=sz==='t-lg', isMd=sz==='t-md', isDisc=sz==='t-disc';
+  const numCh=['一','二','三','四','五','六','七','八','九'][num-1];
+  const nSz=isLg?'1.3rem':isMd?'1rem':isDisc?'0.9rem':'0.68rem';
+  const sSz=isLg?'0.58rem':isMd?'0.46rem':isDisc?'0.44rem':'0.32rem';
+  return `<span class="tc" style="font-size:${nSz};color:#cc1111;font-family:'Noto Serif SC',serif;">${numCh}</span><span class="ts" style="font-size:${sSz};color:#991111;font-family:'Noto Serif SC',serif;">萬</span>`;
+}
+
+function souTileHTML(num, sz){
+  const isLg=sz==='t-lg', isMd=sz==='t-md', isDisc=sz==='t-disc';
+  const w=isLg?40:isMd?30:isDisc?26:sz==='t-sm'?22:16;
+  const h=isLg?56:isMd?43:isDisc?37:sz==='t-sm'?31:21;
+  return souSVG(num,w,h);
+}
+
+function pinTileHTML(num, sz){
+  const isLg=sz==='t-lg', isMd=sz==='t-md', isDisc=sz==='t-disc';
+  const w=isLg?40:isMd?30:isDisc?26:sz==='t-sm'?22:16;
+  const h=isLg?56:isMd?43:isDisc?37:sz==='t-sm'?31:21;
+  return pinSVG(num,w,h);
+}
+
 function tileEl(t,sz,extra,onclick){
   const full=tzh(t);
   const d=document.createElement('div');
   d.className=`tile ${sz} ${tileCls(t)} ${extra||''}`;
   d.title=`${full} / ${ten(t)}`;
   if(t.suit==='honor'){
-    // Honor tiles: big single character, centered
+    // Honor: big single character — 中(red), 發(green), 白(frame), winds(black)
     d.innerHTML=`<span class="tc">${TILE_ZH[t.num]}</span>`;
+  } else if(t.suit==='sou'){
+    d.innerHTML=souTileHTML(t.num,sz);
+  } else if(t.suit==='pin'){
+    d.innerHTML=pinTileHTML(t.num,sz);
   } else {
-    // Numbered tiles: big number on top, suit label below
-    const num=TILE_ZH[t.suit][t.num-1];
-    const suit=TILE_SUIT_ZH[t.suit];
-    d.innerHTML=`<span class="tc">${num}</span><span class="ts">${suit}</span>`;
+    // man
+    d.innerHTML=manHTML(t.num,sz);
   }
   if(onclick)d.onclick=onclick;return d;
 }
-function backEl(sz){const d=document.createElement('div');d.className=`tile ${sz} tback`;d.innerHTML=`<span class="tc">🀫</span>`;return d;}
+function backEl(sz){
+  const d=document.createElement('div');
+  d.className=`tile ${sz} tback`;
+  // Proper tile back: no emoji, geometric pattern
+  const isLg=sz==='t-lg', isMd=sz==='t-md';
+  const w=isLg?40:isMd?30:sz==='t-disc'?26:sz==='t-sm'?22:16;
+  const h=isLg?56:isMd?43:sz==='t-disc'?37:sz==='t-sm'?31:21;
+  d.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <rect width="${w}" height="${h}" fill="#1a4a88" rx="2"/>
+    <rect x="2" y="2" width="${w-4}" height="${h-4}" fill="none" stroke="#4a8acc" stroke-width="1" rx="1"/>
+    <line x1="${w/2}" y1="2" x2="${w/2}" y2="${h-2}" stroke="#2a5a99" stroke-width="0.5"/>
+    <line x1="2" y1="${h/2}" x2="${w-2}" y2="${h/2}" stroke="#2a5a99" stroke-width="0.5"/>
+    <circle cx="${w/2}" cy="${h/2}" r="${Math.min(w,h)*0.2}" fill="none" stroke="#4a8acc" stroke-width="0.8"/>
+    <circle cx="${w/2}" cy="${h/2}" r="${Math.min(w,h)*0.08}" fill="#6aaaee"/>
+  </svg>`;
+  return d;
+}
 
 /* ═══════════════════════════════ WIN DETECTION ══════════════════════ */
 function canFormSets(tiles){if(tiles.length===0)return true;return _cfs([...tiles].sort(tcmp));}
@@ -785,7 +1389,102 @@ function isWin(hand,melds){
   return false;
 }
 
-/* ═══════════════════════════════ AI ═════════════════════════════════ */
+
+/* ═══════════════════════════════ SINGAPOREAN TAI (台) SYSTEM ══════════ */
+// Minimum 3 台 to win (Singaporean standard)
+const MIN_TAI = 3;
+
+function calcTai(hand, melds, method, roundWind, seatWind){
+  melds = melds||[];
+  let tai = 0;
+  const reasons = [];
+  const allTiles = [...hand, ...melds.flatMap(m=>m.tiles)];
+  const fullHand = [...hand];
+
+  // Helper: is tile a dragon?
+  const isDragon = t => t.suit==='honor' && ['haku','hatsu','chun'].includes(t.num);
+  // Helper: is tile a wind?
+  const isWind = t => t.suit==='honor' && ['east','south','west','north'].includes(t.num);
+
+  // ── Pong/Kong of Dragons (役牌): 1 台 each
+  melds.forEach(m=>{
+    if((m.type==='pong'||m.type==='kong') && isDragon(m.tiles[0])){
+      tai+=1; reasons.push(`${tzh(m.tiles[0])}碰/杠 +1台`);
+    }
+  });
+  // ── Pong of Round Wind: 1 台
+  melds.forEach(m=>{
+    if((m.type==='pong'||m.type==='kong') && m.tiles[0].suit==='honor' && m.tiles[0].num===roundWind){
+      tai+=1; reasons.push(`圈风碰 +1台`);
+    }
+  });
+  // ── Pong of Seat Wind: 1 台
+  melds.forEach(m=>{
+    if((m.type==='pong'||m.type==='kong') && m.tiles[0].suit==='honor' && m.tiles[0].num===seatWind){
+      tai+=1; reasons.push(`门风碰 +1台`);
+    }
+  });
+
+  // ── Tsumo (自摸): 1 tai
+  if(method==='tsumo'){tai+=1; reasons.push('自摸 +1台');}
+
+  // ── All Pongs (对对和): 3 tai
+  const allPong = melds.length===4 && melds.every(m=>m.type==='pong'||m.type==='kong');
+  if(allPong||_allPongHand(hand,melds)){tai+=3; reasons.push('对对和 +3台');}
+
+  // ── Full flush (清一色): 6 tai
+  const suits = allTiles.filter(t=>t.suit!=='honor').map(t=>t.suit);
+  const honors = allTiles.filter(t=>t.suit==='honor');
+  const uniqueSuits = [...new Set(suits)];
+  if(honors.length===0 && uniqueSuits.length===1){tai+=6; reasons.push('清一色 +6台');}
+  // ── Half flush (混一色): 3 tai
+  else if(uniqueSuits.length===1 && honors.length>0){tai+=3; reasons.push('混一色 +3台');}
+
+  // ── All honors (字一色): 10 tai
+  if(allTiles.every(t=>t.suit==='honor')){tai+=10; reasons.push('字一色 +10台');}
+
+  // ── Seven pairs (七对): 4 tai (no melds allowed)
+  if(!melds.length && hand.length===14){
+    const s=sortH(hand);let ok=true;
+    for(let i=0;i<14;i+=2)if(!teq(s[i],s[i+1])){ok=false;break;}
+    if(ok){tai+=4; reasons.push('七对 +4台');}
+  }
+
+  // ── All terminals & honors (混老头): 8 tai
+  const isTermOrHonor = t => t.suit==='honor' || t.num===1 || t.num===9;
+  if(allTiles.every(isTermOrHonor)){tai+=8; reasons.push('混老头 +8台');}
+
+  // ── No melds (门清): 1 tai
+  if(melds.length===0){tai+=1; reasons.push('门清 +1台');}
+
+  // ── Consecutive pongs of 1+2+3 dragons (大三元): 16 tai
+  const dragonPongs = melds.filter(m=>(m.type==='pong'||m.type==='kong')&&isDragon(m.tiles[0]));
+  if(dragonPongs.length===3){tai+=16; reasons.push('大三元 +16台');}
+
+  // ── All 4 winds ponged (大四喜): 16 tai
+  const windPongs = melds.filter(m=>(m.type==='pong'||m.type==='kong')&&isWind(m.tiles[0]));
+  if(windPongs.length===4){tai+=16; reasons.push('大四喜 +16台');}
+
+  return {tai, reasons};
+}
+
+function _allPongHand(hand, melds){
+  // Check if hand (without melds drawn tiles) forms all pongs — simple 7 pairs or meld-heavy
+  if(melds.length===0 && hand.length===14){
+    // Pure pairs check done in seven pairs; here check if 4 sets are all pongs
+    // (covered by meld check above)
+  }
+  return false;
+}
+
+function taiToCoins(tai){
+  // Singapore standard: 3台 base = 100 coins; each extra tai doubles or +50
+  // Simplified ladder for game currency
+  const ladder={3:100,4:150,5:200,6:300,7:450,8:600,9:800,10:1000};
+  if(tai<=2)return 0; // below minimum
+  if(tai>=10)return 1000+(tai-10)*200;
+  return ladder[tai]||100;
+}
 function aiScore(tile,hand){let sc=0;const o=hand.filter(t=>!teq(t,tile));sc+=o.filter(t=>teq(t,tile)).length*5;if(tile.suit!=='honor'){[-2,-1,1,2].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=2;});[-1,1].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=1;});}return sc;}
 function aiDiscard(pi){const h=G.hands[pi];let min=Infinity,pick=h[0];h.forEach(t=>{const s=aiScore(t,h);if(s<min){min=s;pick=t;}});return pick;}
 function aiWantPong(pi,tile){return G.hands[pi].filter(t=>teq(t,tile)).length>=2;}
@@ -793,20 +1492,29 @@ function aiWantChi(pi,tile,from){if((from+1)%4!==pi||tile.suit==='honor')return 
 
 /* ═══════════════════════════════ COINS ══════════════════════════════ */
 function calcCoins(winner,method){
-  if(winner!==0)return 0;let base=method==='tsumo'?150:100,mult=1;
+  if(winner!==0)return{coins:0,tai:0,reasons:[]};
   const h=G.hands[0],m=G.melds[0];
+  // Singapore Tai scoring
+  const seatWinds=['east','south','west','north'];
+  const seatWind = seatWinds[0]; // player is always East for simplicity
+  const {tai,reasons} = calcTai(h,m,method,G.roundWind,seatWind);
+  let base = taiToCoins(tai);
+  let mult = 1;
+  // Hero bonuses on top of tai
   if(PD.hero?.passive==='fortune')mult*=1.5;
   if(PD.hero?.passive==='dragon'){const drg=h.filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));if(drg.length>=3)mult*=2;else if(drg.length>0)base+=50;}
   if(PD.hero?.passive==='bamboo'){if(h.filter(t=>t.suit==='sou').length>=5)base+=30;}
-  if(PD.hero?.passive==='wind'){if(m.some(mx=>mx.type==='pong'&&mx.tiles[0].suit==='honor'&&HONORS.slice(0,4).includes(mx.tiles[0].num)))base+=20;}
   if(G.starBoost){mult*=2;G.starBoost=false;}
   if(G.luckyRound)mult*=1.2;
   mult*=PD.coinMult;
-  // Pet bonuses
   if(PD.activePet==='dragon_pet')base+=80;
-  if(PD.activePet==='koi')base+=0; // applied at round start
+  if(PD.activePet==='golden_dragon')mult*=1.2;
+  if(PD.activePet==='white_rabbit'&&reasons.some(r=>r.includes('七对')))base+=120;
+  if(PD.activePet==='bryan'){mult*=2; base+=20;}
+  if(PD.activePet==='tiger'){base+=45;} // steal handled separately in endRound
   if(PD.inv['dragonsoul'])base+=100;
-  return Math.round(base*mult);
+  const coins = Math.max(0,Math.round(base*mult));
+  return {coins, tai, reasons};
 }
 
 /* ═══════════════════════════════ HERO ABILITY ANIMATION ═════════════ */
@@ -856,7 +1564,12 @@ function updPetHUD(){
   const pt=document.getElementById('pet-tooltip');
   if(PD.activePet&&G){
     const p=PETS.find(x=>x.id===PD.activePet);
-    pw.classList.remove('hidden');pw.textContent=p?.emoji||'🐾';
+    pw.classList.remove('hidden');
+    if(p?.svgAvatar){
+      pw.innerHTML=`<div style="width:36px;height:36px;overflow:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;">${p.svgAvatar.replace('width="80" height="80"','width="44" height="44"').replace('viewBox="0 0 80 80"','viewBox="10 20 60 55"')}</div>`;
+    } else {
+      pw.textContent=p?.emoji||'🐾';
+    }
     if(pt&&p)pt.innerHTML=`<strong>${p.zh}</strong><br>${p.dz}`;
   } else pw.classList.add('hidden');
 }
@@ -889,6 +1602,8 @@ function initRound(){
   G={wall:deck,hands,melds:[[],[],[],[]],discards:[[],[],[],[]],cur:0,phase:'draw',pending:null,pendingFrom:-1,selIdx:null,selDrawn:false,drawn:null,thunderUsed:false,starBoost:(PD.inv['starboost']||0)>0,luckyRound:(PD.inv['luckycharm']||0)>0,roundWind,wallUsed:0};
   // Koi pet: +15 coins at round start
   if(PD.activePet==='koi'){PD.coins+=15;floatNotif('🐟 锦鲤加持！+15🪙');}
+  if(PD.activePet==='bryan'){PD.coins+=20;floatNotif('👓 Bryan 在场！+20🪙 & 金币×2！/ Bryan is here! +20🪙 & ×2 coins!');}
+  if(PD.activePet==='golden_dragon'){floatNotif('🌟 金龙神加持！金币×1.2！/ Golden Dragon: ×1.2 coins!');}
   updHUD();renderWall();
   if(PD.hero?.passive==='bamboo'&&G.wall.length>0){
     heroAbilityAnim('bamboo');
@@ -940,7 +1655,16 @@ function humanDraw(){
   }
   const full=[...G.hands[0],G.drawn];
   if(isWin(full,G.melds[0])){
-    showActs([{az:'🀄 和牌！',ae:'Win! (Tsumo)',cls:'abtn-win',fn:()=>{hideActs();G.hands[0]=sortH(full);G.drawn=null;endRound(0,'自摸 / Tsumo!',calcCoins(0,'tsumo'));}},{az:'继续打牌',ae:'Continue',cls:'abtn-skip',fn:()=>hideActs()}]);
+    showActs([{az:'🀄 和牌！',ae:'Win! (Tsumo)',cls:'abtn-win',fn:()=>{
+      hideActs();G.hands[0]=sortH(full);G.drawn=null;
+      const {coins,tai,reasons}=calcCoins(0,'tsumo');
+      if(tai<MIN_TAI){
+        // Not enough tai — show info but don't win
+        showModal('⚠️','台数不足 / Too Few Tai',`<strong style="color:#ffaa44">需要至少 ${MIN_TAI} 台才能和牌！/ Need at least ${MIN_TAI} tai to win!</strong><br><br>你现在有 <strong style="color:#ff8888">${tai} 台</strong><br>${reasons.join('<br>')||'无台数役种'}`,[{lz:'继续打牌',le:'Keep Playing',fn:()=>{hideModal();G.drawn=sortH(full)[full.length-1];G.hands[0]=sortH(full.slice(0,-1));renderAll();}}]);
+      } else {
+        endRound(0,'自摸 / Tsumo!',coins,tai,reasons);
+      }
+    }},{az:'继续打牌',ae:'Continue',cls:'abtn-skip',fn:()=>hideActs()}]);
   } else {
     setTurn('🃏 你的回合 — 点选牌，再点打出 / Your turn — tap to select, tap again to discard');
   }
@@ -957,6 +1681,8 @@ function doDiscard(idx,isDrawn){
   else{if(G.drawn){G.hands[0]=sortH([...G.hands[0],G.drawn]);G.drawn=null;}tile=G.hands[0][idx];G.hands[0].splice(idx,1);}
   G.selIdx=null;G.selDrawn=false;G.discards[0].push(tile);G.pending=tile;G.pendingFrom=0;G.phase='action';
   playDiscard();
+  // Sparrow pet: 10% chance +5 coins on discard
+  if(PD.activePet==='sparrow'&&Math.random()<0.10){PD.coins+=5;updHUD();floatNotif('🐦 麻雀：弃牌奖励！+5🪙');}
   document.getElementById('skhint').textContent='';document.getElementById('skbtn').innerHTML='';
   hideAbilityHint();
   renderAll();setTurn('⏳ 等待其他玩家 / Waiting…');
@@ -990,7 +1716,15 @@ function checkClaims(from){
 }
 function checkHumanClaim(tile,from){
   const acts=[],full=[...G.hands[0],tile];
-  if(isWin(full,G.melds[0]))acts.push({az:'🀄 和牌！',ae:'Win! (Ron)',cls:'abtn-win',fn:()=>{hideActs();G.hands[0]=sortH(full);endRound(0,'荣和 / Ron!',calcCoins(0,'ron'));}});
+  if(isWin(full,G.melds[0]))acts.push({az:'🀄 和牌！',ae:'Win! (Ron)',cls:'abtn-win',fn:()=>{
+    hideActs();G.hands[0]=sortH(full);
+    const {coins,tai,reasons}=calcCoins(0,'ron');
+    if(tai<MIN_TAI){
+      showModal('⚠️','台数不足 / Too Few Tai',`<strong style="color:#ffaa44">需要至少 ${MIN_TAI} 台才能和牌！/ Need at least ${MIN_TAI} tai to win!</strong><br><br>你现在有 <strong style="color:#ff8888">${tai} 台</strong><br>${reasons.join('<br>')||'无台数役种'}`,[{lz:'继续打牌',le:'Keep Playing',fn:()=>{hideModal();G.hands[0]=sortH(full.slice(0,-1));renderAll();}}]);
+    } else {
+      endRound(0,'荣和 / Ron!',coins,tai,reasons);
+    }
+  }});
   const mn=G.hands[0].filter(t=>teq(t,tile));
   if(mn.length>=2)acts.push({az:'碰！',ae:'Pong!',cls:'abtn-pong',fn:()=>{hideActs();humanPong(tile);}});
   if(mn.length>=3)acts.push({az:'杠！',ae:'Kong!',cls:'abtn-kong',fn:()=>{hideActs();humanKong(tile);}});
@@ -1067,10 +1801,9 @@ function useThunder(){
 }
 
 /* ═══════════════════════════════ ROUND END ══════════════════════════ */
-function endRound(winner,label,coins){
+function endRound(winner,label,coins,tai,reasons){
   hideActs();hideAbilityHint();G.phase='end';let body='';
   if(winner===0){
-    // Dragon hero animation on win
     if(PD.hero?.passive==='dragon'){
       const drg=G.hands[0].filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));
       if(drg.length>0)heroAbilityAnim('dragon');
@@ -1078,14 +1811,14 @@ function endRound(winner,label,coins){
     PD.coins+=coins;PD.slotStreak=0;
     if(PD.hero?.passive==='thunder')for(let p=1;p<=3;p++)PD.coins+=10;
     playWin();spawnConfetti();
-    body=`<strong>获得 / Gained: 🪙 ${coins} 金币</strong><br>总计 / Total: ${PD.coins} 金币`;
+    const taiStr = tai!=null?`<div style="margin:4px 0;padding:4px 8px;background:rgba(200,150,26,0.15);border-radius:8px;font-size:0.72rem;color:#ffdd88;line-height:1.6;"><strong>🀄 台数: ${tai} 台</strong><br>${(reasons||[]).join(' · ')}</div>`:'';
+    body=`${taiStr}<strong>获得 / Gained: 🪙 ${coins} 金币</strong><br>总计 / Total: ${PD.coins} 金币`;
   } else if(winner===null){
     body='没有人赢，继续下一局！<br>Nobody wins — next round!';
   } else {
     const nameMap={1:'南 South',2:'北 North',3:'西 West'};
     body=`${nameMap[winner]||'AI'} 赢了！<br>Better luck next round!`;
     playLose();
-    // Phoenix pet: keep 50%
     if(PD.activePet==='phoenix'){floatNotif('🦅 凤凰护盾！损失减半！/ Phoenix shield!');}
     if(!G.shieldActive)PD.coins=Math.max(0,PD.coins);
   }
@@ -1099,7 +1832,17 @@ function renderAll(){
   if(!G)return;updHUD();setActivePA();renderTop();renderLeft();renderRight();renderBot();renderCenter();
 }
 function setActivePA(){['top','left','right','bot'].forEach((s,i)=>{const pi=[2,3,1,0][i];const el=document.getElementById('pa-'+s);if(el)el.classList.toggle('active',G.cur===pi);});}
-function renderTop(){const pi=2,th=document.getElementById('th-top');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-sm')));renderMelds('tm-top',pi,'t-sm');renderDisc('td-top',pi,'t-xs');}
+function renderTop(){
+  const pi=2,th=document.getElementById('th-top');
+  th.innerHTML='';
+  th.style.flexWrap='wrap';
+  th.style.justifyContent='center';
+  th.style.maxWidth='100%';
+  th.style.gap='2px';
+  G.hands[pi].forEach(()=>th.appendChild(backEl('t-sm')));
+  renderMelds('tm-top',pi,'t-sm');
+  renderDisc('td-top',pi,'t-xs');
+}
 function renderLeft(){const pi=3,th=document.getElementById('th-left');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));renderDisc('td-left',pi,'t-xs');}
 function renderRight(){const pi=1,th=document.getElementById('th-right');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));renderDisc('td-right',pi,'t-xs');}
 function renderBot(){
@@ -1133,7 +1876,13 @@ function renderCenter(){
   document.getElementById('chint').textContent=hints.join(' ');
   renderWall();
 }
-function setTurn(msg){document.getElementById('tbar').textContent=msg;}
+function setTurn(msg){
+  document.getElementById('tbar').textContent=msg;
+  // In landscape the tbar is hidden — show brief status in round indicator
+  if(window.innerWidth>window.innerHeight){
+    document.getElementById('hround').title=msg;
+  }
+}
 
 /* ═══════════════════════════════ ACTION PANEL ═══════════════════════ */
 function showActs(acts){const p=document.getElementById('actpanel');p.innerHTML='';p.classList.remove('hidden');acts.forEach(a=>{const b=document.createElement('button');b.className='abtn '+a.cls;b.innerHTML=`<span class="az">${a.az}</span><span class="ae">${a.ae}</span>`;b.onclick=()=>{playClick();a.fn();};p.appendChild(b);});}
@@ -1147,6 +1896,46 @@ function showModal(ico,title,body,btns,tiles){
   document.getElementById('overlay').classList.remove('hidden');
 }
 function hideModal(){document.getElementById('overlay').classList.add('hidden');}
+
+/* ═══════════════════════════════ TAI RULES DISPLAY ══════════════════ */
+function showTaiRules(){
+  const rulesHTML=`
+<div style="text-align:left;font-size:0.75rem;line-height:1.8;color:#aaccdd;">
+<div style="font-size:0.82rem;font-weight:700;color:#ffdd88;margin-bottom:6px;">🇸🇬 新加坡麻将 台数规则</div>
+<div style="color:#ff9966;font-weight:700;margin-bottom:4px;">最低 3 台才能和牌！/ Minimum 3 Tai to Win!</div>
+<table style="width:100%;border-collapse:collapse;font-size:0.72rem;">
+<tr style="color:#ffdd88"><td style="padding:1px 4px;"><strong>役种 Yaku</strong></td><td style="text-align:right;padding:1px 4px;"><strong>台数</strong></td></tr>
+<tr><td>自摸 Tsumo</td><td style="text-align:right;color:#88ff88">+1</td></tr>
+<tr><td>门清 Concealed Hand</td><td style="text-align:right;color:#88ff88">+1</td></tr>
+<tr><td>役牌 (中/发/白) Dragon Pong</td><td style="text-align:right;color:#88ff88">+1 each</td></tr>
+<tr><td>圈风碰 Round Wind Pong</td><td style="text-align:right;color:#88ff88">+1</td></tr>
+<tr><td>门风碰 Seat Wind Pong</td><td style="text-align:right;color:#88ff88">+1</td></tr>
+<tr><td>七对 Seven Pairs</td><td style="text-align:right;color:#ffcc44">+4</td></tr>
+<tr><td>对对和 All Pongs</td><td style="text-align:right;color:#ffcc44">+3</td></tr>
+<tr><td>混一色 Half Flush</td><td style="text-align:right;color:#ffcc44">+3</td></tr>
+<tr><td>清一色 Full Flush</td><td style="text-align:right;color:#ff8888">+6</td></tr>
+<tr><td>混老头 Mixed Terminals</td><td style="text-align:right;color:#ff8888">+8</td></tr>
+<tr><td>字一色 All Honors</td><td style="text-align:right;color:#ff8888">+10</td></tr>
+<tr><td>大三元 Big Three Dragons</td><td style="text-align:right;color:#ff4444">+16</td></tr>
+<tr><td>大四喜 Big Four Winds</td><td style="text-align:right;color:#ff4444">+16</td></tr>
+</table>
+<div style="margin-top:8px;font-size:0.7rem;color:#6a9a7a;">台数越高，奖励越多！<br>More tai = more coins! 🪙</div>
+</div>`;
+  showModal('🀄','台数规则 / Tai Rules',rulesHTML,[{lz:'明白了',le:'Got it!',fn:()=>hideModal()}]);
+}
+
+/* Live tai preview in player turn bar */
+function updLiveTai(){
+  if(!G||G.cur!==0)return;
+  const full=[...G.hands[0],...(G.drawn?[G.drawn]:[])];
+  if(isWin(full,G.melds[0])){
+    const method=G.drawn?'tsumo':'ron';
+    const {tai,reasons}=calcTai(full,G.melds[0],method,G.roundWind,'east');
+    const col=tai>=MIN_TAI?'#88ff88':'#ff8888';
+    return `<span style="color:${col};font-weight:700;margin-left:8px;">⬡ ${tai}台${tai<MIN_TAI?' (需'+MIN_TAI+'台)':' ✓'}</span>`;
+  }
+  return '';
+}
 
 /* ═══════════════════════════════ FLOAT NOTIF ════════════════════════ */
 function floatNotif(msg){
@@ -1193,10 +1982,26 @@ let currentSymbols=[null,null,null];
 function spinSlots(numSpins){
   if(slotSpinning)return;
   const cost=numSpins===1?50:120;
-  if(PD.coins<cost){floatNotif(`金币不足！需要 ${cost}🪙`);return;}
-  PD.coins-=cost;
+  // Use free spins first (1 free spin per slot spin call)
+  if((PD.freeSpins||0)>=numSpins){
+    PD.freeSpins-=numSpins;
+    floatNotif(`🎁 免费旋转！剩余 ${PD.freeSpins} 次 / Free spin! ${PD.freeSpins} left`);
+  } else if((PD.freeSpins||0)>0 && numSpins===3){
+    // Partial: use remaining free spins and pay rest
+    const free=PD.freeSpins;
+    const paid=numSpins-free;
+    const partCost=paid===1?50:120;
+    if(PD.coins<partCost){floatNotif(`金币不足！需要 ${partCost}🪙`);return;}
+    PD.freeSpins=0;
+    PD.coins-=partCost;
+    floatNotif(`🎁 使用 ${free} 次免费旋转！/ Used ${free} free spin(s)`);
+  } else {
+    if(PD.coins<cost){floatNotif(`金币不足！需要 ${cost}🪙`);return;}
+    PD.coins-=cost;
+  }
   document.getElementById('gcoins').textContent=PD.coins;
   updTitleCoins();
+  updFreeSpinBtn();
   slotSpinning=true;
   document.getElementById('btn-spin1').disabled=true;
   document.getElementById('btn-spin3').disabled=true;
@@ -1213,6 +2018,26 @@ function spinSlots(numSpins){
       });
     });
   });
+}
+
+function updFreeSpinBtn(){
+  const fs=PD.freeSpins||0;
+  const b1=document.getElementById('btn-spin1');
+  const b3=document.getElementById('btn-spin3');
+  if(b1){
+    if(fs>=1){
+      b1.innerHTML=`🎁 FREE SPIN × 1<br><small style="font-weight:400;font-size:0.68rem;color:#aaffaa">免费旋转 剩余${fs}</small>`;
+    } else {
+      b1.innerHTML=`SPIN × 1<br><small style="font-weight:400;font-size:0.68rem">50 🪙</small>`;
+    }
+  }
+  if(b3){
+    if(fs>=3){
+      b3.innerHTML=`🎁 FREE SPIN × 3<br><small style="font-weight:400;font-size:0.68rem;color:#aaffaa">免费旋转 剩余${fs}</small>`;
+    } else {
+      b3.innerHTML=`SPIN × 3<br><small style="font-weight:400;font-size:0.68rem">120 🪙</small>`;
+    }
+  }
 }
 
 function animateReel(reelIdx,finalSym,spinDur,cb){
@@ -1325,23 +2150,35 @@ function renderSlotGacha(){
   document.getElementById('gstreak').textContent=PD.slotStreak||0;
   initSlotLights();
   initReels();
+  updFreeSpinBtn();
   // Pets grid
   const pg=document.getElementById('pets-grid');pg.innerHTML='';
   PETS.forEach(p=>{
     const unlocked=!!PD.pets[p.id];
     const isActive=PD.activePet===p.id;
-    const rarityColors={common:'#448899',rare:'#aa44ff',legendary:'#ffd700'};
+    const rarityColors={common:'#44aacc',rare:'#aa44ff',legendary:'#ffd700'};
+    const rarityGlow={common:'rgba(68,170,204,0.4)',rare:'rgba(170,68,255,0.45)',legendary:'rgba(255,215,0,0.55)'};
+    const rarityLabel={common:'普通 Common',rare:'稀有 Rare',legendary:'传说 Legendary'};
     const d=document.createElement('div');
     d.className='pet-card'+(unlocked?'':' locked')+(isActive?' active-pet':'');
-    d.style.borderColor=unlocked?rarityColors[p.r]:'#333';
+    d.style.borderColor=unlocked?rarityColors[p.r]:'#2a3a2a';
+    if(unlocked && p.r==='legendary') d.style.boxShadow=`0 0 18px ${rarityGlow[p.r]}, inset 0 0 12px rgba(255,215,0,0.07)`;
+    if(unlocked && p.r==='rare') d.style.boxShadow=`0 0 12px ${rarityGlow[p.r]}`;
+    // Avatar: SVG or emoji
+    const avatarHTML = p.svgAvatar
+      ? `<div class="pet-svg-avatar"${!unlocked?' style="filter:grayscale(1) brightness(0.35) sepia(0);opacity:0.4;"':''}>${p.svgAvatar}</div>`
+      : `<span class="pet-emoji" style="${!unlocked?'filter:grayscale(0.8);opacity:0.45;':''}">${p.emoji}</span>`;
+    const unlockTip = p.unlockHint||'🎰 JACKPOT解锁';
     d.innerHTML=`
       <span class="lock-badge">${unlocked?(isActive?'✅':''):'🔒'}</span>
-      <span class="pet-emoji">${p.emoji}</span>
-      <div class="pet-name" style="color:${rarityColors[p.r]}">${p.zh}</div>
-      <div style="font-size:0.55rem;color:#668888">${p.en}</div>
-      <div class="pet-desc">${p.dz}</div>
-      <div class="pet-rarity" style="color:${rarityColors[p.r]}">${{common:'普通',rare:'稀有',legendary:'传说'}[p.r]}</div>
-      ${unlocked?`<button style="margin-top:4px;font-size:0.55rem;padding:2px 6px;border:1px solid ${rarityColors[p.r]};border-radius:4px;background:rgba(0,0,0,0.4);color:${rarityColors[p.r]};cursor:pointer;" onclick="equipPet('${isActive?null:p.id}')">${isActive?'卸下 Unequip':'装备 Equip'}</button>`:'<div style="font-size:0.58rem;color:#664444;margin-top:4px">🎰 JACKPOT解锁</div>'}
+      ${avatarHTML}
+      <div class="pet-name" style="color:${unlocked?rarityColors[p.r]:'#4a6a4a'}">${p.zh}</div>
+      <div style="font-size:0.52rem;color:${unlocked?'#668899':'#3a5a3a'};margin-bottom:1px;">${p.en}</div>
+      <div class="pet-desc" style="color:${unlocked?'#88aabb':'#3a5a3a'}">${p.dz}</div>
+      <div class="pet-rarity" style="color:${unlocked?rarityColors[p.r]:'#3a5a3a'};font-size:0.52rem;letter-spacing:0.04em;margin-top:2px;">${rarityLabel[p.r]}</div>
+      ${unlocked
+        ? `<button style="margin-top:5px;font-size:0.55rem;padding:3px 8px;border:1px solid ${rarityColors[p.r]};border-radius:6px;background:rgba(0,0,0,0.5);color:${rarityColors[p.r]};cursor:pointer;font-family:inherit;" onclick="equipPet('${isActive?null:p.id}')">${isActive?'卸下 Unequip':'装备 Equip'}</button>`
+        : `<div style="font-size:0.55rem;color:#4a6a4a;margin-top:4px;line-height:1.4;">${unlockTip}</div>`}
     `;
     pg.appendChild(d);
   });
