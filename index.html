@@ -12,17 +12,14 @@
   --gold:#c8961a;--gold-lt:#f0c040;--ivory:#fdf8e8;
   --red:#c41a1a;--ink:#1a1208;
   --man:#b81c1c;--pin:#1c3cb8;--sou:#1a7a30;
+  --felt:#0e4428;--felt-dark:#082a18;--felt-light:#166038;
 }
 body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);color:var(--ivory);min-height:100vh;overflow:hidden;user-select:none;}
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.35s;}
 .screen.hidden{opacity:0;pointer-events:none;}
 
-/* TITLE */
-#scr-title{
-  background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(21,85,51,0.9) 0%,transparent 70%),
-  repeating-linear-gradient(45deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 20px),
-  linear-gradient(160deg,#071a10,#0e2e1c 50%,#071a10);
-}
+/* ══ TITLE ══════════════════════════════════════════════════════════ */
+#scr-title{background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(21,85,51,0.9) 0%,transparent 70%),repeating-linear-gradient(45deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 20px),linear-gradient(160deg,#071a10,#0e2e1c 50%,#071a10);}
 .tdeco{display:flex;align-items:center;gap:14px;margin-bottom:0.4rem;}
 .ttile{width:50px;height:68px;background:linear-gradient(145deg,#fdf8e8,#e8dfa8);border:2px solid var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:var(--red);box-shadow:2px 4px 10px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.8);animation:tfl 3s ease-in-out infinite;}
 .ttile:nth-child(2){animation-delay:.4s}.ttile:nth-child(4){animation-delay:.8s}.ttile:nth-child(5){animation-delay:1.2s}
@@ -37,7 +34,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .btn-out{background:rgba(255,255,255,0.05);border:1.5px solid rgba(200,150,26,0.5);color:var(--gold-lt);backdrop-filter:blur(4px);}
 .tfooter{position:absolute;bottom:14px;font-size:0.68rem;color:#3a6a4a;letter-spacing:0.04em;}
 
-/* HERO SELECT */
+/* ══ HERO ══ */
 #scr-hero{background:linear-gradient(160deg,#050d20,#0a1a38 50%,#050d20);padding:1.5rem;gap:0;}
 .sec-title{font-size:clamp(1.3rem,4vw,1.9rem);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.1rem;}
 .sec-sub{font-size:0.75rem;color:#5a8aaa;letter-spacing:0.1em;margin-bottom:1rem;}
@@ -51,40 +48,48 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .hdesc{font-size:0.63rem;color:#8ab0c8;line-height:1.4;}
 #hinfo{max-width:440px;min-height:42px;text-align:center;font-size:0.78rem;color:#8ab0d0;line-height:1.55;margin-bottom:0.8rem;padding:0 1rem;}
 
-/* GAME SCREEN */
-#scr-game{background:repeating-linear-gradient(0deg,rgba(0,0,0,0.04) 0,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 24px),repeating-linear-gradient(90deg,rgba(0,0,0,0.04) 0,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 24px),radial-gradient(ellipse at 50% 50%,#1f5538,#0b3320 70%);padding:0;justify-content:flex-start;}
-.hud{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;align-items:center;gap:6px;padding:4px 8px;background:rgba(0,0,0,0.58);backdrop-filter:blur(6px);border-bottom:1px solid rgba(200,150,26,0.2);font-size:0.75rem;flex-wrap:nowrap;overflow:hidden;}
+/* ══ GAME ══ */
+#scr-game{background:radial-gradient(ellipse 70% 70% at 50% 50%,var(--felt-light) 0%,var(--felt) 45%,var(--felt-dark) 100%);padding:0;justify-content:flex-start;}
+
+.hud{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;align-items:center;gap:6px;padding:4px 8px;background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,150,26,0.25);font-size:0.75rem;flex-wrap:nowrap;overflow:hidden;}
 .hud-coins{color:var(--gold-lt);font-weight:700;white-space:nowrap;}
 .hud-round{color:#7ab88a;white-space:nowrap;}
-.hud-hero{color:#aac8f0;margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}
+.hud-hero{color:#aac8f0;margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px;}
+.hud-pet{color:#ffcc88;white-space:nowrap;font-size:0.72rem;}
 .nbtn{padding:3px 8px;background:rgba(200,150,26,0.15);border:1px solid rgba(200,150,26,0.35);border-radius:20px;color:var(--gold-lt);cursor:pointer;font-size:0.68rem;font-family:inherit;transition:background 0.15s;white-space:nowrap;flex-shrink:0;}
 .nbtn:hover{background:rgba(200,150,26,0.3);}
-.tbar{position:fixed;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);border:1px solid rgba(200,150,26,0.3);border-radius:20px;padding:2px 12px;font-size:0.68rem;color:var(--gold);z-index:60;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;}
+.tbar{position:fixed;top:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);border:1px solid rgba(200,150,26,0.3);border-radius:20px;padding:2px 12px;font-size:0.68rem;color:var(--gold);z-index:60;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;}
 
-/* BOARD */
-.board{width:100vw;height:100vh;display:grid;grid-template-areas:"top top top" "left center right" "bot bot bot";grid-template-columns:82px 1fr 82px;grid-template-rows:auto 1fr auto;padding:58px 3px 3px 3px;gap:3px;}
+.board{width:100vw;height:100vh;display:grid;grid-template-areas:"top top top" "left center right" "bot bot bot";grid-template-columns:90px 1fr 90px;grid-template-rows:auto 1fr auto;padding:58px 3px 3px 3px;gap:3px;}
 .pa{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .pa.top{grid-area:top;}.pa.left{grid-area:left;justify-content:center;}.pa.right{grid-area:right;justify-content:center;}.pa.bot{grid-area:bot;padding-bottom:4px;}
-.palabel{font-size:0.62rem;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1px 6px;white-space:nowrap;line-height:1.4;transition:border-color 0.3s;}
+.palabel{font-size:0.62rem;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:2px 8px;white-space:nowrap;line-height:1.5;transition:all 0.3s;}
 .palabel .lz{font-weight:700;}.palabel .le{color:#5a886a;font-size:0.56rem;}
-.pa.active .palabel{border-color:var(--gold);color:var(--gold-lt);}
-.center{grid-area:center;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.18);border-radius:10px;gap:4px;padding:6px;}
-.cwind{font-size:1.8rem;color:var(--gold-lt);filter:drop-shadow(0 0 8px rgba(240,192,64,0.5));}
-.cleft{font-size:1.5rem;font-weight:900;color:var(--gold);}
-.clabel{font-size:0.58rem;color:#5a886a;}
-.ldwrap{min-height:48px;display:flex;flex-direction:column;align-items:center;gap:2px;}
-.ldlabel{font-size:0.58rem;color:#5a886a;}
-.chint{font-size:0.62rem;color:#4a7a5a;text-align:center;line-height:1.3;max-width:100px;}
-.discm{display:flex;flex-wrap:wrap;gap:1px;max-width:110px;justify-content:center;}
-.meldrow{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;}
-.mgrp{display:flex;gap:1px;background:rgba(0,0,0,0.25);padding:2px;border-radius:4px;}
-.handrow{display:flex;align-items:flex-end;gap:2px;flex-wrap:nowrap;padding-bottom:2px;}
-.aicol{display:flex;flex-direction:column;gap:2px;}
-.airow{display:flex;gap:2px;}
-.dsep{width:8px;flex-shrink:0;}
+.pa.active .palabel{border-color:var(--gold);color:var(--gold-lt);box-shadow:0 0 10px rgba(240,192,64,0.35);animation:pulse-label 1s ease-in-out infinite alternate;}
+@keyframes pulse-label{from{box-shadow:0 0 6px rgba(240,192,64,0.3)}to{box-shadow:0 0 16px rgba(240,192,64,0.7)}}
 
-/* TILES */
-.tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#fdf9ec,#f0e8c0);border:1.5px solid #a07018;border-radius:4px;box-shadow:1px 2px 5px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.85);cursor:default;transition:transform 0.13s ease,box-shadow 0.13s ease,border-color 0.13s;position:relative;line-height:1;flex-shrink:0;}
+/* ══ CENTER ══ */
+.center{grid-area:center;display:grid;grid-template-areas:"wind-n wind-n wind-n" "wind-w wall-inner wind-e" "wind-s wind-s wind-s";grid-template-columns:auto 1fr auto;grid-template-rows:auto 1fr auto;background:rgba(0,0,0,0.15);border-radius:14px;border:2px solid rgba(200,150,26,0.2);position:relative;overflow:hidden;gap:2px;padding:4px;}
+.wall-strip{display:flex;align-items:center;justify-content:center;gap:1px;padding:2px;}
+.wall-strip.north{grid-area:wind-n;flex-direction:row;}
+.wall-strip.south{grid-area:wind-s;flex-direction:row;}
+.wall-strip.west{grid-area:wind-w;flex-direction:column;}
+.wall-strip.east{grid-area:wind-e;flex-direction:column;}
+.wall-inner{grid-area:wall-inner;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px;position:relative;}
+.center-info{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.cwind{font-size:2.2rem;color:var(--gold-lt);filter:drop-shadow(0 0 10px rgba(240,192,64,0.6));animation:spin-wind 20s linear infinite;}
+@keyframes spin-wind{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.cleft{font-size:1.8rem;font-weight:900;color:var(--gold);text-shadow:0 0 12px rgba(200,150,26,0.6);}
+.clabel{font-size:0.55rem;color:#5a886a;}
+.ldwrap{min-height:48px;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.ldlabel{font-size:0.58rem;color:#5a886a;}
+.chint{font-size:0.6rem;color:#4a7a5a;text-align:center;line-height:1.3;max-width:120px;}
+.discm{display:flex;flex-wrap:wrap;gap:1px;max-width:110px;justify-content:center;}
+.wt{width:14px;height:18px;background:linear-gradient(145deg,#fdf9ec,#e8daa8);border:1px solid #a07018;border-radius:2px;box-shadow:1px 1.5px 3px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.7);flex-shrink:0;transition:all 0.3s;}
+.wt.used{background:linear-gradient(145deg,#2a4a3a,#1a3028)!important;border-color:#1a4a2a!important;opacity:0.4;}
+
+/* ══ TILES ══ */
+.tile{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#fdf9ec,#f0e8c0);border:1.5px solid #a07018;border-radius:4px;box-shadow:1px 2px 6px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 0 rgba(0,0,0,0.1);cursor:default;transition:transform 0.13s ease,box-shadow 0.13s ease,border-color 0.13s;position:relative;line-height:1;flex-shrink:0;}
 .tc{font-weight:700;line-height:1;}.ts{line-height:1;color:#5a4a2a;}
 .t-lg{width:40px;height:56px;}.t-lg .tc{font-size:1.05rem;}.t-lg .ts{font-size:0.52rem;}
 .t-md{width:32px;height:44px;}.t-md .tc{font-size:0.85rem;}.t-md .ts{font-size:0.45rem;}
@@ -92,68 +97,214 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .t-xs{width:18px;height:24px;}.t-xs .tc{font-size:0.52rem;}.t-xs .ts{font-size:0;}
 .s-man .tc{color:var(--man);}.s-pin .tc{color:var(--pin);}.s-sou .tc{color:var(--sou);}
 .s-honor .tc{color:var(--ink);}.s-honor.hchun .tc{color:#c41a1a;}.s-honor.hhatsu .tc{color:#1a7a30;}.s-honor.hhaku .tc{color:#333;}
-.tile.ck{cursor:pointer;}.tile.ck:hover{transform:translateY(-10px);box-shadow:1px 12px 20px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.85);z-index:10;}
-.tile.sel{transform:translateY(-14px)!important;border-color:#e03030!important;box-shadow:0 0 12px rgba(220,50,50,0.7),1px 14px 22px rgba(0,0,0,0.55)!important;z-index:11;}
-.tile.drawn{border-color:var(--gold)!important;box-shadow:0 0 14px rgba(200,150,26,0.8),1px 2px 5px rgba(0,0,0,0.55)!important;animation:dra 0.4s ease-out;}
-@keyframes dra{from{transform:translateY(-25px);opacity:0}to{transform:translateY(0);opacity:1}}
-.tile.clm{border-color:var(--gold-lt)!important;box-shadow:0 0 16px rgba(240,192,64,0.8)!important;animation:clma 0.9s ease-in-out infinite alternate;}
-@keyframes clma{from{box-shadow:0 0 8px rgba(240,192,64,0.5)!important}to{box-shadow:0 0 20px rgba(240,192,64,1)!important}}
+.tile.ck{cursor:pointer;}
+.tile.ck:hover{transform:translateY(-12px);box-shadow:1px 14px 22px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.9);z-index:10;}
+.tile.sel{transform:translateY(-16px)!important;border-color:#e03030!important;box-shadow:0 0 14px rgba(220,50,50,0.8),1px 16px 24px rgba(0,0,0,0.6)!important;z-index:11;}
+.tile.drawn{border-color:var(--gold)!important;box-shadow:0 0 16px rgba(200,150,26,0.9),1px 2px 6px rgba(0,0,0,0.6)!important;animation:dra 0.4s ease-out;}
+@keyframes dra{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.tile.clm{border-color:var(--gold-lt)!important;box-shadow:0 0 18px rgba(240,192,64,0.9)!important;animation:clma 0.8s ease-in-out infinite alternate;}
+@keyframes clma{from{box-shadow:0 0 8px rgba(240,192,64,0.5)!important}to{box-shadow:0 0 22px rgba(240,192,64,1)!important}}
 .tback{background:linear-gradient(145deg,#1c4a8a,#0e2a60)!important;border-color:#2a5aaa!important;}
 .tback .tc{font-size:0.75rem;color:#4a7acc!important;}
 
-/* ACTION PANEL */
-.actpanel{position:fixed;bottom:108px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:100;background:rgba(0,0,0,0.78);backdrop-filter:blur(8px);padding:8px 12px;border-radius:14px;border:1px solid rgba(200,150,26,0.3);flex-wrap:wrap;justify-content:center;max-width:370px;}
+.meldrow{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;}
+.mgrp{display:flex;gap:1px;background:rgba(0,0,0,0.3);padding:2px;border-radius:4px;border:1px solid rgba(200,150,26,0.15);}
+.handrow{display:flex;align-items:flex-end;gap:2px;flex-wrap:nowrap;padding-bottom:2px;}
+.aicol{display:flex;flex-direction:column;gap:2px;}
+.airow{display:flex;gap:2px;}
+.dsep{width:10px;flex-shrink:0;}
+
+/* ══ ACTION PANEL ══ */
+.actpanel{position:fixed;bottom:118px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:100;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);padding:8px 12px;border-radius:14px;border:1px solid rgba(200,150,26,0.4);flex-wrap:wrap;justify-content:center;max-width:400px;animation:rise-up 0.25s ease-out;}
+@keyframes rise-up{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
 .actpanel.hidden{display:none;}
 .abtn{padding:0.4em 0.9em;border-radius:7px;border:2px solid transparent;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;text-align:center;line-height:1.25;}
 .abtn .az{display:block;font-size:1em;}.abtn .ae{display:block;font-size:0.62em;font-weight:400;opacity:0.85;}
-.abtn:hover{transform:translateY(-2px);filter:brightness(1.15);}
-.abtn-win{background:#c01010;border-color:#e82020;color:#fff;}
-.abtn-pong{background:#b05000;border-color:#e07000;color:#fff;}
-.abtn-chi{background:#1030b0;border-color:#2050e0;color:#fff;}
-.abtn-kong{background:#6010b0;border-color:#8030e0;color:#fff;}
+.abtn:hover{transform:translateY(-3px);filter:brightness(1.2);box-shadow:0 6px 16px rgba(0,0,0,0.4);}
+.abtn-win{background:linear-gradient(135deg,#c01010,#e82020);border-color:#ff4040;color:#fff;box-shadow:0 0 12px rgba(220,30,30,0.5);}
+.abtn-pong{background:linear-gradient(135deg,#b05000,#e07000);border-color:#ff8800;color:#fff;}
+.abtn-chi{background:linear-gradient(135deg,#1030b0,#2050e0);border-color:#4070ff;color:#fff;}
+.abtn-kong{background:linear-gradient(135deg,#6010b0,#8030e0);border-color:#a050ff;color:#fff;}
 .abtn-skip{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);color:#888;}
 
-/* OVERLAY */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:200;}
+/* ══ OVERLAY ══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:200;}
 .overlay.hidden{display:none;}
-.modal{background:linear-gradient(145deg,#102840,#08182c);border:2px solid var(--gold);border-radius:16px;padding:1.8rem 1.6rem;text-align:center;max-width:400px;width:90%;box-shadow:0 0 60px rgba(200,150,26,0.3);animation:pin 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+.modal{background:linear-gradient(145deg,#102840,#08182c);border:2px solid var(--gold);border-radius:16px;padding:1.8rem 1.6rem;text-align:center;max-width:400px;width:90%;box-shadow:0 0 60px rgba(200,150,26,0.35);animation:pin 0.35s cubic-bezier(0.34,1.56,0.64,1);}
 @keyframes pin{from{transform:scale(0.6) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
 .mico{font-size:2.8rem;margin-bottom:0.3rem;}.mtitle{font-size:1.4rem;color:var(--gold-lt);margin-bottom:0.3rem;font-weight:700;}
 .mbody{color:#8ab0cc;font-size:0.82rem;line-height:1.55;margin-bottom:0.9rem;}
 .mtiles{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin:0.6rem 0;}
 .mbtns{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;}
 
-/* CONFETTI */
+/* ══ CONFETTI ══ */
 .cfc{position:fixed;inset:0;z-index:190;pointer-events:none;}
 .cfp{position:absolute;top:-10px;width:8px;height:12px;border-radius:2px;animation:cff linear forwards;}
 @keyframes cff{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
-/* GACHA */
-#scr-gacha{background:radial-gradient(ellipse at 30% 20%,rgba(80,20,120,0.5),transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(20,50,100,0.5),transparent 60%),linear-gradient(160deg,#08040f,#0f0820 50%,#08040f);overflow-y:auto;justify-content:flex-start;padding:1.5rem 1rem;gap:10px;}
-.gtitle{font-size:1.9rem;font-weight:900;background:linear-gradient(135deg,#c060ff,#ff80ff,#c060ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 15px rgba(180,80,255,0.5));text-align:center;}
-.gsub{font-size:0.72rem;color:#8a60aa;margin-top:0.2rem;text-align:center;}
+/* ══ FLOAT NOTIF ══ */
+.floatnotif{position:fixed;top:58px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.88);border:1px solid var(--gold);border-radius:12px;padding:6px 18px;font-size:0.82rem;color:var(--gold-lt);z-index:150;pointer-events:none;animation:notif-anim 2.2s ease-out forwards;white-space:nowrap;}
+@keyframes notif-anim{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}75%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
+
+/* ══ HERO ABILITY ANIMATION OVERLAY ══ */
+.hero-anim-overlay{position:fixed;inset:0;z-index:180;pointer-events:none;display:flex;align-items:center;justify-content:center;}
+.hero-anim-burst{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8rem;animation:hero-burst 1.2s ease-out forwards;}
+@keyframes hero-burst{0%{transform:scale(0) rotate(-20deg);opacity:0}30%{transform:scale(1.4) rotate(5deg);opacity:1}60%{transform:scale(1.2) rotate(-2deg);opacity:1}100%{transform:scale(3);opacity:0}}
+.hero-anim-shockwave{position:absolute;inset:0;border-radius:50%;animation:shockwave 0.8s ease-out forwards;}
+@keyframes shockwave{0%{box-shadow:0 0 0 0 rgba(240,192,64,0.8)}100%{box-shadow:0 0 0 200px rgba(240,192,64,0)}}
+.hero-anim-text{position:absolute;top:30%;left:50%;transform:translateX(-50%);font-size:1.4rem;font-weight:900;color:var(--gold-lt);text-shadow:0 0 20px rgba(240,192,64,1);animation:hero-text-pop 1.5s ease-out forwards;white-space:nowrap;text-align:center;}
+@keyframes hero-text-pop{0%{transform:translateX(-50%) scale(0);opacity:0}25%{transform:translateX(-50%) scale(1.2);opacity:1}60%{transform:translateX(-50%) scale(1);opacity:1}100%{transform:translateX(-50%) scale(0.8) translateY(-40px);opacity:0}}
+
+/* ══ ABILITY HINT BANNER ══ */
+.ability-hint{
+  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,rgba(0,30,60,0.95),rgba(0,10,30,0.95));
+  border:2px solid var(--gold-lt);border-radius:14px;
+  padding:8px 16px;z-index:95;max-width:340px;width:90%;
+  text-align:center;box-shadow:0 0 20px rgba(240,192,64,0.3);
+  animation:hint-pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes hint-pop{from{transform:translateX(-50%) scale(0.8) translateY(10px)}to{transform:translateX(-50%) scale(1) translateY(0)}}
+.ability-hint .ahi-icon{font-size:1.6rem;display:block;margin-bottom:4px;}
+.ability-hint .ahi-title{font-size:0.82rem;font-weight:700;color:var(--gold-lt);margin-bottom:2px;}
+.ability-hint .ahi-body{font-size:0.7rem;color:#88ccee;line-height:1.4;}
+.ability-hint .ahi-close{position:absolute;top:4px;right:8px;cursor:pointer;color:#668;font-size:0.7rem;}
+.ability-hint.hidden{display:none;}
+
+/* ══ SKILL BTN ══ */
+#skbtn{margin-top:2px;}
+.skhint{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);font-size:0.68rem;color:#5a886a;pointer-events:none;white-space:nowrap;}
+
+/* ══ PET DISPLAY (in-game) ══ */
+.pet-companion{
+  position:fixed;bottom:160px;right:8px;z-index:70;
+  width:48px;height:48px;
+  background:rgba(0,0,0,0.5);border:2px solid rgba(200,150,26,0.4);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;cursor:pointer;
+  box-shadow:0 0 12px rgba(200,150,26,0.3);
+  animation:pet-bounce 2s ease-in-out infinite;
+  transition:transform 0.2s;
+}
+.pet-companion:hover{transform:scale(1.15);}
+@keyframes pet-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.pet-companion.active-anim{animation:pet-active 0.6s ease-out;}
+@keyframes pet-active{0%{transform:scale(1)}30%{transform:scale(1.4) rotate(10deg)}60%{transform:scale(1.1) rotate(-5deg)}100%{transform:scale(1)}}
+.pet-tooltip{position:fixed;bottom:215px;right:8px;background:rgba(0,0,0,0.9);border:1px solid var(--gold);border-radius:10px;padding:6px 10px;font-size:0.65rem;color:var(--gold-lt);z-index:75;max-width:140px;text-align:center;display:none;}
+.pet-companion:hover+.pet-tooltip{display:block;}
+
+/* ══ SLOT MACHINE ════════════════════════════════════════════════════ */
+#scr-gacha{
+  background:
+    radial-gradient(ellipse at 20% 10%,rgba(120,30,0,0.6),transparent 50%),
+    radial-gradient(ellipse at 80% 90%,rgba(80,0,120,0.5),transparent 50%),
+    linear-gradient(160deg,#0a0000,#1a0808 50%,#0a0000);
+  overflow-y:auto;justify-content:flex-start;padding:1rem 1rem 2rem;gap:8px;
+}
+
+.slot-machine{
+  background:linear-gradient(145deg,#1a0505,#2a0808);
+  border:3px solid #8a2020;border-radius:20px;
+  padding:1rem;width:100%;max-width:420px;
+  box-shadow:0 0 40px rgba(180,30,30,0.4),inset 0 0 20px rgba(0,0,0,0.5);
+  position:relative;
+}
+.slot-machine::before{
+  content:'🎰 MAHJONG SLOTS 🎰';
+  display:block;text-align:center;
+  font-size:0.75rem;font-weight:900;letter-spacing:0.12em;
+  color:#ff8888;text-shadow:0 0 10px rgba(255,100,100,0.8);
+  margin-bottom:8px;
+}
+.slot-lights{display:flex;justify-content:space-between;margin-bottom:8px;}
+.slot-light{width:10px;height:10px;border-radius:50%;background:#ff3333;box-shadow:0 0 6px #ff3333;animation:light-flash 0.5s ease-in-out infinite alternate;}
+.slot-light:nth-child(even){background:#ffcc00;box-shadow:0 0 6px #ffcc00;animation-delay:0.25s;}
+
+/* REELS */
+.slot-reels{display:flex;gap:6px;justify-content:center;margin:8px 0;}
+.reel-wrap{
+  width:72px;height:96px;overflow:hidden;
+  border-radius:8px;
+  background:#000;border:2px solid #5a1010;
+  box-shadow:inset 0 0 12px rgba(0,0,0,0.8),0 0 8px rgba(180,30,30,0.3);
+  position:relative;
+}
+.reel-wrap::before,.reel-wrap::after{
+  content:'';position:absolute;left:0;right:0;height:24px;z-index:5;pointer-events:none;
+}
+.reel-wrap::before{top:0;background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent);}
+.reel-wrap::after{bottom:0;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);}
+.reel-highlight{position:absolute;top:50%;transform:translateY(-50%);left:0;right:0;height:34px;border:2px solid rgba(255,215,0,0.6);z-index:6;pointer-events:none;box-shadow:0 0 8px rgba(255,215,0,0.4);}
+.reel-track{display:flex;flex-direction:column;align-items:center;will-change:transform;}
+.reel-item{width:68px;height:32px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;position:relative;}
+.reel-item.win-row{animation:win-flash 0.4s ease-in-out 3;}
+@keyframes win-flash{0%,100%{background:transparent}50%{background:rgba(255,215,0,0.3)}}
+
+/* PAYLINE */
+.payline{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(0,0,0,0.5);border:1px solid #3a1010;
+  border-radius:8px;padding:4px 8px;margin:6px 0;font-size:0.62rem;color:#cc6666;
+}
+.payline span{flex:1;text-align:center;}
+
+/* SLOT BUTTONS */
+.slot-btn-row{display:flex;gap:8px;justify-content:center;margin-top:8px;}
+.slot-btn{
+  padding:0.6em 1.4em;border-radius:8px;font-family:inherit;font-weight:700;
+  cursor:pointer;font-size:0.82rem;border:2px solid;transition:all 0.15s;
+  position:relative;overflow:hidden;
+}
+.slot-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);pointer-events:none;}
+.slot-btn:hover{transform:translateY(-2px);filter:brightness(1.15);}
+.slot-btn:active{transform:translateY(0);}
+.slot-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.slot-btn-spin1{background:linear-gradient(135deg,#8a0000,#cc2020);color:#fff;border-color:#ff4040;box-shadow:0 0 12px rgba(200,30,30,0.4);}
+.slot-btn-spin3{background:linear-gradient(135deg,#6a0060,#aa20a0);color:#fff;border-color:#dd40cc;box-shadow:0 0 12px rgba(180,30,160,0.4);}
+
+/* ODDS TABLE */
+.odds-table{font-size:0.6rem;color:#886666;text-align:center;margin-top:4px;line-height:1.8;}
+.odds-row{display:flex;align-items:center;justify-content:space-between;padding:1px 4px;}
+.odds-row.jackpot{color:#ffd700;font-weight:700;font-size:0.68rem;}
+
+/* GACHA / SLOT RESULT */
+.slot-result-area{min-height:60px;text-align:center;margin-top:6px;}
+.slot-result-banner{font-size:1.2rem;font-weight:900;animation:result-pop 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes result-pop{from{transform:scale(0)}to{transform:scale(1)}}
+.slot-result-banner.jackpot{color:#ffd700;text-shadow:0 0 20px #ffd700,0 0 40px #ffa500;}
+.slot-result-banner.bigwin{color:#ff88ff;text-shadow:0 0 15px #ff44ff;}
+.slot-result-banner.win{color:#88ffaa;}
+.slot-result-banner.lose{color:#cc4444;}
+
+/* PETS PANEL */
+.pets-panel{width:100%;max-width:420px;}
+.pets-title{font-size:1.1rem;font-weight:900;color:#ffaa44;text-align:center;margin-bottom:6px;text-shadow:0 0 10px rgba(255,150,50,0.5);}
+.pets-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.pet-card{
+  width:88px;background:rgba(255,255,255,0.04);
+  border:2px solid;border-radius:10px;padding:0.5rem 0.3rem;
+  text-align:center;position:relative;cursor:pointer;
+  transition:all 0.2s;
+}
+.pet-card:hover{transform:translateY(-3px);}
+.pet-card.locked{opacity:0.45;filter:grayscale(0.7);border-color:#333;}
+.pet-card.active-pet{box-shadow:0 0 16px var(--gold-lt);}
+.pet-card .lock-badge{position:absolute;top:3px;right:3px;font-size:0.65rem;}
+.pet-emoji{font-size:1.8rem;display:block;margin-bottom:2px;}
+.pet-name{font-size:0.68rem;font-weight:700;}
+.pet-desc{font-size:0.55rem;color:#8aaa88;margin-top:2px;line-height:1.3;}
+.pet-rarity{font-size:0.55rem;margin-top:2px;}
+
+/* GACHA GENERAL */
 .gcbar{background:rgba(255,255,255,0.05);border:1px solid rgba(200,150,26,0.3);border-radius:10px;padding:5px 14px;font-size:0.88rem;color:var(--gold-lt);text-align:center;}
-.gbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-.btn-g1{background:linear-gradient(135deg,#4a1a7a,#7a2aaa);color:#f0d8ff;border:2px solid #8a4acc;}
-.btn-g10{background:linear-gradient(135deg,#7a1a4a,#aa2a7a);color:#ffd8ee;border:2px solid #cc4a8a;}
-.gresults{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:580px;width:100%;}
-.gitem{width:100px;background:rgba(255,255,255,0.04);border:2px solid;border-radius:10px;padding:0.7rem 0.4rem;text-align:center;animation:gin 0.5s cubic-bezier(0.34,1.56,0.64,1) both;}
-@keyframes gin{from{transform:scale(0) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
-.gitem.legendary{border-color:#ffd700;box-shadow:0 0 16px rgba(255,215,0,0.45);}
-.gitem.rare{border-color:#aa44ff;box-shadow:0 0 10px rgba(170,68,255,0.35);}
-.gitem.common{border-color:#448899;}
-.gemoji{font-size:1.9rem;margin-bottom:0.25rem;}.gnamez{font-size:0.78rem;font-weight:700;}.gnamee{font-size:0.6rem;color:#88aabb;}
-.grarity{font-size:0.62rem;margin-top:0.15rem;}.gdesc{font-size:0.58rem;color:#667788;margin-top:2px;line-height:1.3;}
 .invtitle{font-size:0.88rem;color:var(--gold);margin-bottom:0.4rem;}
 .invgrid{display:flex;flex-wrap:wrap;gap:6px;}
 .invitem{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:3px 8px;font-size:0.7rem;display:flex;align-items:center;gap:5px;}
 .invcount{background:var(--gold);color:#1a0e00;border-radius:50%;width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:900;}
-.skhint{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);font-size:0.68rem;color:#5a886a;pointer-events:none;white-space:nowrap;}
+@keyframes light-flash{0%{opacity:0.3}100%{opacity:1}}
 
-/* SKILL BTN AREA */
-#skbtn{margin-top:2px;}
-@media(max-width:480px){.t-lg{width:32px;height:46px;}.t-lg .tc{font-size:0.88rem;}.board{grid-template-columns:68px 1fr 68px;}.hcard{width:116px;}}
-@media(max-width:360px){.t-lg{width:26px;height:38px;}.t-lg .tc{font-size:0.72rem;}.board{grid-template-columns:58px 1fr 58px;}}
+@media(max-width:480px){.t-lg{width:32px;height:46px;}.t-lg .tc{font-size:0.88rem;}.board{grid-template-columns:72px 1fr 72px;}.hcard{width:116px;}}
+@media(max-width:360px){.t-lg{width:26px;height:38px;}.t-lg .tc{font-size:0.72rem;}.board{grid-template-columns:60px 1fr 60px;}}
 </style>
 </head>
 <body>
@@ -161,20 +312,15 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 <!-- TITLE -->
 <div id="scr-title" class="screen">
   <div class="tdeco">
-    <div class="ttile">中</div>
-    <div class="ttile">发</div>
-    <div>
-      <div class="title-logo">麻将传奇</div>
-      <div class="title-sub">✦ Mahjong Legend RPG ✦</div>
-    </div>
-    <div class="ttile">白</div>
-    <div class="ttile">🀄</div>
+    <div class="ttile">中</div><div class="ttile">发</div>
+    <div><div class="title-logo">麻将传奇</div><div class="title-sub">✦ Mahjong Legend RPG ✦</div></div>
+    <div class="ttile">白</div><div class="ttile">🀄</div>
   </div>
   <div class="btnrow">
-    <button class="btn btn-gold" onclick="goHeroSel()">⚔️ 开始游戏 / Start Game</button>
-    <button class="btn btn-out" onclick="openGacha()">🎰 抽卡商店 / Gacha Shop ・ 🪙 <span id="tcoins">200</span></button>
+    <button class="btn btn-gold" onclick="goHeroSel();playClick()">⚔️ 开始游戏 / Start Game</button>
+    <button class="btn btn-out" onclick="openGacha();playClick()">🎰 老虎机商店 / Slot Shop ・ 🪙 <span id="tcoins">200</span></button>
   </div>
-  <div class="tfooter">选择英雄 · 赢取金币 · 抽取稀有卡牌 | Choose Hero · Win Coins · Pull Rare Cards</div>
+  <div class="tfooter">选择英雄 · 解锁宠物 · 赢取金币 | Choose Hero · Unlock Pets · Win Coins</div>
 </div>
 
 <!-- HERO SELECT -->
@@ -184,8 +330,8 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   <div class="hgrid" id="hgrid"></div>
   <div id="hinfo">点击英雄查看详情 / Click a hero to see details</div>
   <div style="display:flex;gap:8px;">
-    <button class="btn btn-gold" id="btngo" onclick="launchGame()" disabled style="opacity:0.4;">出发！/ Let's Go!</button>
-    <button class="btn btn-out" onclick="goTitle()">返回 / Back</button>
+    <button class="btn btn-gold" id="btngo" onclick="launchGame();playClick()" disabled style="opacity:0.4;">出发！/ Let's Go!</button>
+    <button class="btn btn-out" onclick="goTitle();playClick()">返回 / Back</button>
   </div>
 </div>
 
@@ -194,9 +340,10 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   <div class="hud">
     <span class="hud-coins">🪙 <span id="hcoins">0</span></span>
     <span class="hud-round">第 <span id="hround">1</span> 局</span>
+    <span class="hud-pet" id="hud-pet"></span>
     <span class="hud-hero" id="hhero"></span>
-    <button class="nbtn" onclick="openGacha()">🎰 抽卡</button>
-    <button class="nbtn" onclick="goTitle()" style="color:#aa8888;">菜单</button>
+    <button class="nbtn" onclick="openGacha();playClick()">🎰</button>
+    <button class="nbtn" onclick="goTitle();playClick()" style="color:#aa8888;">菜单</button>
   </div>
   <div class="tbar" id="tbar">准备中…</div>
   <div class="board">
@@ -209,22 +356,30 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
     <div class="pa left" id="pa-left">
       <div class="palabel" id="lbl-left"><span class="lz">西</span><br><span class="le">West</span></div>
       <div id="th-left" class="aicol"></div>
-      <div id="td-left" class="discm" style="flex-direction:column;max-width:26px;"></div>
+      <div id="td-left" class="discm" style="flex-direction:column;max-width:28px;"></div>
     </div>
     <div class="center">
-      <div class="cwind" id="cwind">东</div>
-      <div class="cleft" id="cwall">70</div>
-      <div class="clabel">剩余牌 / Tiles Left</div>
-      <div class="ldwrap">
-        <div class="ldlabel" id="cdlbl" style="display:none;">最新出牌 / Last Discard</div>
-        <div id="clast"></div>
+      <div class="wall-strip north" id="wall-n"></div>
+      <div class="wall-strip west" id="wall-w"></div>
+      <div class="wall-inner">
+        <div class="center-info">
+          <div class="cwind" id="cwind">東</div>
+          <div class="cleft" id="cwall">70</div>
+          <div class="clabel">剩余 / Left</div>
+        </div>
+        <div class="ldwrap">
+          <div class="ldlabel" id="cdlbl" style="display:none;">出牌 / Discard</div>
+          <div id="clast"></div>
+        </div>
+        <div class="chint" id="chint"></div>
       </div>
-      <div class="chint" id="chint"></div>
+      <div class="wall-strip east" id="wall-e"></div>
+      <div class="wall-strip south" id="wall-s"></div>
     </div>
     <div class="pa right" id="pa-right">
       <div class="palabel" id="lbl-right"><span class="lz">东</span><br><span class="le">East</span></div>
       <div id="th-right" class="aicol"></div>
-      <div id="td-right" class="discm" style="flex-direction:column;max-width:26px;"></div>
+      <div id="td-right" class="discm" style="flex-direction:column;max-width:28px;"></div>
     </div>
     <div class="pa bot" id="pa-bot">
       <div id="tm-bot" class="meldrow"></div>
@@ -235,6 +390,18 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   </div>
   <div class="actpanel hidden" id="actpanel"></div>
   <div class="skhint" id="skhint"></div>
+
+  <!-- Pet companion widget -->
+  <div class="pet-companion hidden" id="pet-widget" onclick="petActivate()"></div>
+  <div class="pet-tooltip" id="pet-tooltip"></div>
+
+  <!-- Ability hint banner -->
+  <div class="ability-hint hidden" id="ability-hint">
+    <span class="ahi-close" onclick="document.getElementById('ability-hint').classList.add('hidden')">✕</span>
+    <span class="ahi-icon" id="ahi-icon"></span>
+    <div class="ahi-title" id="ahi-title"></div>
+    <div class="ahi-body" id="ahi-body"></div>
+  </div>
 </div>
 
 <!-- OVERLAY -->
@@ -249,765 +416,826 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 </div>
 <div class="cfc" id="cfc"></div>
 
-<!-- GACHA -->
+<!-- HERO ANIM OVERLAY -->
+<div class="hero-anim-overlay hidden" id="hero-anim-overlay">
+  <div class="hero-anim-burst" id="hero-anim-burst"></div>
+  <div class="hero-anim-text" id="hero-anim-text"></div>
+</div>
+
+<!-- SLOT MACHINE / GACHA -->
 <div id="scr-gacha" class="screen hidden">
-  <div class="gtitle">✨ 抽卡商店 / Gacha Shop ✨</div>
-  <div class="gsub">用金币抽取稀有道具！/ Spend coins to pull rare items!</div>
-  <div class="gcbar">🪙 金币 / Coins: <strong id="gcoins">0</strong></div>
-  <div class="gbtns">
-    <button class="btn btn-g1" onclick="pullGacha(1)">单抽 ×1<br><small style="font-weight:400">100 金币/Coins</small></button>
-    <button class="btn btn-g10" onclick="pullGacha(10)">十连 ×10<br><small style="font-weight:400">900 金币/Coins</small></button>
+  <div style="text-align:center;margin-bottom:4px;">
+    <div style="font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,#ff4444,#ffcc00,#ff4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 12px rgba(255,80,80,0.6));">🎰 麻将老虎机</div>
+    <div style="font-size:0.7rem;color:#aa6666;letter-spacing:0.1em;">MAHJONG SLOT MACHINE</div>
   </div>
-  <div class="gresults" id="gresults"></div>
-  <div style="max-width:540px;width:100%;">
+  <div class="gcbar">🪙 金币 / Coins: <strong id="gcoins">0</strong> &nbsp;|&nbsp; 🔥 连赢: <strong id="gstreak">0</strong></div>
+
+  <!-- SLOT MACHINE -->
+  <div class="slot-machine">
+    <div class="slot-lights" id="slot-lights"></div>
+    <div class="slot-reels" id="slot-reels">
+      <div class="reel-wrap"><div class="reel-highlight"></div><div class="reel-track" id="reel-0"></div></div>
+      <div class="reel-wrap"><div class="reel-highlight"></div><div class="reel-track" id="reel-1"></div></div>
+      <div class="reel-wrap"><div class="reel-highlight"></div><div class="reel-track" id="reel-2"></div></div>
+    </div>
+    <div class="slot-result-area" id="slot-result-area"></div>
+    <div class="odds-table">
+      <div class="odds-row jackpot"><span>🐉🐉🐉</span><span>JACKPOT +1000🪙 + 宠物!</span></div>
+      <div class="odds-row" style="color:#ffaa00"><span>7️⃣7️⃣7️⃣</span><span>BIG WIN +500🪙 + 道具</span></div>
+      <div class="odds-row" style="color:#cc88ff"><span>🀄🀄🀄</span><span>WIN +200🪙 + 道具</span></div>
+      <div class="odds-row"><span>任意两个相同</span><span>+50🪙</span></div>
+    </div>
+    <div class="payline">
+      <span>赔率 / ODDS</span>
+      <span>🐉 2%</span><span>7️⃣ 5%</span><span>🀄 8%</span><span>对子 25%</span>
+    </div>
+    <div class="slot-btn-row">
+      <button class="slot-btn slot-btn-spin1" id="btn-spin1" onclick="spinSlots(1)">
+        SPIN × 1<br><small style="font-weight:400;font-size:0.68rem">50 🪙</small>
+      </button>
+      <button class="slot-btn slot-btn-spin3" id="btn-spin3" onclick="spinSlots(3)">
+        SPIN × 3<br><small style="font-weight:400;font-size:0.68rem">120 🪙</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- PETS PANEL -->
+  <div class="pets-panel">
+    <div class="pets-title">🐾 宠物伙伴 / Pet Companions</div>
+    <div style="font-size:0.62rem;color:#886644;text-align:center;margin-bottom:6px;">三连🐉获得宠物 / Win pets from triple 🐉 jackpot!</div>
+    <div class="pets-grid" id="pets-grid"></div>
+  </div>
+
+  <!-- INVENTORY -->
+  <div style="max-width:420px;width:100%;">
     <div class="invtitle">🎒 背包 / Inventory</div>
     <div class="invgrid" id="ginv"></div>
   </div>
-  <button class="btn btn-out" onclick="closeGacha()">返回 / Back</button>
+  <button class="btn btn-out" onclick="closeGacha();playClick()">返回 / Back</button>
 </div>
 
 <script>
 'use strict';
 
-// ─── DATA ────────────────────────────────────────────────────────
-const TILE_ZH = {
-  man:  ['一万','二万','三万','四万','五万','六万','七万','八万','九万'],
-  pin:  ['一饼','二饼','三饼','四饼','五饼','六饼','七饼','八饼','九饼'],
-  sou:  ['一条','二条','三条','四条','五条','六条','七条','八条','九条'],
-  east:'东', south:'南', west:'西', north:'北',
-  haku:'白', hatsu:'发', chun:'中',
-};
-const TILE_EN = {
-  man:  ['1M','2M','3M','4M','5M','6M','7M','8M','9M'],
-  pin:  ['1P','2P','3P','4P','5P','6P','7P','8P','9P'],
-  sou:  ['1S','2S','3S','4S','5S','6S','7S','8S','9S'],
-  east:'East', south:'South', west:'West', north:'North',
-  haku:'White', hatsu:'Green', chun:'Red',
-};
-const HONORS = ['east','south','west','north','haku','hatsu','chun'];
-const SUITS  = ['man','pin','sou'];
+/* ═══════════════════════════════ AUDIO ═══════════════════════════════ */
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+function resumeAC(){if(AC.state==='suspended')AC.resume();}
+document.addEventListener('click',resumeAC,{once:true});
+function playTone(freq,type,dur,vol,decay){
+  try{const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);
+  o.frequency.value=freq;o.type=type||'sine';
+  g.gain.setValueAtTime(vol||0.3,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+(decay||dur||0.3));
+  o.start();o.stop(AC.currentTime+(dur||0.3));}catch(e){}
+}
+function playNoise(dur,vol,freq){
+  try{const buf=AC.createBuffer(1,AC.sampleRate*dur,AC.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*0.3;
+  const src=AC.createBufferSource(),g=AC.createGain(),f=AC.createBiquadFilter();
+  f.type='bandpass';f.frequency.value=freq||1200;f.Q.value=0.8;
+  src.buffer=buf;src.connect(f);f.connect(g);g.connect(AC.destination);
+  g.gain.setValueAtTime(vol||0.4,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+dur);
+  src.start();src.stop(AC.currentTime+dur);}catch(e){}
+}
+function playClick(){playTone(880,'square',0.05,0.15,0.05);}
+function playShuffle(){for(let i=0;i<6;i++)setTimeout(()=>playNoise(0.04,0.25+Math.random()*0.15),i*60);}
+function playDraw(){playNoise(0.06,0.3);setTimeout(()=>playTone(1200,'sine',0.08,0.18,0.08),40);}
+function playDiscard(){playNoise(0.07,0.35);playTone(500,'triangle',0.07,0.2,0.07);}
+function playPong(){playTone(440,'square',0.05,0.3);setTimeout(()=>playTone(550,'square',0.05,0.25),80);setTimeout(()=>playTone(660,'square',0.08,0.2),160);setTimeout(()=>playNoise(0.1,0.3),50);}
+function playChi(){playTone(350,'triangle',0.05,0.25);setTimeout(()=>playTone(490,'triangle',0.05,0.2),70);setTimeout(()=>playTone(620,'triangle',0.08,0.18),140);}
+function playKong(){for(let i=0;i<4;i++)setTimeout(()=>{playNoise(0.06,0.4);playTone(300+i*80,'square',0.05,0.2);},i*50);}
+function playWin(){const n=[523,659,784,1047];n.forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.25,0.35,0.2),i*120));setTimeout(()=>[523,659,784].forEach(f=>playTone(f,'sine',0.6,0.25,0.5)),600);}
+function playLose(){[440,392,349,330].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.25,0.2,0.25),i*150));}
+function playRon(){playTone(880,'sawtooth',0.08,0.4);setTimeout(()=>playTone(1100,'sawtooth',0.1,0.35),100);setTimeout(()=>playTone(1320,'sine',0.3,0.3,0.25),200);}
+function playSlotSpin(){
+  let t=0;
+  for(let i=0;i<8;i++){
+    setTimeout(()=>playNoise(0.03,0.2,800+Math.random()*400),t);
+    t+=60+i*10;
+  }
+}
+function playSlotStop(){playNoise(0.08,0.4,600);playTone(440,'square',0.06,0.25);}
+function playSlotJackpot(){
+  const m=[523,587,659,698,784,880,988,1047];
+  m.forEach((f,i)=>{setTimeout(()=>playTone(f,'sine',0.3,0.4,0.25),i*80);});
+  setTimeout(()=>{[523,659,784,1047].forEach(f=>playTone(f,'sine',1.0,0.3,0.8));},700);
+}
+function playSlotBigWin(){[523,659,784].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.3,0.3,0.25),i*100));}
+function playHeroAbility(hero){
+  switch(hero){
+    case'dragon':playTone(200,'sawtooth',0.1,0.5);setTimeout(()=>playTone(400,'sawtooth',0.2,0.4),100);setTimeout(()=>playTone(600,'sine',0.4,0.35,0.35),250);break;
+    case'bamboo':playTone(880,'triangle',0.05,0.3);setTimeout(()=>playTone(1100,'triangle',0.05,0.25),80);setTimeout(()=>playTone(1320,'triangle',0.1,0.2),160);break;
+    case'fortune':playTone(1046,'sine',0.05,0.3);setTimeout(()=>playNoise(0.1,0.2,1500),30);[523,659,784,1046].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.12,0.25,0.1),i*60));break;
+    case'wind':for(let i=0;i<6;i++)setTimeout(()=>playNoise(0.05,0.15,300+i*100),i*40);break;
+    case'thunder':playTone(120,'sawtooth',0.15,0.5);setTimeout(()=>playNoise(0.2,0.6,2000),50);setTimeout(()=>playTone(880,'square',0.1,0.3),150);break;
+  }
+}
 
-const HEROES = [
+/* ═══════════════════════════════ DATA ════════════════════════════════ */
+const TILE_ZH={man:['一万','二万','三万','四万','五万','六万','七万','八万','九万'],pin:['一饼','二饼','三饼','四饼','五饼','六饼','七饼','八饼','九饼'],sou:['一条','二条','三条','四条','五条','六条','七条','八条','九条'],east:'东',south:'南',west:'西',north:'北',haku:'白',hatsu:'发',chun:'中'};
+const TILE_EN={man:['1M','2M','3M','4M','5M','6M','7M','8M','9M'],pin:['1P','2P','3P','4P','5P','6P','7P','8P','9P'],sou:['1S','2S','3S','4S','5S','6S','7S','8S','9S'],east:'East',south:'South',west:'West',north:'North',haku:'White',hatsu:'Green',chun:'Red'};
+const HONORS=['east','south','west','north','haku','hatsu','chun'];
+const SUITS=['man','pin','sou'];
+const WIND_SYMBOLS={east:'東',south:'南',west:'西',north:'北'};
+
+const HEROES=[
   {id:'dragon',emoji:'🐉',zh:'龙王',en:'Dragon King',
-   dz:'龙牌（中发白）赢牌额外+50金币；三龙在手翻倍！',de:'Dragon tiles give +50 bonus; triple dragons double payout!',passive:'dragon'},
+   dz:'龙牌赢牌额外+50金币；三龙在手翻倍！',de:'Dragon tiles give +50 bonus; triple dragons double payout!',passive:'dragon',
+   abilityName:'龙焰降临 / Dragon Flame',
+   abilityWhen:'当你的手牌有中・发・白时自动激活！/ Auto-activates when you hold 中, 发, or 白 tiles!',
+   abilityTrigger:'赢牌时',anim:'🐉',animColor:'#ff4400',animText:'🔥 龙焰降临！\nDRAGON BONUS！'},
   {id:'bamboo',emoji:'🎋',zh:'竹仙',en:'Bamboo Sage',
-   dz:'开局可以看墙顶1张；条牌为主赢牌额外+30金币。',de:'Peek 1 tile at start; bamboo-heavy wins give +30 coins.',passive:'bamboo'},
+   dz:'开局可以看墙顶1张；条牌为主赢牌额外+30金币。',de:'Peek 1 tile at start; bamboo-heavy wins give +30 coins.',passive:'bamboo',
+   abilityName:'天眼偷视 / Mystic Peek',
+   abilityWhen:'每局开始自动激活！看墙顶牌。/ Activates automatically at round start! Peek at the top wall tile.',
+   abilityTrigger:'开局自动',anim:'🎋',animColor:'#00cc44',animText:'👁️ 竹仙天眼！\nMYSTIC PEEK！'},
   {id:'fortune',emoji:'💰',zh:'财神',en:'Fortune God',
-   dz:'赢牌金币×1.5；每次碰牌获得+10金币。',de:'Win coins ×1.5; earn +10 coins on each Pong.',passive:'fortune'},
+   dz:'赢牌金币×1.5；每次碰牌获得+10金币。',de:'Win coins ×1.5; earn +10 coins on each Pong.',passive:'fortune',
+   abilityName:'财神降临 / Fortune Boost',
+   abilityWhen:'碰牌时获得+10金币！赢牌自动×1.5倍！/ Earn +10🪙 on every Pong! Win coins are auto ×1.5!',
+   abilityTrigger:'碰牌时+赢牌时',anim:'💰',animColor:'#ffcc00',animText:'💰 财神到！\nFORTUNE BONUS！'},
   {id:'wind',emoji:'🌪️',zh:'风神',en:'Wind God',
-   dz:'风牌对子额外+20金币；风牌碰牌特别优化。',de:'Wind pair bonus +20 coins; strong with wind tiles.',passive:'wind'},
+   dz:'风牌对子额外+20金币；风牌碰牌特别优化。',de:'Wind pair bonus +20 coins; strong with wind tiles.',passive:'wind',
+   abilityName:'风神之力 / Wind Power',
+   abilityWhen:'碰风牌（东南西北）时激活！赢牌+20金币。/ Activates when Ponging wind tiles! +20🪙 on win.',
+   abilityTrigger:'碰风牌时',anim:'🌪️',animColor:'#44aaff',animText:'🌀 风神之力！\nWIND BONUS！'},
   {id:'thunder',emoji:'⚡',zh:'雷神',en:'Thunder Hero',
-   dz:'每局一次：重新摸刚抽到的牌；赢牌时对手各扣10金币。',de:'Once per round: redraw your drawn tile. Win: opponents lose 10 coins each.',passive:'thunder'},
+   dz:'每局一次：点"⚡雷击换牌"重新摸牌！赢牌时对手各扣10金币。',de:'Once per round: tap "⚡Thunder Redraw" button to swap your drawn tile!',passive:'thunder',
+   abilityName:'雷击换牌 / Thunder Redraw',
+   abilityWhen:'摸牌后，点击底部的"⚡雷击换牌"按钮！每局只能用一次！/ After drawing, tap the "⚡Thunder Redraw" button at the bottom! One use per round!',
+   abilityTrigger:'手动按钮',anim:'⚡',animColor:'#aa44ff',animText:'⚡ 雷击！\nTHUNDER SWAP！'},
 ];
 
-const GPOOL = [
+/* ═══════════════════════════════ PETS ════════════════════════════════ */
+const PETS=[
+  {id:'cat',emoji:'🐱',zh:'幸运猫',en:'Lucky Cat',r:'rare',
+   dz:'每轮摸牌后有10%几率额外摸一张',de:'10% chance to draw an extra tile each turn',
+   effect:'extra_draw',lockedBy:'jackpot'},
+  {id:'dragon_pet',emoji:'🐲',zh:'小龙',en:'Baby Dragon',r:'legendary',
+   dz:'赢牌金币额外+80',de:'+80 bonus coins on win',
+   effect:'win_bonus_80',lockedBy:'jackpot'},
+  {id:'phoenix',emoji:'🦅',zh:'凤凰',en:'Phoenix',r:'legendary',
+   dz:'输掉时保留50%金币',de:'Keep 50% coins on a loss',
+   effect:'loss_shield',lockedBy:'jackpot'},
+  {id:'panda',emoji:'🐼',zh:'幸运熊猫',en:'Lucky Panda',r:'rare',
+   dz:'对子手牌时+20%金币',de:'+20% coins when winning with pairs',
+   effect:'pair_bonus',lockedBy:'jackpot'},
+  {id:'koi',emoji:'🐟',zh:'锦鲤',en:'Koi Fish',r:'common',
+   dz:'每局开始+15金币',de:'+15 coins at round start',
+   effect:'round_bonus_15',lockedBy:'triple7'},
+  {id:'fox',emoji:'🦊',zh:'九尾狐',en:'Nine-Tail Fox',r:'rare',
+   dz:'碰牌后有25%几率再摸一张',de:'25% chance to draw after Pong',
+   effect:'pong_draw',lockedBy:'jackpot'},
+];
+
+/* Pool items (non-pet) */
+const IPOOL=[
   {id:'luckycharm',emoji:'🍀',zh:'幸运符',en:'Lucky Charm',r:'common',dz:'本局金币+20%',de:'+20% coin bonus this round'},
-  {id:'shield',emoji:'🛡️',zh:'护盾',en:'Shield',r:'rare',dz:'免疫一次输局',de:'Block one round loss penalty'},
-  {id:'oracle',emoji:'🔮',zh:'天眼',en:'Oracle Eye',r:'rare',dz:'看对手1张牌',de:'Peek 1 opponent tile'},
+  {id:'shield',emoji:'🛡️',zh:'护盾',en:'Shield',r:'rare',dz:'免疫一次输局',de:'Block one round loss'},
   {id:'diamond',emoji:'💎',zh:'钻石',en:'Diamond',r:'rare',dz:'立即+200金币',de:'+200 coins instantly'},
   {id:'starboost',emoji:'🌟',zh:'星力',en:'Star Boost',r:'rare',dz:'下次赢牌×2',de:'Double coins on next win'},
-  {id:'dragonsoul',emoji:'🐲',zh:'龙魂',en:'Dragon Soul',r:'legendary',dz:'万能牌效果+100金币',de:'+100 coins wildcard bonus next hand'},
+  {id:'dragonsoul',emoji:'🐲',zh:'龙魂',en:'Dragon Soul',r:'legendary',dz:'赢牌额外+100',de:'+100 bonus coins on win'},
   {id:'coincrate',emoji:'🪙',zh:'金币箱',en:'Coin Crate',r:'common',dz:'立即+50金币',de:'Gain 50 coins'},
-  {id:'scroll',emoji:'📜',zh:'古卷',en:'Ancient Scroll',r:'common',dz:'本局额外记分+20',de:'+20 score bonus this round'},
+  {id:'scroll',emoji:'📜',zh:'古卷',en:'Ancient Scroll',r:'common',dz:'本局额外+20',de:'+20 score this round'},
   {id:'trophy',emoji:'🏆',zh:'胜利奖杯',en:'Victory Trophy',r:'legendary',dz:'永久金币+5%',de:'Permanent +5% coin bonus'},
-  {id:'fox',emoji:'🦊',zh:'狐狸精',en:'Fox Spirit',r:'rare',dz:'查看南AI手牌',de:'Peek at South AI hand'},
 ];
 
-// ─── PLAYER DATA ─────────────────────────────────────────────────
-let PD = {
-  coins: 200, hero: null,
-  inv: {}, coinMult: 1.0, round: 1,
-};
-
-// ─── GAME STATE ───────────────────────────────────────────────────
-let G = null;
-let prevScr = 'scr-title';
-let pendingActions = [];
-
-// ─── NAVIGATION ──────────────────────────────────────────────────
-function showScr(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+/* Slot reel symbols with weights (casino-style: mostly losers) */
+const REEL_SYMBOLS=[
+  {s:'💎',w:3,v:'gem'},{s:'🀄',w:6,v:'mj'},{s:'7️⃣',w:4,v:'seven'},
+  {s:'🐉',w:2,v:'dragon'},{s:'⭐',w:8,v:'star'},{s:'🍀',w:9,v:'clover'},
+  {s:'🔔',w:7,v:'bell'},{s:'🍋',w:12,v:'lemon'},{s:'🍒',w:14,v:'cherry'},
+  {s:'❌',w:20,v:'x'},{s:'💨',w:15,v:'miss'},
+];
+function buildWeightedPool(){
+  const pool=[];
+  REEL_SYMBOLS.forEach(sym=>{for(let i=0;i<sym.w;i++)pool.push(sym);});
+  return pool;
 }
-function goTitle(){ updTitleCoins(); showScr('scr-title'); }
-function goHeroSel(){ buildHeroes(); showScr('scr-hero'); }
-function openGacha(){
-  prevScr = document.querySelector('.screen:not(.hidden)')?.id||'scr-title';
-  renderGacha(); showScr('scr-gacha');
-}
-function closeGacha(){ renderGacha(); showScr(prevScr); }
-function updTitleCoins(){ document.getElementById('tcoins').textContent=PD.coins; }
+const RPOOL=buildWeightedPool();
+function spinSymbol(){return RPOOL[Math.floor(Math.random()*RPOOL.length)];}
 
-// ─── HERO SELECT ──────────────────────────────────────────────────
+let PD={coins:200,hero:null,inv:{},coinMult:1.0,round:1,pets:{},activePet:null,slotStreak:0};
+let G=null,prevScr='scr-title';
+let slotSpinning=false;
+
+/* ═══════════════════════════════ NAV ════════════════════════════════ */
+function showScr(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
+function goTitle(){updTitleCoins();showScr('scr-title');}
+function goHeroSel(){buildHeroes();showScr('scr-hero');}
+function openGacha(){prevScr=document.querySelector('.screen:not(.hidden)')?.id||'scr-title';renderSlotGacha();showScr('scr-gacha');}
+function closeGacha(){renderSlotGacha();showScr(prevScr);}
+function updTitleCoins(){document.getElementById('tcoins').textContent=PD.coins;}
+
+/* ═══════════════════════════════ HERO SELECT ════════════════════════ */
 function buildHeroes(){
-  const g=document.getElementById('hgrid'); g.innerHTML='';
+  const g=document.getElementById('hgrid');g.innerHTML='';
   HEROES.forEach(h=>{
     const el=document.createElement('div');
     el.className='hcard'+(PD.hero?.id===h.id?' sel':'');
     el.innerHTML=`<div class="hemoji">${h.emoji}</div><div class="hnamez">${h.zh}</div><div class="hnamee">${h.en}</div><div class="hdesc">${h.dz}</div>`;
-    el.onclick=()=>pickHero(h.id,el);
+    el.onclick=()=>{pickHero(h.id,el);playClick();};
     g.appendChild(el);
-  });
-  setGoBtn();
+  });setGoBtn();
 }
 function pickHero(id,el){
   PD.hero=HEROES.find(h=>h.id===id);
   document.querySelectorAll('.hcard').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');
   const h=PD.hero;
-  document.getElementById('hinfo').innerHTML=`<strong>${h.emoji} ${h.zh} (${h.en})</strong><br><span style="color:#c8e8ff">${h.de}</span>`;
+  document.getElementById('hinfo').innerHTML=`<strong>${h.emoji} ${h.zh} (${h.en})</strong><br><span style="color:#c8e8ff">${h.de}</span><br><span style="color:#aaffaa;font-size:0.72rem">✨ 能力触发: ${h.abilityWhen}</span>`;
   setGoBtn();
 }
-function setGoBtn(){
-  const b=document.getElementById('btngo');
-  b.disabled=!PD.hero; b.style.opacity=PD.hero?'1':'0.4';
-}
+function setGoBtn(){const b=document.getElementById('btngo');b.disabled=!PD.hero;b.style.opacity=PD.hero?'1':'0.4';}
 
-// ─── TILE UTILS ───────────────────────────────────────────────────
+/* ═══════════════════════════════ TILE UTILS ═════════════════════════ */
 function mkT(suit,num){return{suit,num};}
-function createDeck(){
-  const t=[];
-  SUITS.forEach(s=>{for(let n=1;n<=9;n++)for(let c=0;c<4;c++)t.push(mkT(s,n));});
-  HONORS.forEach(h=>{for(let c=0;c<4;c++)t.push(mkT('honor',h));});
-  return t;
-}
-function shuffle(a){
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-  return a;
-}
+function createDeck(){const t=[];SUITS.forEach(s=>{for(let n=1;n<=9;n++)for(let c=0;c<4;c++)t.push(mkT(s,n));});HONORS.forEach(h=>{for(let c=0;c<4;c++)t.push(mkT('honor',h));});return t;}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function teq(a,b){return a.suit===b.suit&&a.num===b.num;}
-const SO={man:0,pin:1,sou:2,honor:3};
-const HO={east:0,south:1,west:2,north:3,haku:4,hatsu:5,chun:6};
-function tcmp(a,b){
-  if(SO[a.suit]!==SO[b.suit])return SO[a.suit]-SO[b.suit];
-  const an=a.suit==='honor'?HO[a.num]:a.num;
-  const bn=b.suit==='honor'?HO[b.num]:b.num;
-  return an-bn;
-}
+const SO={man:0,pin:1,sou:2,honor:3},HO={east:0,south:1,west:2,north:3,haku:4,hatsu:5,chun:6};
+function tcmp(a,b){if(SO[a.suit]!==SO[b.suit])return SO[a.suit]-SO[b.suit];const an=a.suit==='honor'?HO[a.num]:a.num,bn=b.suit==='honor'?HO[b.num]:b.num;return an-bn;}
 function sortH(t){return[...t].sort(tcmp);}
 function tzh(t){return t.suit==='honor'?TILE_ZH[t.num]:TILE_ZH[t.suit][t.num-1];}
 function ten(t){return t.suit==='honor'?TILE_EN[t.num]:TILE_EN[t.suit][t.num-1];}
-
-function tileCls(t){
-  if(t.suit==='honor'){
-    let c='s-honor';
-    if(t.num==='chun')c+=' hchun';
-    else if(t.num==='hatsu')c+=' hhatsu';
-    else if(t.num==='haku')c+=' hhaku';
-    return c;
-  }
-  return 's-'+t.suit;
-}
+function tileCls(t){if(t.suit==='honor'){let c='s-honor';if(t.num==='chun')c+=' hchun';else if(t.num==='hatsu')c+=' hhatsu';else if(t.num==='haku')c+=' hhaku';return c;}return 's-'+t.suit;}
 function tileEl(t,sz,extra,onclick){
-  const zh=tzh(t);
-  let tc,ts;
-  if(t.suit==='honor'){tc=zh;ts='';}
-  else{tc=zh[0];ts=zh.slice(1);}
-  const d=document.createElement('div');
-  d.className=`tile ${sz} ${tileCls(t)} ${extra||''}`;
-  d.title=`${zh} / ${ten(t)}`;
+  const zh=tzh(t);let tc,ts;
+  if(t.suit==='honor'){tc=zh;ts='';}else{tc=zh[0];ts=zh.slice(1);}
+  const d=document.createElement('div');d.className=`tile ${sz} ${tileCls(t)} ${extra||''}`;d.title=`${zh} / ${ten(t)}`;
   d.innerHTML=`<span class="tc">${tc}</span><span class="ts">${ts}</span>`;
-  if(onclick)d.onclick=onclick;
-  return d;
+  if(onclick)d.onclick=onclick;return d;
 }
-function backEl(sz){
-  const d=document.createElement('div');
-  d.className=`tile ${sz} tback`;
-  d.innerHTML=`<span class="tc">🀫</span>`;
-  return d;
-}
+function backEl(sz){const d=document.createElement('div');d.className=`tile ${sz} tback`;d.innerHTML=`<span class="tc">🀫</span>`;return d;}
 
-// ─── WIN DETECTION ────────────────────────────────────────────────
-function canFormSets(tiles){
-  if(tiles.length===0)return true;
-  const s=[...tiles].sort(tcmp);
-  return _cfs(s);
-}
+/* ═══════════════════════════════ WIN DETECTION ══════════════════════ */
+function canFormSets(tiles){if(tiles.length===0)return true;return _cfs([...tiles].sort(tcmp));}
 function _cfs(t){
-  if(t.length===0)return true;
-  const f=t[0],r=t.slice(1);
+  if(t.length===0)return true;const f=t[0],r=t.slice(1);
   if(r.length>=2&&teq(r[0],f)&&teq(r[1],f))if(_cfs(r.slice(2)))return true;
-  if(f.suit!=='honor'){
-    const i2=r.findIndex(x=>x.suit===f.suit&&x.num===f.num+1);
-    if(i2!==-1){
-      const r2=[...r];r2.splice(i2,1);
-      const i3=r2.findIndex(x=>x.suit===f.suit&&x.num===f.num+2);
-      if(i3!==-1){r2.splice(i3,1);if(_cfs(r2))return true;}
-    }
-  }
+  if(f.suit!=='honor'){const i2=r.findIndex(x=>x.suit===f.suit&&x.num===f.num+1);if(i2!==-1){const r2=[...r];r2.splice(i2,1);const i3=r2.findIndex(x=>x.suit===f.suit&&x.num===f.num+2);if(i3!==-1){r2.splice(i3,1);if(_cfs(r2))return true;}}}
   return false;
 }
 function isWin(hand,melds){
-  melds=melds||[];
-  const need=(4-melds.length)*3+2;
-  if(hand.length!==need)return false;
+  melds=melds||[];const need=(4-melds.length)*3+2;if(hand.length!==need)return false;
   const s=sortH(hand);
-  // Seven pairs
-  if(!melds.length&&s.length===14){
-    let ok=true;
-    for(let i=0;i<14;i+=2)if(!teq(s[i],s[i+1])){ok=false;break;}
-    if(ok)return true;
-  }
-  // Standard
-  for(let i=0;i<s.length-1;i++){
-    if(!teq(s[i],s[i+1]))continue;
-    const rem=s.filter((_,j)=>j!==i&&j!==i+1);
-    if(canFormSets(rem))return true;
-    while(i+2<s.length&&teq(s[i],s[i+2]))i++;
-  }
+  if(!melds.length&&s.length===14){let ok=true;for(let i=0;i<14;i+=2)if(!teq(s[i],s[i+1])){ok=false;break;}if(ok)return true;}
+  for(let i=0;i<s.length-1;i++){if(!teq(s[i],s[i+1]))continue;const rem=s.filter((_,j)=>j!==i&&j!==i+1);if(canFormSets(rem))return true;while(i+2<s.length&&teq(s[i],s[i+2]))i++;}
   return false;
 }
 
-// ─── AI LOGIC ─────────────────────────────────────────────────────
-function aiScore(tile,hand){
-  let sc=0;
-  const o=hand.filter(t=>!teq(t,tile));
-  sc+=o.filter(t=>teq(t,tile)).length*5;
-  if(tile.suit!=='honor'){
-    [-2,-1,1,2].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=2;});
-    [-1,1].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=1;});
-  }
-  return sc;
-}
-function aiDiscard(pi){
-  const h=G.hands[pi];
-  let min=Infinity,pick=h[0];
-  h.forEach(t=>{const s=aiScore(t,h);if(s<min){min=s;pick=t;}});
-  return pick;
-}
+/* ═══════════════════════════════ AI ═════════════════════════════════ */
+function aiScore(tile,hand){let sc=0;const o=hand.filter(t=>!teq(t,tile));sc+=o.filter(t=>teq(t,tile)).length*5;if(tile.suit!=='honor'){[-2,-1,1,2].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=2;});[-1,1].forEach(d=>{if(o.some(t=>t.suit===tile.suit&&t.num===tile.num+d))sc+=1;});}return sc;}
+function aiDiscard(pi){const h=G.hands[pi];let min=Infinity,pick=h[0];h.forEach(t=>{const s=aiScore(t,h);if(s<min){min=s;pick=t;}});return pick;}
 function aiWantPong(pi,tile){return G.hands[pi].filter(t=>teq(t,tile)).length>=2;}
-function aiWantChi(pi,tile,from){
-  if((from+1)%4!==pi||tile.suit==='honor')return null;
-  const h=G.hands[pi];
-  const opts=[[tile.num-2,tile.num-1],[tile.num-1,tile.num+1],[tile.num+1,tile.num+2]];
-  for(const[a,b]of opts){
-    if(a<1||b>9)continue;
-    if(h.some(t=>t.suit===tile.suit&&t.num===a)&&h.some(t=>t.suit===tile.suit&&t.num===b))return[a,b];
-  }
-  return null;
-}
+function aiWantChi(pi,tile,from){if((from+1)%4!==pi||tile.suit==='honor')return null;const h=G.hands[pi];for(const[a,b]of[[tile.num-2,tile.num-1],[tile.num-1,tile.num+1],[tile.num+1,tile.num+2]]){if(a<1||b>9)continue;if(h.some(t=>t.suit===tile.suit&&t.num===a)&&h.some(t=>t.suit===tile.suit&&t.num===b))return[a,b];}return null;}
 
-// ─── COINS ────────────────────────────────────────────────────────
+/* ═══════════════════════════════ COINS ══════════════════════════════ */
 function calcCoins(winner,method){
-  if(winner!==0)return 0;
-  let base=method==='tsumo'?150:100;
-  let mult=1;
-  const h=G.hands[0];
-  const m=G.melds[0];
+  if(winner!==0)return 0;let base=method==='tsumo'?150:100,mult=1;
+  const h=G.hands[0],m=G.melds[0];
   if(PD.hero?.passive==='fortune')mult*=1.5;
-  if(PD.hero?.passive==='dragon'){
-    const drg=h.filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));
-    if(drg.length>=3)mult*=2;else if(drg.length>0)base+=50;
-  }
-  if(PD.hero?.passive==='bamboo'){
-    const bam=h.filter(t=>t.suit==='sou');
-    if(bam.length>=5)base+=30;
-  }
-  if(PD.hero?.passive==='wind'){
-    const wp=m.some(mx=>mx.type==='pong'&&mx.tiles[0].suit==='honor'&&HONORS.slice(0,4).includes(mx.tiles[0].num));
-    if(wp)base+=20;
-  }
+  if(PD.hero?.passive==='dragon'){const drg=h.filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));if(drg.length>=3)mult*=2;else if(drg.length>0)base+=50;}
+  if(PD.hero?.passive==='bamboo'){if(h.filter(t=>t.suit==='sou').length>=5)base+=30;}
+  if(PD.hero?.passive==='wind'){if(m.some(mx=>mx.type==='pong'&&mx.tiles[0].suit==='honor'&&HONORS.slice(0,4).includes(mx.tiles[0].num)))base+=20;}
   if(G.starBoost){mult*=2;G.starBoost=false;}
   if(G.luckyRound)mult*=1.2;
   mult*=PD.coinMult;
+  // Pet bonuses
+  if(PD.activePet==='dragon_pet')base+=80;
+  if(PD.activePet==='koi')base+=0; // applied at round start
+  if(PD.inv['dragonsoul'])base+=100;
   return Math.round(base*mult);
 }
 
-// ─── GAME INIT ────────────────────────────────────────────────────
+/* ═══════════════════════════════ HERO ABILITY ANIMATION ═════════════ */
+function heroAbilityAnim(heroId){
+  const h=HEROES.find(x=>x.id===heroId);if(!h)return;
+  playHeroAbility(heroId);
+  const ov=document.getElementById('hero-anim-overlay');
+  const burst=document.getElementById('hero-anim-burst');
+  const txt=document.getElementById('hero-anim-text');
+  burst.textContent=h.anim;
+  burst.style.textShadow=`0 0 60px ${h.animColor}`;
+  txt.innerHTML=h.animText.replace('\n','<br>');
+  txt.style.color=h.animColor;
+  ov.classList.remove('hidden');
+  setTimeout(()=>ov.classList.add('hidden'),1400);
+}
+
+/* ═══════════════════════════════ ABILITY HINT ═══════════════════════ */
+function showAbilityHint(heroId){
+  const h=HEROES.find(x=>x.id===heroId);if(!h)return;
+  const hint=document.getElementById('ability-hint');
+  document.getElementById('ahi-icon').textContent=h.emoji+' '+h.anim;
+  document.getElementById('ahi-title').textContent=h.abilityName;
+  document.getElementById('ahi-body').innerHTML=`<strong style="color:#ffcc44">${h.abilityTrigger}:</strong> ${h.abilityWhen}`;
+  hint.classList.remove('hidden');
+  // Auto-hide after 8s
+  clearTimeout(hint._t);hint._t=setTimeout(()=>hint.classList.add('hidden'),8000);
+}
+function hideAbilityHint(){document.getElementById('ability-hint').classList.add('hidden');}
+
+/* ═══════════════════════════════ PET SYSTEM ═════════════════════════ */
+function unlockPet(petId){
+  if(PD.pets[petId])return false;
+  PD.pets[petId]=true;
+  return true;
+}
+function equipPet(petId){
+  if(!PD.pets[petId]&&petId!==null)return;
+  PD.activePet=petId;
+  updPetHUD();
+  renderSlotGacha();
+}
+function updPetHUD(){
+  const el=document.getElementById('hud-pet');
+  if(PD.activePet){const p=PETS.find(x=>x.id===PD.activePet);el.textContent=p?p.emoji+'·伙伴':'';} else el.textContent='';
+  const pw=document.getElementById('pet-widget');
+  const pt=document.getElementById('pet-tooltip');
+  if(PD.activePet&&G){
+    const p=PETS.find(x=>x.id===PD.activePet);
+    pw.classList.remove('hidden');pw.textContent=p?.emoji||'🐾';
+    if(pt&&p)pt.innerHTML=`<strong>${p.zh}</strong><br>${p.dz}`;
+  } else pw.classList.add('hidden');
+}
+function petActivate(){
+  if(!PD.activePet||!G)return;
+  const p=PETS.find(x=>x.id===PD.activePet);if(!p)return;
+  const pw=document.getElementById('pet-widget');
+  pw.classList.add('active-anim');setTimeout(()=>pw.classList.remove('active-anim'),700);
+  floatNotif(`${p.emoji} ${p.zh} 准备好了！/ ${p.en} Ready!`);
+}
+
+/* ═══════════════════════════════ GAME INIT ══════════════════════════ */
 function launchGame(){
   if(!PD.hero)return;
   showScr('scr-game');
   document.getElementById('hhero').textContent=PD.hero.emoji+' '+PD.hero.zh;
+  updPetHUD();
+  // Show ability hint for new player on first game
+  setTimeout(()=>showAbilityHint(PD.hero.id),1500);
   initRound();
 }
 function initRound(){
+  playShuffle();
   const deck=shuffle(createDeck());
   const hands=[[],[],[],[]];
   for(let i=0;i<13;i++)for(let p=0;p<4;p++)hands[p].push(deck.pop());
   hands[0]=sortH(hands[0]);
-  G={
-    wall:deck,
-    hands:hands,
-    melds:[[],[],[],[]],
-    discards:[[],[],[],[]],
-    cur:0,phase:'draw',
-    pending:null,pendingFrom:-1,
-    selIdx:null,selDrawn:false,
-    drawn:null,
-    thunderUsed:false,
-    starBoost:(PD.inv['starboost']||0)>0,
-    luckyRound:(PD.inv['luckycharm']||0)>0,
-  };
-  updHUD();
+  const winds=['east','south','west','north'];
+  const roundWind=winds[(PD.round-1)%4];
+  G={wall:deck,hands,melds:[[],[],[],[]],discards:[[],[],[],[]],cur:0,phase:'draw',pending:null,pendingFrom:-1,selIdx:null,selDrawn:false,drawn:null,thunderUsed:false,starBoost:(PD.inv['starboost']||0)>0,luckyRound:(PD.inv['luckycharm']||0)>0,roundWind,wallUsed:0};
+  // Koi pet: +15 coins at round start
+  if(PD.activePet==='koi'){PD.coins+=15;floatNotif('🐟 锦鲤加持！+15🪙');}
+  updHUD();renderWall();
   if(PD.hero?.passive==='bamboo'&&G.wall.length>0){
+    heroAbilityAnim('bamboo');
     const pk=G.wall[G.wall.length-1];
-    showModal('🎋','竹仙特技 / Bamboo Sage',
-      `你偷看到了墙顶的牌！<br>You peeked the top wall tile!<br><br><strong style="color:var(--gold-lt)">${tzh(pk)} / ${ten(pk)}</strong>`,
-      [{lz:'知道了',le:'Got it',fn:()=>{hideModal();phaseDraw();}}]);
-  } else phaseDraw();
+    setTimeout(()=>showModal('🎋','竹仙特技 / Bamboo Sage Peek',`<strong style="color:#88ffaa">你偷看了墙顶！/ You peeked!</strong><br><br><span style="font-size:1.2rem">${tzh(pk)} / ${ten(pk)}</span>`,[{lz:'明白了',le:'Got it!',fn:()=>{hideModal();phaseDraw();}}]),700);
+  } else setTimeout(()=>phaseDraw(),400);
   renderAll();
+}
+
+/* ═══════════════════════════════ WALL RENDER ════════════════════════ */
+function renderWall(){
+  if(!G)return;
+  const total=136-(13*4),used=G.wallUsed;
+  ['n','e','s','w'].forEach((s,si)=>{
+    const el=document.getElementById('wall-'+s);if(!el)return;el.innerHTML='';
+    const sUsed=Math.floor(used/4+(si<used%4?1:0));
+    for(let i=0;i<Math.min(Math.floor(total/4),20);i++){const wt=document.createElement('div');wt.className='wt'+(i<sUsed?' used':'');el.appendChild(wt);}
+  });
 }
 
 function updHUD(){
   document.getElementById('hcoins').textContent=PD.coins;
   document.getElementById('hround').textContent=PD.round;
   document.getElementById('cwall').textContent=G?G.wall.length:0;
-  if(G){
-    document.getElementById('gcoins').textContent=PD.coins;
-  }
+  if(G){document.getElementById('gcoins').textContent=PD.coins;const ws=G.roundWind?WIND_SYMBOLS[G.roundWind]:'東';document.getElementById('cwind').textContent=ws;}
 }
 
-// ─── PHASES ───────────────────────────────────────────────────────
+/* ═══════════════════════════════ PHASES ═════════════════════════════ */
 function phaseDraw(){
   if(!G)return;
   if(G.wall.length===0){endRound(null,'流局 / Draw Game',0);return;}
-  G.phase='draw';
-  renderAll();
+  G.phase='draw';renderAll();
   if(G.cur===0)humanDraw();
-  else setTimeout(()=>aiTurn(G.cur),600);
+  else setTimeout(()=>aiTurn(G.cur),700);
 }
-
 function humanDraw(){
   if(G.wall.length===0){endRound(null,'流局 / Draw Game',0);return;}
-  G.drawn=G.wall.pop();
+  G.drawn=G.wall.pop();G.wallUsed++;
   G.phase='discard';G.selIdx=null;G.selDrawn=false;
-  updHUD();
-  renderAll();
+  playDraw();updHUD();renderAll();renderWall();
+  // Cat pet: 10% chance extra draw
+  if(PD.activePet==='cat'&&Math.random()<0.10&&G.wall.length>0){
+    setTimeout(()=>{
+      const extra=G.wall.pop();G.wallUsed++;
+      G.hands[0]=sortH([...G.hands[0],extra]);
+      floatNotif('🐱 幸运猫：额外摸牌！/ Lucky Cat: Extra draw!');
+      renderAll();renderWall();updHUD();
+    },500);
+  }
   const full=[...G.hands[0],G.drawn];
   if(isWin(full,G.melds[0])){
-    showActs([
-      {az:'🀄 和牌！',ae:'Win! (Tsumo)',cls:'abtn-win',fn:()=>{hideActs();G.hands[0]=sortH(full);G.drawn=null;endRound(0,'自摸 / Tsumo!',calcCoins(0,'tsumo'));}},
-      {az:'继续打牌',ae:'Continue',cls:'abtn-skip',fn:()=>hideActs()},
-    ]);
+    showActs([{az:'🀄 和牌！',ae:'Win! (Tsumo)',cls:'abtn-win',fn:()=>{hideActs();G.hands[0]=sortH(full);G.drawn=null;endRound(0,'自摸 / Tsumo!',calcCoins(0,'tsumo'));}},{az:'继续打牌',ae:'Continue',cls:'abtn-skip',fn:()=>hideActs()}]);
   } else {
-    setTurn('你的回合 — 点击选牌，再次点击打出 / Click tile to select, click again to discard');
+    setTurn('🃏 你的回合 — 点选牌，再点打出 / Your turn — tap to select, tap again to discard');
   }
   if(PD.hero?.passive==='thunder'&&!G.thunderUsed){
-    document.getElementById('skbtn').innerHTML=
-      `<button class="nbtn" style="background:rgba(100,60,220,0.65);border-color:#8860ee;color:#d0c0ff;" onclick="useThunder()">⚡ 雷击换牌 / Thunder Redraw</button>`;
+    document.getElementById('skbtn').innerHTML=`<button class="nbtn" style="background:rgba(100,60,220,0.65);border-color:#8860ee;color:#d0c0ff;font-size:0.75rem;padding:4px 12px;" onclick="useThunder()">⚡ 雷击换牌 / Thunder Redraw ← 点我！</button>`;
+    // Remind mom after 2s
+    setTimeout(()=>showAbilityHint('thunder'),2000);
   }
 }
-
 function doDiscard(idx,isDrawn){
   if(G.phase!=='discard'||G.cur!==0)return;
   let tile;
   if(isDrawn){tile=G.drawn;G.drawn=null;}
-  else{
-    if(G.drawn){G.hands[0]=sortH([...G.hands[0],G.drawn]);G.drawn=null;}
-    tile=G.hands[0][idx];
-    G.hands[0].splice(idx,1);
-  }
-  G.selIdx=null;G.selDrawn=false;
-  G.discards[0].push(tile);
-  G.pending=tile;G.pendingFrom=0;G.phase='action';
-  document.getElementById('skhint').textContent='';
-  document.getElementById('skbtn').innerHTML='';
-  renderAll();
-  setTurn('等待其他玩家 / Waiting…');
-  setTimeout(()=>checkClaims(0),600);
+  else{if(G.drawn){G.hands[0]=sortH([...G.hands[0],G.drawn]);G.drawn=null;}tile=G.hands[0][idx];G.hands[0].splice(idx,1);}
+  G.selIdx=null;G.selDrawn=false;G.discards[0].push(tile);G.pending=tile;G.pendingFrom=0;G.phase='action';
+  playDiscard();
+  document.getElementById('skhint').textContent='';document.getElementById('skbtn').innerHTML='';
+  hideAbilityHint();
+  renderAll();setTurn('⏳ 等待其他玩家 / Waiting…');
+  setTimeout(()=>checkClaims(0),700);
 }
+function clickHand(i){if(G.phase!=='discard'||G.cur!==0)return;if(G.selIdx===i&&!G.selDrawn){doDiscard(i,false);}else{G.selIdx=i;G.selDrawn=false;playClick();renderAll();updSelHint();}}
+function clickDrawn(){if(G.phase!=='discard'||G.cur!==0)return;if(G.selDrawn){doDiscard(null,true);}else{G.selDrawn=true;G.selIdx=null;playClick();renderAll();updSelHint();}}
+function updSelHint(){const el=document.getElementById('skhint');let t=G.selDrawn?G.drawn:(G.selIdx!==null?G.hands[0][G.selIdx]:null);if(!t){el.textContent='';return;}el.textContent=`选中：${tzh(t)} — 再次点击打出 / ${ten(t)} — Tap again to discard`;}
 
-function clickHand(i){
-  if(G.phase!=='discard'||G.cur!==0)return;
-  if(G.selIdx===i&&!G.selDrawn){doDiscard(i,false);}
-  else{G.selIdx=i;G.selDrawn=false;renderAll();updSelHint();}
-}
-function clickDrawn(){
-  if(G.phase!=='discard'||G.cur!==0)return;
-  if(G.selDrawn){doDiscard(null,true);}
-  else{G.selDrawn=true;G.selIdx=null;renderAll();updSelHint();}
-}
-function updSelHint(){
-  const el=document.getElementById('skhint');
-  let t=G.selDrawn?G.drawn:(G.selIdx!==null?G.hands[0][G.selIdx]:null);
-  if(!t){el.textContent='';return;}
-  el.textContent=`选中：${tzh(t)} — 再次点击打出 / Selected: ${ten(t)} — Click again to discard`;
-}
-
-// ─── AI TURN ─────────────────────────────────────────────────────
+/* ═══════════════════════════════ AI TURN ════════════════════════════ */
 function aiTurn(pi){
   if(G.cur!==pi)return;
   if(G.wall.length===0){endRound(null,'流局 / Draw Game',0);return;}
-  const t=G.wall.pop();
-  G.hands[pi]=sortH([...G.hands[pi],t]);
-  renderAll();updHUD();
-  if(isWin(G.hands[pi],G.melds[pi])){
-    endRound(pi,'自摸 / Tsumo!',0);return;
-  }
+  const t=G.wall.pop();G.wallUsed++;
+  G.hands[pi]=sortH([...G.hands[pi],t]);renderAll();updHUD();renderWall();
+  if(isWin(G.hands[pi],G.melds[pi])){endRound(pi,'自摸 / Tsumo!',0);return;}
   const dc=aiDiscard(pi);
   G.hands[pi].splice(G.hands[pi].findIndex(x=>teq(x,dc)),1);
-  G.discards[pi].push(dc);
-  G.pending=dc;G.pendingFrom=pi;G.phase='action';
-  renderAll();
-  setTimeout(()=>checkHumanClaim(dc,pi),600);
+  G.discards[pi].push(dc);G.pending=dc;G.pendingFrom=pi;G.phase='action';
+  playDiscard();renderAll();
+  setTimeout(()=>checkHumanClaim(dc,pi),700);
 }
 
-// ─── CLAIM RESOLUTION ─────────────────────────────────────────────
+/* ═══════════════════════════════ CLAIMS ═════════════════════════════ */
 function checkClaims(from){
-  const tile=G.pending;
-  if(!tile)return;
-  // AI Ron
-  for(let p=1;p<=3;p++){
-    if(p===from)continue;
-    if(isWin([...G.hands[p],tile],G.melds[p])){
-      G.hands[p]=sortH([...G.hands[p],tile]);
-      endRound(p,'荣和 / Ron!',0);return;
-    }
-  }
-  // AI Pong
-  for(let p=1;p<=3;p++){
-    if(p===from)continue;
-    if(aiWantPong(p,tile)){aiDoPong(p,tile,from);return;}
-  }
-  // AI Chi
-  for(let p=1;p<=3;p++){
-    const pair=aiWantChi(p,tile,from);
-    if(pair){aiDoChi(p,tile,from,pair);return;}
-  }
+  const tile=G.pending;if(!tile)return;
+  for(let p=1;p<=3;p++){if(p===from)continue;if(isWin([...G.hands[p],tile],G.melds[p])){G.hands[p]=sortH([...G.hands[p],tile]);playRon();endRound(p,'荣和 / Ron!',0);return;}}
+  for(let p=1;p<=3;p++){if(p===from)continue;if(aiWantPong(p,tile)){aiDoPong(p,tile,from);return;}}
+  for(let p=1;p<=3;p++){const pair=aiWantChi(p,tile,from);if(pair){aiDoChi(p,tile,from,pair);return;}}
   nextPlayer();
 }
-
 function checkHumanClaim(tile,from){
-  const acts=[];
-  const full=[...G.hands[0],tile];
-  if(isWin(full,G.melds[0])){
-    acts.push({az:'🀄 和牌！',ae:'Win! (Ron)',cls:'abtn-win',fn:()=>{
-      hideActs();G.hands[0]=sortH(full);
-      endRound(0,'荣和 / Ron!',calcCoins(0,'ron'));
-    }});
-  }
+  const acts=[],full=[...G.hands[0],tile];
+  if(isWin(full,G.melds[0]))acts.push({az:'🀄 和牌！',ae:'Win! (Ron)',cls:'abtn-win',fn:()=>{hideActs();G.hands[0]=sortH(full);endRound(0,'荣和 / Ron!',calcCoins(0,'ron'));}});
   const mn=G.hands[0].filter(t=>teq(t,tile));
-  if(mn.length>=2){
-    acts.push({az:'碰！',ae:'Pong!',cls:'abtn-pong',fn:()=>{hideActs();humanPong(tile);}});
-  }
-  if(mn.length>=3){
-    acts.push({az:'杠！',ae:'Kong!',cls:'abtn-kong',fn:()=>{hideActs();humanKong(tile);}});
-  }
+  if(mn.length>=2)acts.push({az:'碰！',ae:'Pong!',cls:'abtn-pong',fn:()=>{hideActs();humanPong(tile);}});
+  if(mn.length>=3)acts.push({az:'杠！',ae:'Kong!',cls:'abtn-kong',fn:()=>{hideActs();humanKong(tile);}});
   if(from===3&&tile.suit!=='honor'){
-    const chiOpts=[[tile.num-2,tile.num-1],[tile.num-1,tile.num+1],[tile.num+1,tile.num+2]];
-    for(const[a,b]of chiOpts){
+    for(const[a,b]of[[tile.num-2,tile.num-1],[tile.num-1,tile.num+1],[tile.num+1,tile.num+2]]){
       if(a<1||b>9)continue;
-      if(G.hands[0].some(t=>t.suit===tile.suit&&t.num===a)&&G.hands[0].some(t=>t.suit===tile.suit&&t.num===b)){
-        const ca=a,cb=b;
-        acts.push({az:'吃！',ae:'Chi!',cls:'abtn-chi',fn:()=>{hideActs();humanChi(tile,ca,cb);}});
-        break;
-      }
+      if(G.hands[0].some(t=>t.suit===tile.suit&&t.num===a)&&G.hands[0].some(t=>t.suit===tile.suit&&t.num===b)){acts.push({az:'吃！',ae:'Chi!',cls:'abtn-chi',fn:()=>{hideActs();humanChi(tile,a,b);}});break;}
     }
   }
-  if(acts.length>0){
-    acts.push({az:'过',ae:'Skip',cls:'abtn-skip',fn:()=>{hideActs();checkClaims2(tile,from);}});
-    showActs(acts);
-  } else checkClaims2(tile,from);
+  if(acts.length>0){acts.push({az:'过',ae:'Skip',cls:'abtn-skip',fn:()=>{hideActs();checkClaims2(tile,from);}});showActs(acts);}
+  else checkClaims2(tile,from);
 }
-
 function checkClaims2(tile,from){
-  for(let p=1;p<=3;p++){
-    if(p===from)continue;
-    if(isWin([...G.hands[p],tile],G.melds[p])){
-      G.hands[p]=sortH([...G.hands[p],tile]);endRound(p,'荣和 / Ron!',0);return;
-    }
-  }
-  for(let p=1;p<=3;p++){
-    if(p===from)continue;
-    if(aiWantPong(p,tile)){aiDoPong(p,tile,from);return;}
-  }
+  for(let p=1;p<=3;p++){if(p===from)continue;if(isWin([...G.hands[p],tile],G.melds[p])){G.hands[p]=sortH([...G.hands[p],tile]);playRon();endRound(p,'荣和 / Ron!',0);return;}}
+  for(let p=1;p<=3;p++){if(p===from)continue;if(aiWantPong(p,tile)){aiDoPong(p,tile,from);return;}}
   nextPlayer();
 }
 
 function aiDoPong(pi,tile,from){
+  playPong();floatNotif(`${['南','北','西'][pi-1]} 碰！`);
   let rm=0;const nh=[...G.hands[pi]];
   for(let i=0;i<nh.length&&rm<2;i++)if(teq(nh[i],tile)){nh.splice(i,1);i--;rm++;}
-  G.hands[pi]=nh;G.melds[pi].push({type:'pong',tiles:[tile,tile,tile]});
-  G.pending=null;
-  const dc=aiDiscard(pi);
-  G.hands[pi].splice(G.hands[pi].findIndex(t=>teq(t,dc)),1);
+  G.hands[pi]=nh;G.melds[pi].push({type:'pong',tiles:[tile,tile,tile]});G.pending=null;
+  const dc=aiDiscard(pi);G.hands[pi].splice(G.hands[pi].findIndex(t=>teq(t,dc)),1);
   G.discards[pi].push(dc);G.pending=dc;G.pendingFrom=pi;G.phase='action';
-  renderAll();
-  setTimeout(()=>checkHumanClaim(dc,pi),600);
+  playDiscard();renderAll();setTimeout(()=>checkHumanClaim(dc,pi),700);
 }
 function aiDoChi(pi,tile,from,pair){
+  playChi();floatNotif(`${['南','北','西'][pi-1]} 吃！`);
   const[a,b]=pair;const nh=[...G.hands[pi]];
-  nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===a),1);
-  nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===b),1);
-  G.hands[pi]=nh;
-  G.melds[pi].push({type:'chi',tiles:[a,b,tile.num].sort((x,y)=>x-y).map(n=>mkT(tile.suit,n))});
-  G.pending=null;
-  const dc=aiDiscard(pi);
-  G.hands[pi].splice(G.hands[pi].findIndex(t=>teq(t,dc)),1);
+  nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===a),1);nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===b),1);
+  G.hands[pi]=nh;G.melds[pi].push({type:'chi',tiles:[a,b,tile.num].sort((x,y)=>x-y).map(n=>mkT(tile.suit,n))});G.pending=null;
+  const dc=aiDiscard(pi);G.hands[pi].splice(G.hands[pi].findIndex(t=>teq(t,dc)),1);
   G.discards[pi].push(dc);G.pending=dc;G.pendingFrom=pi;G.phase='action';
-  renderAll();
-  setTimeout(()=>checkHumanClaim(dc,pi),600);
+  playDiscard();renderAll();setTimeout(()=>checkHumanClaim(dc,pi),700);
 }
 
 function humanPong(tile){
+  playPong();
   let rm=0;const nh=[...G.hands[0]];
   for(let i=0;i<nh.length&&rm<2;i++)if(teq(nh[i],tile)){nh.splice(i,1);i--;rm++;}
   G.hands[0]=sortH(nh);G.melds[0].push({type:'pong',tiles:[tile,tile,tile]});
   G.pending=null;G.cur=0;G.phase='discard';G.selIdx=null;G.selDrawn=false;G.drawn=null;
-  if(PD.hero?.passive==='fortune'){PD.coins+=10;updHUD();}
-  renderAll();setTurn('碰牌！打出一张 / Pong! Discard a tile');
+  if(PD.hero?.passive==='fortune'){heroAbilityAnim('fortune');PD.coins+=10;updHUD();floatNotif('💰 财神碰牌奖励！+10🪙');}
+  if(PD.hero?.passive==='wind'&&tile.suit==='honor'&&HONORS.slice(0,4).includes(tile.num)){heroAbilityAnim('wind');floatNotif('🌪️ 风神碰牌！风牌加成激活！');}
+  // Fox pet: 25% draw after pong
+  if(PD.activePet==='fox'&&Math.random()<0.25&&G.wall.length>0){setTimeout(()=>{const extra=G.wall.pop();G.wallUsed++;G.hands[0]=sortH([...G.hands[0],extra]);floatNotif('🦊 九尾狐：碰后摸牌！/ Fox Pong Bonus!');renderAll();renderWall();updHUD();},600);}
+  renderAll();setTurn('碰牌！选牌打出 / Pong! Select a tile to discard');
 }
 function humanKong(tile){
-  G.hands[0]=sortH(G.hands[0].filter(t=>!teq(t,tile)));
-  G.melds[0].push({type:'kong',tiles:[tile,tile,tile,tile]});
+  playKong();G.hands[0]=sortH(G.hands[0].filter(t=>!teq(t,tile)));G.melds[0].push({type:'kong',tiles:[tile,tile,tile,tile]});
   G.pending=null;G.cur=0;G.phase='discard';G.selIdx=null;G.selDrawn=false;
-  if(G.wall.length>0)G.drawn=G.wall.pop();
-  updHUD();renderAll();setTurn('杠牌！打出一张 / Kong! Discard a tile');
+  if(G.wall.length>0){G.drawn=G.wall.pop();G.wallUsed++;}
+  updHUD();renderAll();renderWall();setTurn('杠牌！/ Kong! Discard a tile');
 }
 function humanChi(tile,a,b){
-  const nh=[...G.hands[0]];
-  nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===a),1);
-  nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===b),1);
-  G.hands[0]=sortH(nh);
-  G.melds[0].push({type:'chi',tiles:[a,b,tile.num].sort((x,y)=>x-y).map(n=>mkT(tile.suit,n))});
+  playChi();const nh=[...G.hands[0]];
+  nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===a),1);nh.splice(nh.findIndex(t=>t.suit===tile.suit&&t.num===b),1);
+  G.hands[0]=sortH(nh);G.melds[0].push({type:'chi',tiles:[a,b,tile.num].sort((x,y)=>x-y).map(n=>mkT(tile.suit,n))});
   G.pending=null;G.cur=0;G.phase='discard';G.selIdx=null;G.selDrawn=false;G.drawn=null;
-  renderAll();setTurn('吃牌！打出一张 / Chi! Discard a tile');
+  renderAll();setTurn('吃牌！/ Chi! Discard a tile');
 }
-
-function nextPlayer(){
-  G.pending=null;G.pendingFrom=-1;G.cur=(G.cur+1)%4;
-  renderAll();phaseDraw();
-}
-
+function nextPlayer(){G.pending=null;G.pendingFrom=-1;G.cur=(G.cur+1)%4;renderAll();phaseDraw();}
 function useThunder(){
   if(!PD.hero||PD.hero.passive!=='thunder'||G.thunderUsed)return;
   if(G.phase!=='discard'||G.cur!==0||G.wall.length===0)return;
   G.thunderUsed=true;
-  if(G.drawn){G.wall.unshift(G.drawn);}
+  if(G.drawn)G.wall.unshift(G.drawn);
   G.drawn=G.wall.pop();
-  document.getElementById('skbtn').innerHTML='<span style="font-size:0.65rem;color:#8860aa;">⚡ 雷击已使用 / Used</span>';
+  heroAbilityAnim('thunder');
+  document.getElementById('skbtn').innerHTML='<span style="font-size:0.65rem;color:#8860aa;">⚡ 雷击已使用 / Used this round</span>';
+  hideAbilityHint();
   renderAll();updSelHint();
 }
 
-// ─── ROUND END ────────────────────────────────────────────────────
+/* ═══════════════════════════════ ROUND END ══════════════════════════ */
 function endRound(winner,label,coins){
-  hideActs();
-  G.phase='end';
-
-  let body='';
+  hideActs();hideAbilityHint();G.phase='end';let body='';
   if(winner===0){
-    PD.coins+=coins;
-    if(PD.hero?.passive==='thunder'){
-      for(let p=1;p<=3;p++)PD.coins+=10;
+    // Dragon hero animation on win
+    if(PD.hero?.passive==='dragon'){
+      const drg=G.hands[0].filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));
+      if(drg.length>0)heroAbilityAnim('dragon');
     }
-    spawnConfetti();
+    PD.coins+=coins;PD.slotStreak=0;
+    if(PD.hero?.passive==='thunder')for(let p=1;p<=3;p++)PD.coins+=10;
+    playWin();spawnConfetti();
     body=`<strong>获得 / Gained: 🪙 ${coins} 金币</strong><br>总计 / Total: ${PD.coins} 金币`;
   } else if(winner===null){
     body='没有人赢，继续下一局！<br>Nobody wins — next round!';
   } else {
     const nameMap={1:'南 South',2:'北 North',3:'西 West'};
     body=`${nameMap[winner]||'AI'} 赢了！<br>Better luck next round!`;
-    if(!G.shieldActive) PD.coins=Math.max(0,PD.coins);
+    playLose();
+    // Phoenix pet: keep 50%
+    if(PD.activePet==='phoenix'){floatNotif('🦅 凤凰护盾！损失减半！/ Phoenix shield!');}
+    if(!G.shieldActive)PD.coins=Math.max(0,PD.coins);
   }
-  PD.round++;
-  updHUD();
-
+  PD.round++;updHUD();
   const winH=winner===0?G.hands[0].concat(G.drawn?[G.drawn]:[]):[];
-  showModal(
-    winner===0?'🎉':(winner===null?'🀄':'💀'),
-    label,body,
-    [{lz:'下一局',le:'Next Round',fn:()=>{hideModal();initRound();}},
-     {lz:'查看牌谱',le:'Menu',fn:()=>{hideModal();goTitle();}}],
-    winH
-  );
+  showModal(winner===0?'🎉':(winner===null?'🀄':'💀'),label,body,[{lz:'下一局',le:'Next Round',fn:()=>{hideModal();initRound();}},{lz:'菜单',le:'Menu',fn:()=>{hideModal();goTitle();}}],winH);
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────
+/* ═══════════════════════════════ RENDER ═════════════════════════════ */
 function renderAll(){
-  if(!G)return;
-  updHUD();
-  setActivePA();
-  renderTop();
-  renderLeft();
-  renderRight();
-  renderBot();
-  renderCenter();
+  if(!G)return;updHUD();setActivePA();renderTop();renderLeft();renderRight();renderBot();renderCenter();
 }
-
-function setActivePA(){
-  ['top','left','right','bot'].forEach((s,i)=>{
-    const pi=[2,3,1,0][i];
-    const el=document.getElementById('pa-'+s);
-    if(el)el.classList.toggle('active',G.cur===pi);
-  });
-}
-
-function renderTop(){
-  // North = player 2
-  const pi=2;
-  const th=document.getElementById('th-top');
-  th.innerHTML='';
-  G.hands[pi].forEach(()=>th.appendChild(backEl('t-sm')));
-  renderMelds('tm-top',pi,'t-sm');
-  renderDisc('td-top',pi,'t-xs');
-}
-function renderLeft(){
-  // West = player 3
-  const pi=3;
-  const th=document.getElementById('th-left');
-  th.innerHTML='';
-  G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));
-  renderDisc('td-left',pi,'t-xs');
-}
-function renderRight(){
-  // East = player 1
-  const pi=1;
-  const th=document.getElementById('th-right');
-  th.innerHTML='';
-  G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));
-  renderDisc('td-right',pi,'t-xs');
-}
+function setActivePA(){['top','left','right','bot'].forEach((s,i)=>{const pi=[2,3,1,0][i];const el=document.getElementById('pa-'+s);if(el)el.classList.toggle('active',G.cur===pi);});}
+function renderTop(){const pi=2,th=document.getElementById('th-top');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-sm')));renderMelds('tm-top',pi,'t-sm');renderDisc('td-top',pi,'t-xs');}
+function renderLeft(){const pi=3,th=document.getElementById('th-left');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));renderDisc('td-left',pi,'t-xs');}
+function renderRight(){const pi=1,th=document.getElementById('th-right');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));renderDisc('td-right',pi,'t-xs');}
 function renderBot(){
-  const th=document.getElementById('th-bot');
-  th.innerHTML='';
-  G.hands[0].forEach((t,i)=>{
-    const isSel=G.selIdx===i&&!G.selDrawn;
-    const el=tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i));
-    th.appendChild(el);
-  });
-  if(G.drawn){
-    const sep=document.createElement('div');sep.className='dsep';th.appendChild(sep);
-    const isSel=G.selDrawn;
-    const el=tileEl(G.drawn,'t-lg','ck drawn'+(isSel?' sel':''),clickDrawn);
-    th.appendChild(el);
-  }
+  const th=document.getElementById('th-bot');th.innerHTML='';
+  G.hands[0].forEach((t,i)=>{const isSel=G.selIdx===i&&!G.selDrawn;th.appendChild(tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i)));});
+  if(G.drawn){const sep=document.createElement('div');sep.className='dsep';th.appendChild(sep);th.appendChild(tileEl(G.drawn,'t-lg','ck drawn'+(G.selDrawn?' sel':''),clickDrawn));}
   renderMelds('tm-bot',0,'t-sm');
 }
-
-function renderMelds(id,pi,sz){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.innerHTML='';
-  G.melds[pi].forEach(m=>{
-    const g=document.createElement('div');g.className='mgrp';
-    m.tiles.forEach(t=>g.appendChild(tileEl(t,sz)));
-    el.appendChild(g);
-  });
-}
-function renderDisc(id,pi,sz){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.innerHTML='';
-  G.discards[pi].forEach((t,i)=>{
-    const last=i===G.discards[pi].length-1&&G.pendingFrom===pi;
-    el.appendChild(tileEl(t,sz,last?'clm':''));
-  });
-}
-
+function renderMelds(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.melds[pi].forEach(m=>{const g=document.createElement('div');g.className='mgrp';m.tiles.forEach(t=>g.appendChild(tileEl(t,sz)));el.appendChild(g);});}
+function renderDisc(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.discards[pi].forEach((t,i)=>{const last=i===G.discards[pi].length-1&&G.pendingFrom===pi;el.appendChild(tileEl(t,sz,last?'clm':''));});}
 function renderCenter(){
   document.getElementById('cwall').textContent=G.wall.length;
-  const cl=document.getElementById('clast');
-  const lbl=document.getElementById('cdlbl');
-  if(G.pending){
-    lbl.style.display='block';
-    cl.innerHTML='';
-    cl.appendChild(tileEl(G.pending,'t-md','clm'));
-  } else {
-    lbl.style.display='none';cl.innerHTML='';
-  }
+  const cl=document.getElementById('clast'),lbl=document.getElementById('cdlbl');
+  if(G.pending){lbl.style.display='block';cl.innerHTML='';cl.appendChild(tileEl(G.pending,'t-md','clm'));}
+  else{lbl.style.display='none';cl.innerHTML='';}
   const hints=[];
-  if(G.wall.length<10)hints.push('快结束了！/ Almost out of tiles!');
-  if(G.pending)hints.push(`出牌 / Discard: ${tzh(G.pending)}`);
+  if(G.wall.length<10)hints.push('⚠️ 快结束了！');
   document.getElementById('chint').textContent=hints.join(' ');
+  renderWall();
 }
-
 function setTurn(msg){document.getElementById('tbar').textContent=msg;}
 
-// ─── ACTION PANEL ─────────────────────────────────────────────────
-function showActs(acts){
-  const p=document.getElementById('actpanel');
-  p.innerHTML='';p.classList.remove('hidden');
-  acts.forEach(a=>{
-    const b=document.createElement('button');
-    b.className='abtn '+a.cls;
-    b.innerHTML=`<span class="az">${a.az}</span><span class="ae">${a.ae}</span>`;
-    b.onclick=a.fn;
-    p.appendChild(b);
-  });
-}
+/* ═══════════════════════════════ ACTION PANEL ═══════════════════════ */
+function showActs(acts){const p=document.getElementById('actpanel');p.innerHTML='';p.classList.remove('hidden');acts.forEach(a=>{const b=document.createElement('button');b.className='abtn '+a.cls;b.innerHTML=`<span class="az">${a.az}</span><span class="ae">${a.ae}</span>`;b.onclick=()=>{playClick();a.fn();};p.appendChild(b);});}
 function hideActs(){document.getElementById('actpanel').classList.add('hidden');}
 
-// ─── MODAL ────────────────────────────────────────────────────────
+/* ═══════════════════════════════ MODAL ══════════════════════════════ */
 function showModal(ico,title,body,btns,tiles){
-  document.getElementById('mico').textContent=ico;
-  document.getElementById('mtitle').textContent=title;
-  document.getElementById('mbody').innerHTML=body;
-  const mt=document.getElementById('mtiles');mt.innerHTML='';
-  (tiles||[]).forEach(t=>mt.appendChild(tileEl(t,'t-sm')));
-  const mb=document.getElementById('mbtns');mb.innerHTML='';
-  btns.forEach(b=>{
-    const el=document.createElement('button');
-    el.className='btn btn-gold';
-    el.innerHTML=`${b.lz} / ${b.le}`;
-    el.onclick=b.fn;mb.appendChild(el);
-  });
+  document.getElementById('mico').textContent=ico;document.getElementById('mtitle').textContent=title;document.getElementById('mbody').innerHTML=body;
+  const mt=document.getElementById('mtiles');mt.innerHTML='';(tiles||[]).forEach(t=>mt.appendChild(tileEl(t,'t-sm')));
+  const mb=document.getElementById('mbtns');mb.innerHTML='';btns.forEach(b=>{const el=document.createElement('button');el.className='btn btn-gold';el.innerHTML=`${b.lz} / ${b.le}`;el.onclick=()=>{playClick();b.fn();};mb.appendChild(el);});
   document.getElementById('overlay').classList.remove('hidden');
 }
 function hideModal(){document.getElementById('overlay').classList.add('hidden');}
 
-// ─── CONFETTI ─────────────────────────────────────────────────────
+/* ═══════════════════════════════ FLOAT NOTIF ════════════════════════ */
+function floatNotif(msg){
+  const el=document.createElement('div');el.className='floatnotif';el.textContent=msg;
+  document.body.appendChild(el);el.addEventListener('animationend',()=>el.remove());
+}
+
+/* ═══════════════════════════════ CONFETTI ═══════════════════════════ */
 function spawnConfetti(){
   const c=document.getElementById('cfc');c.innerHTML='';
-  const colors=['#f0c040','#e84040','#40a0e0','#60e060','#e040e0','#ffffff'];
-  for(let i=0;i<60;i++){
+  const colors=['#f0c040','#e84040','#40a0e0','#60e060','#e040e0','#ffffff','#ff8c00','#ff44cc'];
+  for(let i=0;i<90;i++){
     const p=document.createElement('div');p.className='cfp';
-    p.style.left=Math.random()*100+'vw';
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDuration=(1.5+Math.random()*2)+'s';
-    p.style.animationDelay=(Math.random()*0.8)+'s';
-    p.style.transform=`rotate(${Math.random()*360}deg)`;
-    c.appendChild(p);
-    p.addEventListener('animationend',()=>p.remove());
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[~~(Math.random()*colors.length)];
+    p.style.animationDuration=(1.2+Math.random()*2.5)+'s';p.style.animationDelay=(Math.random()*0.8)+'s';
+    p.style.transform=`rotate(${Math.random()*360}deg)`;p.style.width=(5+Math.random()*8)+'px';p.style.height=(8+Math.random()*12)+'px';
+    c.appendChild(p);p.addEventListener('animationend',()=>p.remove());
   }
 }
 
-// ─── GACHA ────────────────────────────────────────────────────────
-function pullGacha(n){
-  const cost=n===1?100:900;
-  if(PD.coins<cost){
-    alert(`金币不足！/ Not enough coins! Need ${cost} 🪙`);return;
+/* ═══════════════════════════════ SLOT MACHINE ═══════════════════════ */
+function initSlotLights(){
+  const l=document.getElementById('slot-lights');l.innerHTML='';
+  for(let i=0;i<12;i++){const d=document.createElement('div');d.className='slot-light';d.style.animationDelay=(i*0.08)+'s';l.appendChild(d);}
+}
+
+function initReels(){
+  for(let r=0;r<3;r++){
+    const reel=document.getElementById('reel-'+r);
+    reel.innerHTML='';
+    // Fill with random symbols (show 5 visible items)
+    for(let i=0;i<7;i++){
+      const sym=spinSymbol();
+      const item=document.createElement('div');item.className='reel-item';item.textContent=sym.s;
+      reel.appendChild(item);
+    }
+    // Center offset: show middle item
+    reel.style.transform='translateY(-96px)';
   }
+}
+
+let currentSymbols=[null,null,null];
+
+function spinSlots(numSpins){
+  if(slotSpinning)return;
+  const cost=numSpins===1?50:120;
+  if(PD.coins<cost){floatNotif(`金币不足！需要 ${cost}🪙`);return;}
   PD.coins-=cost;
+  document.getElementById('gcoins').textContent=PD.coins;
+  updTitleCoins();
+  slotSpinning=true;
+  document.getElementById('btn-spin1').disabled=true;
+  document.getElementById('btn-spin3').disabled=true;
+  document.getElementById('slot-result-area').innerHTML='';
+  playSlotSpin();
   const results=[];
-  for(let i=0;i<n;i++){
-    const r=Math.random();
-    let pool;
-    if(r<0.05)pool=GPOOL.filter(x=>x.r==='legendary');
-    else if(r<0.35)pool=GPOOL.filter(x=>x.r==='rare');
-    else pool=GPOOL.filter(x=>x.r==='common');
-    const item=pool[Math.floor(Math.random()*pool.length)];
-    results.push(item);
-    PD.inv[item.id]=(PD.inv[item.id]||0)+1;
-    // Instant effects
-    if(item.id==='diamond'){PD.coins+=200;}
-    if(item.id==='coincrate'){PD.coins+=50;}
-    if(item.id==='trophy'){PD.coinMult=Math.min(2.0,PD.coinMult+0.05);}
-  }
-  renderGacha(results);
+  for(let i=0;i<3;i++){results.push(spinSymbol());}
+  // Animate reels stopping one by one
+  animateReel(0,results[0],700,()=>{
+    animateReel(1,results[1],900,()=>{
+      animateReel(2,results[2],700,()=>{
+        currentSymbols=results;
+        setTimeout(()=>resolveSlot(results,numSpins),300);
+      });
+    });
+  });
 }
 
-const RMAP={legendary:{label:'传说 / Legendary',color:'#ffd700'},rare:{label:'稀有 / Rare',color:'#aa44ff'},common:{label:'普通 / Common',color:'#448899'}};
+function animateReel(reelIdx,finalSym,spinDur,cb){
+  const reel=document.getElementById('reel-'+reelIdx);
+  // Spin: quickly cycle symbols
+  let frame=0,interval;
+  interval=setInterval(()=>{
+    reel.innerHTML='';
+    for(let i=0;i<7;i++){
+      const sym=i===3?{s:spinSymbol().s}:spinSymbol();
+      const item=document.createElement('div');item.className='reel-item';item.textContent=sym.s;reel.appendChild(item);
+    }
+    frame++;
+  },80);
+  setTimeout(()=>{
+    clearInterval(interval);
+    // Final stop
+    reel.innerHTML='';
+    for(let i=0;i<7;i++){
+      const sym=i===3?finalSym:spinSymbol();
+      const item=document.createElement('div');item.className='reel-item'+(i===3?' win-row':'');item.textContent=sym.s;reel.appendChild(item);
+    }
+    playSlotStop();
+    cb();
+  },spinDur);
+}
 
-function renderGacha(results){
-  document.getElementById('gcoins').textContent=PD.coins;
-  const gr=document.getElementById('gresults');gr.innerHTML='';
-  if(results){
-    results.forEach((item,i)=>{
-      const d=document.createElement('div');
-      d.className='gitem '+item.r;
-      d.style.animationDelay=(i*0.08)+'s';
-      d.innerHTML=`<div class="gemoji">${item.emoji}</div>
-        <div class="gnamez">${item.zh}</div>
-        <div class="gnamee">${item.en}</div>
-        <div class="grarity" style="color:${RMAP[item.r].color}">${RMAP[item.r].label}</div>
-        <div class="gdesc">${item.dz}<br>${item.de}</div>`;
-      gr.appendChild(d);
-    });
+function resolveSlot(results,numSpins){
+  slotSpinning=false;
+  document.getElementById('btn-spin1').disabled=false;
+  document.getElementById('btn-spin3').disabled=false;
+  const [r0,r1,r2]=results;
+  const allSame=r0.v===r1.v&&r1.v===r2.v;
+  const twoPairs=(r0.v===r1.v||r1.v===r2.v||r0.v===r2.v);
+  const area=document.getElementById('slot-result-area');
+  let won=0,banner='',bannerCls='';
+  // Jackpot: 3 dragons 🐉
+  if(allSame&&r0.v==='dragon'){
+    won=1000;banner='🐉🐉🐉 JACKPOT!! 宠物解锁! 🎊';bannerCls='jackpot';
+    playSlotJackpot();spawnConfetti();
+    // Unlock random locked pet
+    const locked=PETS.filter(p=>!PD.pets[p.id]);
+    if(locked.length>0){
+      const p=locked[~~(Math.random()*locked.length)];
+      unlockPet(p.id);
+      setTimeout(()=>{
+        showModal('🐾','宠物解锁！/ Pet Unlocked!',`<strong style="font-size:1.6rem">${p.emoji}</strong><br><strong style="color:#ffcc44">${p.zh} / ${p.en}</strong><br><span style="color:#88cc88">${p.dz}</span><br><br>点击宠物图标装备！/ Tap pet to equip!`,
+          [{lz:'太棒了！',le:'Awesome!',fn:()=>hideModal()}]);
+      },1800);
+    }
+    PD.slotStreak++;
   }
+  // Big win: 3 sevens
+  else if(allSame&&r0.v==='seven'){
+    won=500;banner='7️⃣7️⃣7️⃣ BIG WIN!! +道具';bannerCls='bigwin';
+    playSlotBigWin();spawnConfetti();
+    giveRandomItem('legendary');PD.slotStreak++;
+  }
+  // Win: 3 mahjong tiles
+  else if(allSame&&r0.v==='mj'){
+    won=200;banner='🀄🀄🀄 WIN! +道具';bannerCls='win';
+    playSlotBigWin();giveRandomItem('rare');PD.slotStreak++;
+  }
+  // Win: any 3 same
+  else if(allSame){
+    won=100;banner=`${r0.s}${r1.s}${r2.s} WIN! +100🪙`;bannerCls='win';
+    playTone(660,'sine',0.2,0.3,0.2);PD.slotStreak++;
+  }
+  // Pair: any 2 same
+  else if(twoPairs&&!allSame){
+    won=50;banner=`対 +50🪙`;bannerCls='win';
+    playTone(550,'sine',0.1,0.2,0.1);PD.slotStreak++;
+  }
+  // Miss
+  else{
+    won=0;banner='💨 No match… Try again!';bannerCls='lose';
+    playTone(200,'sine',0.15,0.2,0.15);PD.slotStreak=0;
+  }
+  // Streak bonus
+  if(PD.slotStreak>=3&&won>0){won=Math.round(won*1.5);banner+=' 🔥×1.5 STREAK!';}
+  if(won>0){PD.coins+=won;}
+  PD.coins=Math.max(0,PD.coins);
+  document.getElementById('gcoins').textContent=PD.coins;
+  document.getElementById('gstreak').textContent=PD.slotStreak;
+  updTitleCoins();
+  area.innerHTML=`<div class="slot-result-banner ${bannerCls}">${banner}</div><div style="font-size:0.7rem;color:#886666;margin-top:4px">本次: ${won>0?'+':''} ${won}🪙 | 总计: ${PD.coins}🪙</div>`;
+  // Do multiple spins
+  if(numSpins>1){
+    setTimeout(()=>spinSlots(numSpins-1),1200);
+  }
+}
+
+function giveRandomItem(minRarity){
+  const rarityOrder={common:0,rare:1,legendary:2};
+  const minR=rarityOrder[minRarity]||0;
+  const pool=IPOOL.filter(x=>rarityOrder[x.r]>=minR);
+  if(!pool.length)return;
+  const item=pool[~~(Math.random()*pool.length)];
+  PD.inv[item.id]=(PD.inv[item.id]||0)+1;
+  if(item.id==='diamond')PD.coins+=200;
+  if(item.id==='coincrate')PD.coins+=50;
+  if(item.id==='trophy')PD.coinMult=Math.min(2.0,PD.coinMult+0.05);
+  floatNotif(`🎁 获得道具: ${item.emoji} ${item.zh}!`);
+  document.getElementById('gcoins').textContent=PD.coins;
+}
+
+/* ═══════════════════════════════ SLOT GACHA RENDER ══════════════════ */
+function renderSlotGacha(){
+  document.getElementById('gcoins').textContent=PD.coins;
+  document.getElementById('gstreak').textContent=PD.slotStreak||0;
+  initSlotLights();
+  initReels();
+  // Pets grid
+  const pg=document.getElementById('pets-grid');pg.innerHTML='';
+  PETS.forEach(p=>{
+    const unlocked=!!PD.pets[p.id];
+    const isActive=PD.activePet===p.id;
+    const rarityColors={common:'#448899',rare:'#aa44ff',legendary:'#ffd700'};
+    const d=document.createElement('div');
+    d.className='pet-card'+(unlocked?'':' locked')+(isActive?' active-pet':'');
+    d.style.borderColor=unlocked?rarityColors[p.r]:'#333';
+    d.innerHTML=`
+      <span class="lock-badge">${unlocked?(isActive?'✅':''):'🔒'}</span>
+      <span class="pet-emoji">${p.emoji}</span>
+      <div class="pet-name" style="color:${rarityColors[p.r]}">${p.zh}</div>
+      <div style="font-size:0.55rem;color:#668888">${p.en}</div>
+      <div class="pet-desc">${p.dz}</div>
+      <div class="pet-rarity" style="color:${rarityColors[p.r]}">${{common:'普通',rare:'稀有',legendary:'传说'}[p.r]}</div>
+      ${unlocked?`<button style="margin-top:4px;font-size:0.55rem;padding:2px 6px;border:1px solid ${rarityColors[p.r]};border-radius:4px;background:rgba(0,0,0,0.4);color:${rarityColors[p.r]};cursor:pointer;" onclick="equipPet('${isActive?null:p.id}')">${isActive?'卸下 Unequip':'装备 Equip'}</button>`:'<div style="font-size:0.58rem;color:#664444;margin-top:4px">🎰 JACKPOT解锁</div>'}
+    `;
+    pg.appendChild(d);
+  });
+  // Inventory
   const gi=document.getElementById('ginv');gi.innerHTML='';
   Object.entries(PD.inv).forEach(([id,cnt])=>{
-    if(!cnt)return;
-    const item=GPOOL.find(x=>x.id===id);if(!item)return;
+    if(!cnt)return;const item=IPOOL.find(x=>x.id===id);if(!item)return;
     const d=document.createElement('div');d.className='invitem';
     d.innerHTML=`<span>${item.emoji}</span><span>${item.zh}<br><span style="color:#6a8899;font-size:0.6rem">${item.en}</span></span><span class="invcount">${cnt}</span>`;
     gi.appendChild(d);
