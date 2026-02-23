@@ -20,11 +20,11 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 
 /* ══ TITLE ══════════════════════════════════════════════════════════ */
 #scr-title{background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(21,85,51,0.9) 0%,transparent 70%),repeating-linear-gradient(45deg,rgba(255,255,255,0.012) 0,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 20px),linear-gradient(160deg,#071a10,#0e2e1c 50%,#071a10);}
-.tdeco{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:0.6rem;flex-wrap:nowrap;}
-.tdeco-tiles{display:flex;gap:8px;align-items:center;}
+.tdeco{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin-bottom:0.8rem;}
+.tdeco-tiles{display:flex;gap:12px;align-items:center;justify-content:center;}
 /* ══ TITLE TILES — authentic mahjong look ══ */
 .ttile{
-  width:46px;height:62px;
+  width:52px;height:70px;
   background:linear-gradient(155deg,#fffef8 0%,#fdf6d0 55%,#f0e088 100%);
   border:2px solid #8a6010;border-radius:6px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -34,19 +34,19 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .ttile:nth-child(1){animation-delay:0s}.ttile:nth-child(2){animation-delay:.5s}.ttile:nth-child(3){animation-delay:1.0s}.ttile:nth-child(4){animation-delay:1.5s}
 @keyframes tfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 /* 中 — red */
-.ttile.t-chun{color:#cc1111;font-size:1.75rem;font-weight:900;font-family:'Noto Serif SC',serif;}
+.ttile.t-chun{color:#cc1111;font-size:2rem;font-weight:900;font-family:'Noto Serif SC',serif;}
 /* 發 — green */
-.ttile.t-hatsu{color:#0a6611;font-size:1.75rem;font-weight:900;font-family:'Noto Serif SC',serif;}
+.ttile.t-hatsu{color:#0a6611;font-size:2rem;font-weight:900;font-family:'Noto Serif SC',serif;}
 /* 白 — ivory with blue border frame inset, no character */
 .ttile.t-haku{overflow:hidden;}
 .haku-inner{display:block;position:absolute;inset:6px;border:2.5px solid #223366;border-radius:2px;background:transparent;}
 /* 九萬 */
 .ttile.t-man9{flex-direction:column;}
-.ttile-num{color:#bb1111;font-size:1.4rem;font-weight:900;line-height:1;font-family:'Noto Serif SC',serif;}
-.ttile-suit{color:#881111;font-size:0.5rem;font-weight:700;line-height:1;font-family:'Noto Serif SC',serif;}
-.title-logo-wrap{text-align:center;flex-shrink:1;}
-.title-logo{font-family:'Cinzel Decorative','Noto Serif SC',serif;font-size:clamp(1.2rem,6vw,3.5rem);font-weight:700;background:linear-gradient(135deg,#c8961a,#f5e060,#c8961a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(200,150,26,0.6));letter-spacing:0.02em;line-height:1.1;white-space:nowrap;}
-.title-sub{font-size:clamp(0.55rem,3vw,0.82rem);color:#7ab89a;letter-spacing:0.04em;margin-top:0.2rem;margin-bottom:1.6rem;white-space:nowrap;}
+.ttile-num{color:#1a0808;font-size:1.5rem;font-weight:900;line-height:1;font-family:'Noto Serif SC',serif;}
+.ttile-suit{color:#1a0808;font-size:0.52rem;font-weight:700;line-height:1;font-family:'Noto Serif SC',serif;}
+.title-logo-wrap{text-align:center;}
+.title-logo{font-family:'Cinzel Decorative','Noto Serif SC',serif;font-size:clamp(1.4rem,7vw,3.5rem);font-weight:700;background:linear-gradient(135deg,#c8961a,#f5e060,#c8961a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(200,150,26,0.6));letter-spacing:0.02em;line-height:1.1;}
+.title-sub{font-size:clamp(0.48rem,2.2vw,0.7rem);color:#7ab89a;letter-spacing:0.02em;margin-top:0.3rem;margin-bottom:1.4rem;text-align:center;padding:0 1rem;line-height:1.5;}
 .btnrow{display:flex;flex-direction:column;gap:10px;align-items:center;}
 .btn{padding:0.65em 2.2em;border:none;border-radius:50px;font-family:inherit;font-size:0.95rem;font-weight:600;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s,filter 0.15s;letter-spacing:0.02em;white-space:nowrap;}
 .btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.5);filter:brightness(1.1);}
@@ -55,6 +55,46 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .btn-out{background:rgba(255,255,255,0.05);border:1.5px solid rgba(200,150,26,0.5);color:var(--gold-lt);backdrop-filter:blur(4px);}
 .btn-promo{background:linear-gradient(135deg,#1a3a6a,#2a5aaa,#1a3a6a);color:#aaddff;border:1.5px solid #4a8acc;box-shadow:0 4px 16px rgba(40,100,200,0.35);}
 .tfooter{position:absolute;bottom:14px;font-size:0.68rem;color:#3a6a4a;letter-spacing:0.04em;}
+
+/* ══ 赌神 王丽珠 SPECIAL STYLES ══ */
+@keyframes dushen-aura {
+  0%,100%{box-shadow:0 0 18px 4px #9b0000,0 0 40px 8px rgba(180,0,60,0.4),inset 0 0 12px rgba(255,80,80,0.1);}
+  50%{box-shadow:0 0 28px 8px #ff2244,0 0 60px 16px rgba(220,0,80,0.6),inset 0 0 20px rgba(255,120,80,0.2);}
+}
+@keyframes dushen-reveal {
+  0%{opacity:0;transform:scale(0.5) rotate(-10deg);}
+  60%{opacity:1;transform:scale(1.12) rotate(2deg);}
+  100%{opacity:1;transform:scale(1) rotate(0deg);}
+}
+.dushen-hcard {
+  background: linear-gradient(135deg,#1a0008,#2d0015,#1a0008) !important;
+  border: 2px solid #cc0033 !important;
+  animation: dushen-aura 2s ease-in-out infinite;
+  position: relative;
+}
+.dushen-locked-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.55);
+  border-radius: inherit;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  font-size: 0.68rem; color: #ff8888;
+  text-align: center; padding: 8px;
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+#dushen-anim-overlay {
+  position:fixed;inset:0;z-index:500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,rgba(120,0,20,0.85) 0%,rgba(0,0,0,0.92) 70%);
+  pointer-events:none;
+}
+#dushen-anim-overlay.hidden{display:none;}
+#dushen-burst{font-size:5rem;animation:dushen-reveal 0.4s ease-out both;filter:drop-shadow(0 0 30px #ff2244);}
+#dushen-text{font-size:1.4rem;font-weight:900;color:#ff4466;text-align:center;
+  text-shadow:0 0 20px #ff2244,0 0 40px rgba(255,34,68,0.5);
+  margin-top:0.8rem;animation:dushen-reveal 0.4s 0.15s ease-out both;}
+/* ══ END 赌神 STYLES ══ */
 
 /* ══ PROMO MODAL ══ */
 .promo-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:300;}
@@ -88,17 +128,16 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .promo-history{margin-top:1rem;font-size:0.65rem;color:#3a6a4a;min-height:16px;}
 /* Mobile title */
 @media(max-width:480px){
-  .tdeco{gap:5px;}
-  .ttile{width:36px;height:50px;}
-  .ttile.t-chun,.ttile.t-hatsu{font-size:1.3rem;}
-  .ttile-num{font-size:1.05rem;}
-  .ttile-suit{font-size:0.4rem;}
+  .ttile{width:42px;height:58px;}
+  .ttile.t-chun,.ttile.t-hatsu{font-size:1.6rem;}
+  .ttile-num{font-size:1.2rem;}
+  .ttile-suit{font-size:0.44rem;}
   .haku-inner{inset:5px;}
-  .title-logo{font-size:clamp(1.1rem,7vw,2rem);}
 }
 
 /* ══ HERO ══ */
-#scr-hero{background:linear-gradient(160deg,#050d20,#0a1a38 50%,#050d20);padding:1.5rem;gap:0;}
+#scr-hero{background:linear-gradient(160deg,#050d20,#0a1a38 50%,#050d20);padding:1.5rem 1.5rem 100px;gap:0;overflow-y:auto;justify-content:flex-start;padding-top:2rem;}
+.hero-btns{position:fixed;bottom:0;left:0;right:0;display:flex;gap:8px;justify-content:center;padding:12px 1rem calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,rgba(5,13,32,0.98) 70%,transparent);z-index:50;}
 .sec-title{font-size:clamp(1.3rem,4vw,1.9rem);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.1rem;}
 .sec-sub{font-size:0.75rem;color:#5a8aaa;letter-spacing:0.1em;margin-bottom:1rem;}
 .hgrid{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:0.8rem;}
@@ -190,7 +229,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .ldwrap{min-height:48px;display:flex;flex-direction:column;align-items:center;gap:3px;}
 .ldlabel{font-size:0.58rem;color:#5a886a;}
 .chint{font-size:0.6rem;color:#4a7a5a;text-align:center;line-height:1.3;max-width:120px;}
-.discm{display:flex;flex-wrap:wrap;gap:1px;max-width:110px;justify-content:center;}
+.discm{display:flex;flex-wrap:wrap;gap:1px;max-width:110px;justify-content:center;align-items:center;}
 .wt{width:14px;height:18px;background:linear-gradient(145deg,#fdf9ec,#e8daa8);border:1px solid #a07018;border-radius:2px;box-shadow:1px 1.5px 3px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.7);flex-shrink:0;transition:all 0.3s;}
 .wt.used{background:linear-gradient(145deg,#2a4a3a,#1a3028)!important;border-color:#1a4a2a!important;opacity:0.4;}
 
@@ -207,9 +246,9 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .ts{line-height:1;font-weight:700;opacity:0.85;letter-spacing:0;}
 
 /* Player hand tiles — LARGE & readable */
-.t-lg{width:44px;height:62px;gap:1px;}
-.t-lg .tc{font-size:1.25rem;}
-.t-lg .ts{font-size:0.62rem;}
+.t-lg{width:48px;height:68px;gap:1px;}
+.t-lg .tc{font-size:1.45rem;}
+.t-lg .ts{font-size:0.68rem;}
 
 /* Meld tiles */
 .t-md{width:34px;height:48px;gap:1px;}
@@ -227,9 +266,9 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 .t-xs .ts{font-size:0.3rem;}
 
 /* Discard pile — medium-small but very readable */
-.t-disc{width:30px;height:42px;gap:0px;}
-.t-disc .tc{font-size:0.88rem;}
-.t-disc .ts{font-size:0.44rem;}
+.t-disc{width:34px;height:48px;gap:0px;}
+.t-disc .tc{font-size:1.0rem;}
+.t-disc .ts{font-size:0.5rem;}
 
 /* Honor tile font sizes per size class */
 .t-lg.s-honor .tc{font-size:1.55rem;}
@@ -240,8 +279,8 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 /* SVG tiles: no extra padding */
 .s-pin,.s-sou{padding:0!important;}
 .s-pin svg,.s-sou svg{display:block;}
-.s-man .tc{color:#cc1111;font-family:'Noto Serif SC',serif;}
-.s-man .ts{color:#991111;font-family:'Noto Serif SC',serif;}
+.s-man .tc{color:#1a0808;font-family:'Noto Serif SC',serif;}
+.s-man .ts{color:#1a0808;font-family:'Noto Serif SC',serif;}
 .s-pin .tc{color:#1133cc;}  /* circles/dots are blue */
 .s-pin .ts{color:#112299;}
 .s-sou .tc{color:#0a6611;} /* bamboo green */
@@ -280,7 +319,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   margin-top:3px;
 }
 .pdt-label{font-size:0.58rem;color:#7a9a7a;margin-bottom:3px;text-align:left;letter-spacing:0.04em;}
-.pdt-tiles{display:flex;flex-wrap:wrap;gap:2px;min-height:28px;align-items:flex-start;}
+.pdt-tiles{display:flex;flex-wrap:wrap;gap:2px;min-height:28px;align-items:flex-start;justify-content:center;}
 
 .meldrow{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;}
 .mgrp{display:flex;gap:1px;background:rgba(0,0,0,0.3);padding:2px;border-radius:4px;border:1px solid rgba(200,150,26,0.15);}
@@ -746,12 +785,12 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
 @keyframes light-flash{0%{opacity:0.3}100%{opacity:1}}
 
 @media(max-width:480px){
-  .t-lg{width:34px;height:50px;}.t-lg .tc{font-size:1rem;}.t-lg .ts{font-size:0.5rem;}
-  .t-disc{width:24px;height:34px;}.t-disc .tc{font-size:0.7rem;}.t-disc .ts{font-size:0.35rem;}
+  .t-lg{width:38px;height:54px;}.t-lg .tc{font-size:1.1rem;}.t-lg .ts{font-size:0.54rem;}
+  .t-disc{width:28px;height:40px;}.t-disc .tc{font-size:0.8rem;}.t-disc .ts{font-size:0.4rem;}
   .board{grid-template-columns:72px 1fr 72px;}.hcard{width:116px;}
 }
 @media(max-width:360px){
-  .t-lg{width:28px;height:42px;}.t-lg .tc{font-size:0.85rem;}.t-lg .ts{font-size:0.42rem;}
+  .t-lg{width:32px;height:46px;}.t-lg .tc{font-size:0.95rem;}.t-lg .ts{font-size:0.46rem;}
   .board{grid-template-columns:60px 1fr 60px;}
 }
 </style>
@@ -764,15 +803,12 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
     <div class="tdeco-tiles">
       <div class="ttile t-chun">中</div>
       <div class="ttile t-hatsu">發</div>
+      <div class="ttile t-haku"><span class="haku-inner"></span></div>
+      <div class="ttile t-man9"><span class="ttile-num">九</span><span class="ttile-suit">萬</span></div>
     </div>
     <div class="title-logo-wrap">
       <div class="title-logo">王丽珠牌侠录</div>
-      <div class="title-sub">✦ Wáng Lìzhū · 牌侠录 ✦</div>
-    </div>
-    <div class="tdeco-tiles">
-      <div class="ttile t-haku"><span class="haku-inner"></span></div>
-      <!-- 九萬 tile — no emoji, pure HTML -->
-      <div class="ttile t-man9"><span class="ttile-num">九</span><span class="ttile-suit">萬</span></div>
+      <div class="title-sub">✦ Records of the Wáng Lìzhū Tile Heroes ✦</div>
     </div>
   </div>
   <div class="btnrow">
@@ -790,7 +826,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   <div class="sec-sub">CHOOSE YOUR HERO</div>
   <div class="hgrid" id="hgrid"></div>
   <div id="hinfo">点击英雄查看详情 / Click a hero to see details</div>
-  <div style="display:flex;gap:8px;">
+  <div class="hero-btns">
     <button class="btn btn-gold" id="btngo" onclick="launchGame();playClick()" disabled style="opacity:0.4;">出发！/ Let's Go!</button>
     <button class="btn btn-out" onclick="goTitle();playClick()">返回 / Back</button>
   </div>
@@ -1039,6 +1075,11 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
   <div class="hero-anim-burst" id="hero-anim-burst"></div>
   <div class="hero-anim-text" id="hero-anim-text"></div>
 </div>
+<!-- 赌神 ability animation overlay -->
+<div id="dushen-anim-overlay" class="hidden">
+  <div id="dushen-burst"></div>
+  <div id="dushen-text"></div>
+</div>
 
 <!-- SLOT MACHINE / GACHA -->
 <div id="scr-gacha" class="screen hidden">
@@ -1177,9 +1218,9 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
     <div class="payline-overlay" id="payline-overlay"></div>
     <div class="slot-result-area" id="slot-result-area"></div>
     <div class="odds-table">
-      <div style="font-size:0.62rem;color:#886666;text-align:center;margin-bottom:2px;">5条赢线 / 5 PAYLINES: 上中下行 + 两条对角线</div>
-      <div class="odds-row jackpot"><span>🪙🪙🪙</span><span>JACKPOT +1000🪙 + 宠物!</span></div>
-      <div class="odds-row" style="color:#ffaa00"><span>7️⃣7️⃣7️⃣</span><span>BIG WIN +500🪙 + 道具</span></div>
+      <div style="font-size:0.62rem;color:#886666;text-align:center;margin-bottom:2px;">5条赢线 / 5 PAYLINES: 上中下行 + 两条对角线 ✓</div>
+      <div class="odds-row jackpot"><span>🪙🪙🪙</span><span>JACKPOT +1000🪙 + 宠物! (含对角线)</span></div>
+      <div class="odds-row" style="color:#ffaa00"><span>7 · 7 · 7</span><span>BIG WIN +500🪙 + 道具</span></div>
       <div class="odds-row" style="color:#cc88ff"><span>🀄🀄🀄</span><span>WIN +200🪙 + 道具</span></div>
       <div class="odds-row" style="color:#88cc88"><span>任意三同</span><span>+100🪙</span></div>
       <div class="odds-row"><span>任意两个相同</span><span>+30🪙</span></div>
@@ -1187,7 +1228,7 @@ body{font-family:'Noto Serif SC','Microsoft YaHei',serif;background:var(--jade);
     </div>
     <div class="payline">
       <span>赔率 / ODDS</span>
-      <span>🪙 稀有</span><span>7️⃣ 少见</span><span>🀄 普通</span><span>胜率 ~20%</span>
+      <span>🪙 稀有</span><span>7 少见</span><span>🀄 普通</span><span>胜率 ~20%</span>
     </div>
     <div class="slot-btn-row">
       <button class="slot-btn slot-btn-spin1" id="btn-spin1" onclick="spinSlots(1)">
@@ -1348,6 +1389,12 @@ function playHeroAbility(hero){
     case'fortune':playTone(1046,'sine',0.05,0.3);setTimeout(()=>playNoise(0.1,0.2,1500),30);[523,659,784,1046].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.12,0.25,0.1),i*60));break;
     case'wind':for(let i=0;i<6;i++)setTimeout(()=>playNoise(0.05,0.15,300+i*100),i*40);break;
     case'thunder':playTone(120,'sawtooth',0.15,0.5);setTimeout(()=>playNoise(0.2,0.6,2000),50);setTimeout(()=>playTone(880,'square',0.1,0.3),150);break;
+    case'dushen':
+      // Eye of Fate — eerie, low, fate-turning sound
+      [440,330,220,165].forEach((f,i)=>setTimeout(()=>{playTone(f,'sawtooth',0.12,0.45,0.1);},i*90));
+      setTimeout(()=>playNoise(0.15,0.5,300),400);
+      setTimeout(()=>[220,277,330].forEach(f=>playTone(f,'sine',0.25,0.35,0.22)),550);
+      break;
   }
 }
 
@@ -1386,6 +1433,14 @@ const HEROES=[
    abilityName:'雷击换牌 / Thunder Redraw',
    abilityWhen:'摸牌后，点击底部的"⚡雷击换牌"按钮！每局只能用一次！/ After drawing, tap the "⚡Thunder Redraw" button at the bottom! One use per round!',
    abilityTrigger:'手动按钮',anim:'⚡',animColor:'#aa44ff',animText:'⚡ 雷击！\nTHUNDER SWAP！'},
+  // 🀄 UNLOCKABLE — 小赌神 (Lesser Gambling God) — unlocked by beating 王丽珠
+  {id:'dushen',emoji:'🃏',zh:'小赌神',en:'Lesser Gambling God',
+   dz:'【解锁角色】每局开始：有20%概率看到对手最强一张牌！赢牌时有15%概率从对手各偷取15金币。',
+   de:'[Unlocked Hero] Round start: 20% chance to peek at one opponent\'s best tile! On win: 15% chance to steal 15 coins from each opponent.',
+   passive:'dushen',locked:true,
+   abilityName:'命运之眼 / Eye of Fate',
+   abilityWhen:'赢牌时有几率偷币；开局有几率偷看对手牌！/ Win: chance to steal coins; round start: chance to peek an opponent tile!',
+   abilityTrigger:'赢牌+开局',anim:'🃏',animColor:'#cc0033',animText:'🃏 命运之眼！\nEYE OF FATE！'},
 ];
 
 /* ═══════════════════════════════ PETS ════════════════════════════════ */
@@ -1606,7 +1661,7 @@ const PETS=[
   {id:'koi',emoji:'🐟',zh:'锦鲤',en:'Koi Fish',r:'common',
    dz:'每局开始+15金币',de:'+15 coins at round start',
    effect:'round_bonus_15',lockedBy:'triple7',
-   unlockHint:'🎰 三连 7️⃣ 解锁'},
+   unlockHint:'🎰 三连 7 解锁'},
 
   {id:'jade_turtle',emoji:'🐢',zh:'玉龟',en:'Jade Turtle',r:'common',
    dz:'每10回合牌墙不减少一次（跳过一轮消耗）',de:'Every 10 turns, wall does not decrease once',
@@ -1682,7 +1737,7 @@ const IPOOL=[
 /* Slot reel symbols with weights — rare winners, heavy losers */
 const REEL_SYMBOLS=[
   {s:`<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><defs><radialGradient id='cg' cx='38%' cy='35%'><stop offset='0%' stop-color='#fff7a0'/><stop offset='40%' stop-color='#f0c030'/><stop offset='100%' stop-color='#8a5a00'/></radialGradient><radialGradient id='ig' cx='50%' cy='50%'><stop offset='0%' stop-color='#ffe066'/><stop offset='100%' stop-color='#c87800'/></radialGradient></defs><circle cx='32' cy='32' r='30' fill='url(#cg)' stroke='#7a4a00' stroke-width='2'/><circle cx='32' cy='32' r='22' fill='none' stroke='#8a5a00' stroke-width='1.5'/><rect x='26' y='26' width='12' height='12' rx='2' fill='url(#ig)' stroke='#7a4a00' stroke-width='1.5'/><text x='32' y='20' text-anchor='middle' font-family='serif' font-size='9' font-weight='bold' fill='#5a2a00'>龍</text><text x='32' y='52' text-anchor='middle' font-family='serif' font-size='9' font-weight='bold' fill='#5a2a00'>幸</text><text x='14' y='35' text-anchor='middle' font-family='serif' font-size='9' font-weight='bold' fill='#5a2a00'>金</text><text x='50' y='35' text-anchor='middle' font-family='serif' font-size='9' font-weight='bold' fill='#5a2a00'>運</text></svg>`,w:1, v:'dragon', win:true},
-  {s:'7️⃣',w:4, v:'seven',  win:true},
+  {s:`<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><defs><linearGradient id='sg7' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='#fff0a0'/><stop offset='40%' stop-color='#ffd700'/><stop offset='100%' stop-color='#c87000'/></linearGradient><linearGradient id='sg7bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='#1a1a1a'/><stop offset='50%' stop-color='#2a2a2a'/><stop offset='100%' stop-color='#111111'/></linearGradient><filter id='glow7'><feGaussianBlur stdDeviation='2.5' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><rect x='2' y='2' width='60' height='60' rx='10' fill='url(#sg7bg)' stroke='#ffd700' stroke-width='2.5'/><rect x='6' y='6' width='52' height='52' rx='7' fill='none' stroke='rgba(255,215,0,0.3)' stroke-width='1'/><text x='33' y='48' text-anchor='middle' font-family='Arial Black,sans-serif' font-size='42' font-weight='900' fill='url(#sg7)' stroke='#8b4500' stroke-width='1.5' paint-order='stroke' filter='url(#glow7)'>7</text><line x1='14' y1='56' x2='22' y2='56' stroke='#ffd700' stroke-width='2' stroke-linecap='round' opacity='0.6'/><line x1='42' y1='56' x2='50' y2='56' stroke='#ffd700' stroke-width='2' stroke-linecap='round' opacity='0.6'/></svg>`,w:4, v:'seven', win:true},
   {s:'🀄',w:7, v:'mj',     win:true},
   {s:'💎',w:4, v:'gem',    win:true},
   {s:'⭐',w:9, v:'star',   win:true},
@@ -1708,6 +1763,7 @@ let PD={coins:200,hero:null,inv:{},coinMult:1.0,round:1,pets:{},activePet:null,s
   bowlCoins:0,       // coins currently in the bowl
   bowlTarget:300,    // coins needed to fill the bowl (recalculates)
   bowlMisses:0,      // consecutive miss count
+  unlockedDushen:false, // unlocked by beating 王丽珠
 };
 
 /* ═══════════════════════════════ DAILY BONUS + BROKE RECOVERY ═══ */
@@ -1965,7 +2021,7 @@ function manHTML(num, sz){
   const numCh=['一','二','三','四','五','六','七','八','九'][num-1];
   const nSz=isLg?'1.3rem':isMd?'1rem':isDisc?'0.9rem':'0.68rem';
   const sSz=isLg?'0.58rem':isMd?'0.46rem':isDisc?'0.44rem':'0.32rem';
-  return `<span class="tc" style="font-size:${nSz};color:#cc1111;font-family:'Noto Serif SC',serif;">${numCh}</span><span class="ts" style="font-size:${sSz};color:#991111;font-family:'Noto Serif SC',serif;">萬</span>`;
+  return `<span class="tc" style="font-size:${nSz};color:#1a0808;font-family:'Noto Serif SC',serif;">${numCh}</span><span class="ts" style="font-size:${sSz};color:#1a0808;font-family:'Noto Serif SC',serif;">萬</span>`;
 }
 
 function souTileHTML(num, sz){
@@ -2246,7 +2302,7 @@ function initRound(){
   hands[0]=sortH(hands[0]);
   const winds=['east','south','west','north'];
   const roundWind=winds[(PD.round-1)%4];
-  G={wall:deck,hands,melds:[[],[],[],[]],discards:[[],[],[],[]],cur:0,phase:'draw',pending:null,pendingFrom:-1,selIdx:null,selDrawn:false,drawn:null,thunderUsed:false,starBoost:(PD.inv['starboost']||0)>0,luckyRound:(PD.inv['luckycharm']||0)>0,roundWind,wallUsed:0};
+  G={wall:deck,hands,melds:[[],[],[],[]],discards:[[],[],[],[]],cur:0,phase:'draw',pending:null,pendingFrom:-1,selIdx:null,selDrawn:false,drawn:null,thunderUsed:false,wlzSuppressed:false,starBoost:(PD.inv['starboost']||0)>0,luckyRound:(PD.inv['luckycharm']||0)>0,roundWind,wallUsed:0};
   // Koi pet: +15 coins at round start
   if(PD.activePet==='koi'){PD.coins+=15;floatNotif('🐟 锦鲤加持！+15🪙');}
   if(PD.activePet==='bryan'){PD.coins+=20;floatNotif('👓 Bryan 在场！+20🪙 & 金币×2！/ Bryan is here! +20🪙 & ×2 coins!');}
@@ -2301,17 +2357,65 @@ function humanDraw(){
     },500);
   }
   const full=[...G.hands[0],G.drawn];
+  // Build action list for player
+  const acts=[];
   if(isWin(full,G.melds[0])){
-    showActs([{az:'🀄 和牌！',ae:'Win! (Tsumo)',cls:'abtn-win',fn:()=>{
+    acts.push({az:'🀄 和牌！',ae:'Win! (Tsumo)',cls:'abtn-win',fn:()=>{
       hideActs();G.hands[0]=sortH(full);G.drawn=null;
       const {coins,tai,reasons}=calcCoins(0,'tsumo');
       if(tai<MIN_TAI){
-        // Not enough tai — show info but don't win
         showModal('⚠️','台数不足 / Too Few Tai',`<strong style="color:#ffaa44">需要至少 ${MIN_TAI} 台才能和牌！/ Need at least ${MIN_TAI} tai to win!</strong><br><br>你现在有 <strong style="color:#ff8888">${tai} 台</strong><br>${reasons.join('<br>')||'无台数役种'}`,[{lz:'继续打牌',le:'Keep Playing',fn:()=>{hideModal();G.drawn=sortH(full)[full.length-1];G.hands[0]=sortH(full.slice(0,-1));renderAll();}}]);
       } else {
         endRound(0,'自摸 / Tsumo!',coins,tai,reasons);
       }
-    }},{az:'继续打牌',ae:'Continue',cls:'abtn-skip',fn:()=>hideActs()}]);
+    }});
+  }
+  // Self-kong (暗杠): 4 of a kind all in hand+drawn
+  const drawnTile=G.drawn;
+  if(drawnTile){
+    // Concealed kong: 3 in hand + drawn tile = 4
+    const matchInHand=G.hands[0].filter(t=>teq(t,drawnTile));
+    if(matchInHand.length>=3){
+      acts.push({az:'暗杠！',ae:'Self Kong!',cls:'abtn-kong',fn:()=>{
+        hideActs();
+        playKong();
+        G.hands[0]=sortH(G.hands[0].filter(t=>!teq(t,drawnTile)));
+        G.drawn=null;
+        G.melds[0].push({type:'kong',tiles:[drawnTile,drawnTile,drawnTile,drawnTile]});
+        if(G.wall.length>0){G.drawn=G.wall.pop();G.wallUsed++;}
+        G.phase='discard';G.selIdx=null;G.selDrawn=false;
+        updHUD();renderAll();renderWall();
+        floatNotif('暗杠！/ Concealed Kong!');
+        setTurn('暗杠！摸牌后打出 / Self Kong! Draw and discard');
+      }});
+    }
+    // Upgraded pong→kong (加杠): have pong in melds + just drew the 4th
+    const pongMeldIdx=G.melds[0].findIndex(m=>m.type==='pong'&&teq(m.tiles[0],drawnTile));
+    if(pongMeldIdx!==-1){
+      acts.push({az:'加杠！',ae:'Add to Kong!',cls:'abtn-kong',fn:()=>{
+        hideActs();
+        playKong();
+        G.melds[0][pongMeldIdx]={type:'kong',tiles:[drawnTile,drawnTile,drawnTile,drawnTile]};
+        G.drawn=null;
+        if(G.wall.length>0){G.drawn=G.wall.pop();G.wallUsed++;}
+        G.phase='discard';G.selIdx=null;G.selDrawn=false;
+        updHUD();renderAll();renderWall();
+        floatNotif('加杠！/ Upgraded to Kong!');
+        setTurn('加杠！摸牌后打出 / Added to Kong! Discard a tile');
+      }});
+    }
+    // Also check: 4 of a kind all in hand (drew the 4th)
+    const allFourInFull=full.filter(t=>teq(t,drawnTile));
+    if(allFourInFull.length===4&&matchInHand.length<3&&pongMeldIdx===-1){
+      // All 4 in hand (3 in hand + drawn = 4)
+      // already covered by matchInHand>=3 above
+    }
+  }
+  if(acts.length>0){
+    if(acts.length>1||acts[0].cls==='abtn-win'){
+      acts.push({az:'继续打牌',ae:'Continue',cls:'abtn-skip',fn:()=>hideActs()});
+    }
+    showActs(acts);
   } else {
     setTurn('🃏 你的回合 — 点选牌，再点打出 / Your turn — tap to select, tap again to discard');
   }
@@ -2336,7 +2440,9 @@ function doDiscard(idx,isDrawn){
   setTimeout(()=>checkClaims(0),700);
 }
 function clickHand(i){if(G.phase!=='discard'||G.cur!==0)return;if(G.selIdx===i&&!G.selDrawn){doDiscard(i,false);}else{G.selIdx=i;G.selDrawn=false;playClick();renderAll();updSelHint();}}
+function dblClickHand(i){if(G.phase!=='discard'||G.cur!==0)return;G.selIdx=i;G.selDrawn=false;doDiscard(i,false);}
 function clickDrawn(){if(G.phase!=='discard'||G.cur!==0)return;if(G.selDrawn){doDiscard(null,true);}else{G.selDrawn=true;G.selIdx=null;playClick();renderAll();updSelHint();}}
+function dblClickDrawn(){if(G.phase!=='discard'||G.cur!==0)return;G.selDrawn=true;G.selIdx=null;doDiscard(null,true);}
 function updSelHint(){const el=document.getElementById('skhint');let t=G.selDrawn?G.drawn:(G.selIdx!==null?G.hands[0][G.selIdx]:null);if(!t){el.textContent='';return;}el.textContent=`选中：${tzh(t)} — 再点一次打出 / ${ten(t)} — Tap again to discard`;}
 
 /* ═══════════════════════════════ AI TURN ════════════════════════════ */
@@ -2471,7 +2577,7 @@ function endRound(winner,label,coins,tai,reasons){
   }
   PD.round++;updHUD();
   const winH=winner===0?G.hands[0].concat(G.drawn?[G.drawn]:[]):[];
-  showModal(winner===0?'🎉':(winner===null?'🀄':'💀'),label,body,[{lz:'下一局',le:'Next Round',fn:()=>{hideModal();initRound();}},{lz:'菜单',le:'Menu',fn:()=>{hideModal();goTitle();}}],winH);
+  showModal(winner===0?'🎉':(winner===null?'🀄':'💀'),label,body,[{lz:'下一局',le:'Next Round',fn:()=>{hideModal();G=null;setTimeout(()=>initRound(),100);}},{lz:'菜单',le:'Menu',fn:()=>{hideModal();G=null;goTitle();}}],winH);
 }
 
 /* ═══════════════════════════════ RENDER ═════════════════════════════ */
@@ -2494,8 +2600,8 @@ function renderLeft(){const pi=3,th=document.getElementById('th-left');th.innerH
 function renderRight(){const pi=1,th=document.getElementById('th-right');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));renderDisc('td-right',pi,'t-xs');}
 function renderBot(){
   const th=document.getElementById('th-bot');th.innerHTML='';
-  G.hands[0].forEach((t,i)=>{const isSel=G.selIdx===i&&!G.selDrawn;th.appendChild(tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i)));});
-  if(G.drawn){const sep=document.createElement('div');sep.className='dsep';th.appendChild(sep);th.appendChild(tileEl(G.drawn,'t-lg','ck drawn'+(G.selDrawn?' sel':''),clickDrawn));}
+  G.hands[0].forEach((t,i)=>{const isSel=G.selIdx===i&&!G.selDrawn;const el=tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i));el.ondblclick=(e)=>{e.stopPropagation();dblClickHand(i);};th.appendChild(el);});
+  if(G.drawn){const sep=document.createElement('div');sep.className='dsep';th.appendChild(sep);const drawnEl=tileEl(G.drawn,'t-lg','ck drawn'+(G.selDrawn?' sel':''),clickDrawn);drawnEl.ondblclick=(e)=>{e.stopPropagation();dblClickDrawn();};th.appendChild(drawnEl);}
   renderMelds('tm-bot',0,'t-sm');
   renderDisc('td-bot',0,'t-disc');
   // Scale hand to always fit screen width
@@ -2961,7 +3067,7 @@ function resolveSlot5(grid, numSpins){
           [{lz:'太棒了！',le:'Awesome!',fn:()=>hideModal()}]),5800);
       }
     } else if(allSame && s0.v==='seven'){
-      won=500; banner=`7️⃣7️⃣7️⃣ BIG WIN! (${pl.name})`; playSlotBigWin(); spawnConfetti(); giveRandomItem('legendary');
+      won=500; banner=`🎰 777 BIG WIN! (${pl.name})`; playSlotBigWin(); spawnConfetti(); giveRandomItem('legendary');
     } else if(allSame && s0.v==='mj'){
       won=200; banner=`🀄🀄🀄 WIN! (${pl.name})`; playSlotMatch(); setTimeout(playSlotBigWin,350); giveRandomItem('rare');
     } else if(allSame){
@@ -3061,9 +3167,22 @@ function drawPaylineOverlay(plIndices){
     });
   });
 
-  // Clear the SVG overlay (not used for lines)
+  // Draw SVG lines over payline overlay (especially for diagonals)
   const overlay = document.getElementById('payline-overlay');
-  if(overlay) overlay.innerHTML = '';
+  if(!overlay) return;
+  // The reels container is 3 reels × 72px wide each + gaps = ~230px wide, 288px tall
+  // Each reel item is 96px tall; visible rows 0,1,2 map to y centers 48, 144, 240
+  const reelW = 72, reelH = 288;
+  const rowCY = [48, 144, 240]; // center y of each visible row
+  const reelCX = [36, 108+4, 180+8]; // center x of each reel (accounting for gaps)
+  // Build SVG lines
+  const lines = plIndices.map(pli=>{
+    const pl = PAYLINES[pli];
+    const pts = pl.cells.map(([r,row])=>`${reelCX[r]},${rowCY[row]}`);
+    return `<line x1="${reelCX[pl.cells[0][0]]}" y1="${rowCY[pl.cells[0][1]]}" x2="${reelCX[pl.cells[2][0]]}" y2="${rowCY[pl.cells[2][1]]}" stroke="${pl.color}" stroke-width="3" stroke-linecap="round" opacity="0.75" stroke-dasharray="6 4"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="0.8s" repeatCount="indefinite"/></line>`;
+  }).join('');
+  const totalW = reelCX[2] + 36;
+  overlay.innerHTML = `<svg viewBox="0 0 ${totalW} ${reelH}" preserveAspectRatio="none" style="position:absolute;top:0;left:32px;width:calc(100% - 64px);height:${reelH}px;pointer-events:none;z-index:8;">${lines}</svg>`;
 }
 
 function updFreeSpinBtn(){
@@ -3273,6 +3392,73 @@ const AI_ROSTER = [
       idle:[['你想多久就多久，没事。','Think as long as you want, no problem.'],['慢慢来，随缘。','Slowly slowly, fate.'],['等你，没问题。','Waiting for you, no problem.']],
     }
   },
+  // ══ 赌神 王丽珠 — THE STRONGEST AI ══
+  {
+    id:'wlz', name:'王丽珠', nameZh:'王丽珠', emoji:'🀄',
+    title:'赌神', titleEn:'Gambling God',
+    style:'godlike', borderColor:'#cc0033', textColor:'#ff6688',
+    voice:{pitch:1.85,rate:1.15,lang:'zh-TW'}, // loud and sharp — piercing female voice
+    bio:'赌神降临，无人能挡。她能预知牌局，操控命运。',
+    isWLZ: true,
+    lines:{
+      draw:[
+        ['命运，已在我手中。','Fate is already in my hands.'],
+        ['这张牌…我早就知道了。','This tile… I already knew.'],
+        ['赌神从不碰运气。','The Gambling God never relies on luck.'],
+        ['每一张牌都有它的命运。','Every tile has its destiny.'],
+      ],
+      discard:[
+        ['这张，不需要了。','This one, no longer needed.'],
+        ['弃之。','Discard.'],
+        ['你们拿去吧。没用的。','Take it. It\'s useless.'],
+        ['命运不需要这张牌。','Fate does not need this tile.'],
+      ],
+      pong:[
+        ['碰。这在我的掌控之中。','Pong. This was within my control.'],
+        ['我早就等着这张牌了。','I\'ve been waiting for this tile.'],
+        ['赌神出手，必有所得。','When the Gambling God acts, she gains.'],
+      ],
+      chi:[
+        ['吃。棋差一招，满盘皆输。','Chi. One wrong move loses everything.'],
+        ['顺势而为。','Go with the flow.'],
+      ],
+      win:[
+        ['和了。你们还差得远。','Win. You still have much to learn.'],
+        ['赌神之名，当之无愧。','The title Gambling God is well-earned.'],
+        ['命运，从一开始就站在我这边。','Fate has been on my side from the start.'],
+        ['输给我，不丢人的。','Losing to me is no shame.'],
+      ],
+      lose:[
+        ['…有意思。你让我刮目相看。','…Interesting. You have surprised me.'],
+        ['我让你赢的，别骄傲。','I let you win. Don\'t be arrogant.'],
+        ['今天的风，不在我这边。','Today\'s wind is not on my side.'],
+      ],
+      human_win:[
+        ['…你，不简单。','…You. Are not simple.'],
+        ['赌神也有看走眼的时候。少年，记住这一局。','Even the Gambling God misjudges. Remember this round, young one.'],
+        ['你的命，比我想象的要硬。','Your fate is harder than I imagined.'],
+        ['有趣。非常有趣。','Interesting. Very interesting.'],
+      ],
+      low_tiles:[
+        ['终局将至。命运，揭晓。','The endgame approaches. Fate, reveal yourself.'],
+        ['越到最后，越见真章。','The end reveals all truths.'],
+      ],
+      idle:[
+        ['时间，也是命运的一部分。慢慢来。','Time is part of fate. Take your time.'],
+        ['我不急。我从不急。','I\'m not in a hurry. I never am.'],
+        ['想好了再走。','Think before you move.'],
+      ],
+      ability:[
+        ['赌神之眼，无所不见。','The eye of the Gambling God sees all.'],
+        ['你的牌，我早已洞悉。','Your hand — I already know it.'],
+        ['命运的齿轮，开始转动。','The gears of fate begin to turn.'],
+      ],
+      taunt_winning:[
+        ['你已经输了，只是还没意识到。','You\'ve already lost. You just don\'t know it yet.'],
+        ['棋局早定。','The game was decided long ago.'],
+      ],
+    }
+  },
 ];
 
 // Current assignments for each seat (can be cycled)
@@ -3338,7 +3524,7 @@ function speakAI(pi, text, persona) {
     if (voice) utt.voice = voice;
     utt.pitch = vp.pitch || 1;
     utt.rate = vp.rate || 1;
-    utt.volume = 0.85;
+    utt.volume = persona.isWLZ ? 1.0 : 0.85;
     utt.lang = vp.lang || 'zh-CN';
     // Show voice indicator
     const vi = document.getElementById('voice-indicator');
@@ -3657,6 +3843,346 @@ initRound = function() {
 /* ── Hook: launchGame ── */
 const _origLaunchGame = launchGame;
 launchGame = function() { _origLaunchGame(); updateAILabels(); updateWinStreak(false); };
+
+/* ══════════════════════════════════════════════════════════════════════
+   赌神 王丽珠 — SPECIAL AI ABILITY SYSTEM
+══════════════════════════════════════════════════════════════════════ */
+
+// Track which seat 王丽珠 occupies (null if not in game)
+function getWLZSeat() {
+  for(const seat of [1,2,3]) {
+    const p = getPersona(seat);
+    if(p && p.isWLZ) return seat;
+  }
+  return null;
+}
+
+// Play her distinctive female tenor sound — rich, low, dramatic
+function playWLZAbility(type) {
+  try {
+    switch(type) {
+      case 'foresee': // destiny peek — sharp piercing ascending tones
+        [880,1100,1320,1760].forEach((f,i)=>setTimeout(()=>{
+          playTone(f,'square',0.12,0.55,0.1);
+          playTone(f*1.5,'sine',0.08,0.3,0.1);
+        },i*80));
+        setTimeout(()=>playNoise(0.08,0.35,3000),380);
+        break;
+      case 'steal': // coin steal — sharp high crack
+        playTone(1320,'square',0.15,0.6);
+        setTimeout(()=>playTone(1760,'square',0.12,0.55),60);
+        setTimeout(()=>playNoise(0.12,0.5,2500),100);
+        setTimeout(()=>[880,1100,1320].forEach(f=>playTone(f,'square',0.18,0.45,0.15)),220);
+        break;
+      case 'swap': // hand swap — sharp high sweep
+        [440,660,880,1100,1320,1760].forEach((f,i)=>setTimeout(()=>
+          playTone(f,'square',0.1,0.5,0.08),i*45));
+        setTimeout(()=>playNoise(0.1,0.4,2500),320);
+        break;
+      case 'block': // win block — sharp high strike
+        playTone(1760,'square',0.18,0.6);
+        setTimeout(()=>playTone(1320,'square',0.15,0.55),50);
+        setTimeout(()=>playNoise(0.15,0.5,2000),100);
+        break;
+      case 'enter': // entrance — loud sharp fanfare
+        [660,880,1100,1320,1760].forEach((f,i)=>setTimeout(()=>{
+          playTone(f,'square',0.15,0.6,0.1);
+        },i*60));
+        setTimeout(()=>{
+          [880,1100,1320,1760].forEach(f=>playTone(f,'square',0.4,0.55,0.35));
+          playNoise(0.12,0.5,2500);
+        },420);
+        break;
+    }
+  } catch(e){}
+}
+
+// Show 赌神 ability animation overlay
+function dushenAnim(burst, text, duration) {
+  const ov = document.getElementById('dushen-anim-overlay');
+  const b = document.getElementById('dushen-burst');
+  const t = document.getElementById('dushen-text');
+  if(!ov) return;
+  b.textContent = burst;
+  t.innerHTML = text;
+  ov.classList.remove('hidden');
+  setTimeout(()=>ov.classList.add('hidden'), duration||1600);
+}
+
+// 赌神 special abilities — called each AI turn
+let wlzAbilityCooldown = 0; // round-based cooldown
+function wlzActivateAbility(seat) {
+  if(!G || G.phase==='end') return;
+  const now = Date.now();
+  if(now - wlzAbilityCooldown < 12000) return; // max once every 12s
+
+  const roll = Math.random();
+  const wlz = getPersona(seat);
+
+  // Ability 1: 命运感知 Destiny Foresee (40%) — reveals one of player's tiles in a bubble
+  if(roll < 0.40 && G.hands[0].length > 0) {
+    wlzAbilityCooldown = now;
+    const revealTile = G.hands[0][Math.floor(Math.random()*G.hands[0].length)];
+    setTimeout(()=>{
+      playWLZAbility('foresee');
+      dushenAnim('👁️','命运感知<br><small style="font-size:0.9rem;color:#ff9999">Destiny Foresee — she sees your hand</small>',1800);
+      aiSay(seat, null, wlz.lines.ability);
+      floatNotif('🀄 赌神 感知了你的手牌！/ Gambling God sensed your hand!');
+    }, 600);
+  }
+  // Ability 2: 运势压制 Fortune Suppress (25%) — player's next action gets -5 coin penalty
+  else if(roll < 0.65) {
+    wlzAbilityCooldown = now;
+    setTimeout(()=>{
+      playWLZAbility('block');
+      dushenAnim('🌑','运势压制<br><small style="font-size:0.9rem;color:#ff9999">Fortune Suppressed — your luck is dimmed</small>',1600);
+      aiSay(seat, null, wlz.lines.ability);
+      G.wlzSuppressed = true; // flag checked in endRound
+      floatNotif('🀄 赌神 压制了你的运势！赢牌减少20金币！');
+    }, 800);
+  }
+  // Ability 3: 牌局洞见 Hand Read (20%) — 王丽珠 draws optimally based on player's discard pattern
+  else if(roll < 0.85) {
+    wlzAbilityCooldown = now;
+    setTimeout(()=>{
+      playWLZAbility('foresee');
+      dushenAnim('🃏','牌局洞见<br><small style="font-size:0.9rem;color:#ff9999">Hand Insight — she reads the table</small>',1400);
+      // Mechanical effect: peek at wall and sort AI hand more optimally (already handled by godlike style)
+      aiSay(seat, null, wlz.lines.ability);
+    }, 500);
+  }
+  // Ability 4: 命运倾斜 Fate Tilt (15%) — taunt + minor gold steal
+  else {
+    wlzAbilityCooldown = now;
+    setTimeout(()=>{
+      playWLZAbility('steal');
+      dushenAnim('💀','命运倾斜<br><small style="font-size:0.9rem;color:#ff9999">Fate Tilts — 10 coins drained</small>',1600);
+      aiSay(seat, null, wlz.lines.taunt_winning);
+      PD.coins = Math.max(0, PD.coins - 10);
+      updHUD();
+      floatNotif('🀄 赌神 夺走了10金币！/ Gambling God drained 10 coins!');
+    }, 700);
+  }
+}
+
+// Override aiDiscard for WLZ — "godlike" style: always make optimal discard
+const _wlzDiscardOrig = aiDiscard;
+aiDiscard = function(pi) {
+  const p = getPersona(pi);
+  if(!p || !p.isWLZ) return _wlzDiscardOrig(pi);
+  // Godlike: score every tile, pick lowest value (most isolated)
+  const h = G.hands[pi];
+  let minScore = Infinity, pick = h[0];
+  h.forEach(t => {
+    // count connections (pairs, sequences)
+    const connections = h.filter(o => o !== t && (
+      teq(o,t) ||
+      (o.suit === t.suit && typeof t.num === 'number' && Math.abs(o.num - t.num) <= 2)
+    )).length;
+    const score = connections;
+    if(score < minScore) { minScore = score; pick = t; }
+  });
+  return pick;
+};
+
+// Override aiWantPong for WLZ — always pong if beneficial
+const _wlzPongOrig = aiWantPong;
+aiWantPong = function(pi, tile) {
+  const p = getPersona(pi);
+  if(!p || !p.isWLZ) return _wlzPongOrig(pi, tile);
+  const matches = G.hands[pi].filter(t=>teq(t,tile)).length;
+  return matches >= 2; // always pong
+};
+
+/* ── Hook: aiTurn — trigger WLZ abilities ── */
+const _origAiTurnWLZ = aiTurn;
+aiTurn = function(pi) {
+  _origAiTurnWLZ(pi);
+  const p = getPersona(pi);
+  if(p && p.isWLZ) {
+    setTimeout(()=>wlzActivateAbility(pi), 1200);
+    setTimeout(()=>aiMaybeComment(pi,'draw',0.35),200);
+    setTimeout(()=>aiMaybeComment(pi,'discard',0.28),950);
+  }
+};
+
+/* ── 王丽珠 entrance when she's in the roster ── */
+const _origInitRoundWLZ = initRound;
+initRound = function() {
+  wlzAbilityCooldown = 0;
+  if(G) G.wlzSuppressed = false;
+  _origInitRoundWLZ();
+  const wlzSeat = getWLZSeat();
+  if(wlzSeat !== null) {
+    setTimeout(()=>{
+      playWLZAbility('enter');
+      dushenAnim('🀄','赌神降临！<br><small style="font-size:0.95rem;color:#ff8888">王丽珠 · 赌神 has arrived</small>', 2200);
+      setTimeout(()=>aiSay(wlzSeat, null, [[
+        '今晚，没有人能赢我。',
+        'Tonight, no one can beat me.'
+      ]]), 800);
+    }, 1200);
+  }
+};
+
+/* ── Hook: updateAILabels — give WLZ special title display ── */
+const _origUpdateAILabels = updateAILabels;
+updateAILabels = function() {
+  _origUpdateAILabels();
+  [1,2,3].forEach(pi => {
+    const p = getPersona(pi);
+    if(p && p.isWLZ) {
+      const el = document.getElementById('ai-name-'+pi);
+      if(el) {
+        el.innerHTML = `🀄 ${p.nameZh}<br><span style="font-size:0.55rem;color:#ff4466;font-weight:700;letter-spacing:0.05em">【${p.title}】${p.titleEn}</span>`;
+        el.style.textShadow = '0 0 8px rgba(200,0,50,0.6)';
+        el.classList.add('dushen-border');
+      }
+    }
+  });
+};
+
+/* ── Hook: buildRosterUI — style WLZ chip specially ── */
+const _origBuildRosterUI = buildRosterUI;
+buildRosterUI = function() {
+  _origBuildRosterUI();
+  // After render, style WLZ chips
+  const wlzIdx = AI_ROSTER.findIndex(p=>p.isWLZ);
+  if(wlzIdx === -1) return;
+  document.querySelectorAll('.ai-char-chip').forEach(chip => {
+    if(chip.textContent.includes('王丽珠') || chip.textContent.includes('🀄')) {
+      chip.style.background = 'linear-gradient(135deg,rgba(120,0,20,0.6),rgba(60,0,10,0.8))';
+      chip.style.borderColor = '#cc0033';
+      chip.style.color = '#ff6688';
+      chip.style.fontWeight = '700';
+    }
+  });
+};
+
+/* ── 王丽珠 score tracking for unlock chance ── */
+let wlzRoundCoins = 0; // coins she'd earn if she were scoring (proxy: times she wins)
+let wlzWins = 0;       // how many rounds WLZ won this session
+let playerWins = 0;    // how many rounds player won against WLZ
+
+/* ── Hook endRound for WLZ unlock logic ── */
+const _origEndRoundWLZ = endRound;
+endRound = function(winner, label, coins, tai, reasons) {
+  const wlzSeat = getWLZSeat();
+
+  // Apply suppression penalty
+  if(winner === 0 && G && G.wlzSuppressed) {
+    coins = Math.max(0, (coins||0) - 20);
+    floatNotif('🀄 赌神压制！-20金币 / Gambling God suppressed your win!');
+  }
+  if(G) G.wlzSuppressed = false;
+
+  if(wlzSeat !== null) {
+    if(winner === 0) {
+      // Player beat 赌神 (or at least nobody else won)
+      playerWins++;
+      // 小赌神 unlock: ~8% chance per round player beats her
+      if(!PD.unlockedDushen && Math.random() < 0.08) {
+        PD.unlockedDushen = true;
+        // Unlock the hero
+        const dh = HEROES.find(h=>h.id==='dushen');
+        if(dh) dh.locked = false;
+        setTimeout(()=>{
+          playWLZAbility('enter');
+          dushenAnim('🃏','小赌神解锁！<br><small style="font-size:0.9rem;color:#ffaaaa">Lesser Gambling God Unlocked!</small>',3000);
+          setTimeout(()=>showModal('🃏','小赌神 已解锁！/ Lesser Gambling God Unlocked!',
+            `<strong style="color:#ff4466;font-size:1.1rem">命运认可了你。</strong><br><span style="color:#ffaaaa">Fate has acknowledged you.</span><br><br>
+            你在赢过赌神后获得了<strong style="color:#ffdd44">小赌神</strong>称号！<br>
+            <span style="font-size:0.8rem;color:#aaaaaa">You've earned the Lesser Gambling God title by defeating 王丽珠!</span><br><br>
+            <span style="font-size:0.75rem;color:#ff9999">🃏 命运之眼：开局20%看对手牌；赢牌15%偷取对手各15金币<br>Eye of Fate: 20% peek on start; 15% steal 15 coins on win</span>`,
+            [{lz:'接受命运',le:'Accept Fate',fn:()=>hideModal()}]
+          ),1200);
+        },800);
+      } else if(!PD.unlockedDushen) {
+        const pct = Math.round(8);
+        floatNotif(`🀄 你胜过了赌神！解锁概率 ${pct}% / You beat the Gambling God! Unlock chance: ${pct}%`);
+      }
+    } else if(winner === wlzSeat) {
+      wlzWins++;
+      // WLZ wins — she taunts
+      setTimeout(()=>{
+        const wlz = getPersona(wlzSeat);
+        aiSay(wlzSeat, null, wlz.lines.win);
+        setTimeout(()=>{
+          playWLZAbility('steal');
+          dushenAnim('🀄','赌神胜利！<br><small style="font-size:0.85rem;color:#ff8888">The Gambling God wins again</small>',1800);
+        },400);
+      },300);
+    }
+  }
+  _origEndRoundWLZ(winner, label, coins, tai, reasons);
+};
+
+/* ── 小赌神 (dushen) hero passive — applied in calcCoins & initRound ── */
+const _origCalcCoins = calcCoins;
+calcCoins = function(winner, method) {
+  const result = _origCalcCoins(winner, method);
+  if(winner !== 0 || PD.hero?.passive !== 'dushen') return result;
+  // 15% chance to steal 15 coins from each opponent
+  if(Math.random() < 0.15) {
+    const stolen = 3 * 15; // 3 opponents × 15
+    result.coins += stolen;
+    heroAbilityAnim('dushen');
+    setTimeout(()=>floatNotif(`🃏 命运之眼发动！偷取 +${stolen}🪙 / Eye of Fate triggered! Stole +${stolen} coins!`),600);
+  }
+  return result;
+};
+
+// 小赌神 round-start peek ability (merged with WLZ entrance hook above)
+const _origInitRoundDushen = initRound;
+initRound = function() {
+  _origInitRoundDushen();
+  if(PD.hero?.passive === 'dushen' && Math.random() < 0.20 && G) {
+    setTimeout(()=>{
+      // Reveal one tile from a random opponent
+      const oppSeat = [1,2,3][Math.floor(Math.random()*3)];
+      const oppHand = G.hands[oppSeat];
+      if(oppHand && oppHand.length > 0) {
+        const revealTile = oppHand[Math.floor(Math.random()*oppHand.length)];
+        heroAbilityAnim('dushen');
+        setTimeout(()=>showModal('🃏','命运之眼 / Eye of Fate',
+          `<strong style="color:#ff6688">你的小赌神天赋发动了！</strong><br><span style="color:#ffaaaa">Your Lesser Gambling God ability activated!</span><br><br>
+          你看到了对手的一张牌：<br>
+          <strong style="font-size:1.5rem">${tzh(revealTile)}</strong><br>
+          <span style="color:#88ccff;font-size:0.8rem">${ten(revealTile)}</span>`,
+          [{lz:'明白了',le:'Understood',fn:()=>hideModal()}]
+        ),500);
+      }
+    },1800);
+  }
+};
+
+/* ── buildHeroes — show 小赌神 as locked unless unlocked ── */
+const _origBuildHeroes = buildHeroes;
+buildHeroes = function() {
+  const g = document.getElementById('hgrid');
+  g.innerHTML = '';
+  HEROES.forEach(h => {
+    const isLocked = h.locked && !PD.unlockedDushen;
+    const el = document.createElement('div');
+    el.className = 'hcard' + (PD.hero?.id===h.id?' sel':'') + (h.id==='dushen'?' dushen-hcard':'');
+    el.style.position = 'relative';
+    el.innerHTML = `<div class="hemoji">${h.emoji}</div>
+      <div class="hnamez">${h.zh}</div>
+      <div class="hnamee">${h.en}</div>
+      <div class="hdesc">${h.dz}</div>`;
+    if(isLocked) {
+      const lockOv = document.createElement('div');
+      lockOv.className = 'dushen-locked-overlay';
+      lockOv.innerHTML = `🔒<br><strong>击败赌神解锁</strong><br><small>Beat 王丽珠 (赌神) to unlock</small>`;
+      el.appendChild(lockOv);
+      el.style.cursor = 'not-allowed';
+    } else {
+      el.onclick = ()=>{ pickHero(h.id, el); playClick(); };
+    }
+    g.appendChild(el);
+  });
+  setGoBtn();
+};
 
 
 
