@@ -185,6 +185,97 @@ html, body {
   display: none !important;
 }
 
+/* ─── PLAYER HAND PEEK / PARK MECHANIC ─── */
+
+/* pa-bot is always fixed at bottom — removed from grid flow so center expands */
+#pa-bot {
+  position: fixed !important;
+  bottom: 0;
+  left: 0; right: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-bottom: max(2px, env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, rgba(8,28,16,0.97) 0%, rgba(8,28,16,0.88) 85%, transparent 100%);
+  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.32s ease,
+              filter 0.32s ease;
+  will-change: transform;
+  pointer-events: none; /* default off; children re-enable selectively */
+}
+
+/* Peek handle is ALWAYS tappable */
+#hand-peek-handle {
+  width: 100%;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  order: -1;
+  pointer-events: auto !important;
+}
+
+/* Parked: slides down so only the 18px peek handle peeks above screen edge */
+#pa-bot.hand-parked {
+  transform: translateY(calc(100% - 18px));
+  opacity: 0.85;
+  filter: blur(0.5px);
+}
+/* Active: fully visible, all children interactive */
+#pa-bot.hand-active {
+  transform: translateY(0);
+  opacity: 1;
+  filter: none;
+  pointer-events: auto;
+}
+
+#hand-peek-handle .peek-dots {
+  display: flex; gap: 2px; align-items: flex-end;
+}
+#hand-peek-handle .peek-dot {
+  width: 6px; height: 9px;
+  background: linear-gradient(155deg, #fffef8, #f0e080);
+  border: 1px solid #7a5808;
+  border-radius: 1px 1px 0 0;
+  box-shadow: 1px 1.5px 0 #5a3800;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.2s;
+}
+#pa-bot.hand-parked #hand-peek-handle .peek-dot {
+  opacity: 0.95;
+  transform: translateY(-1px);
+  animation: peek-bob 2s ease-in-out infinite;
+}
+@keyframes peek-bob {
+  0%, 100% { transform: translateY(-1px); }
+  50% { transform: translateY(-4px); }
+}
+#hand-peek-handle #peek-label {
+  font-size: 0.58rem;
+  color: rgba(240,192,64,0.7);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+#pa-bot.hand-active #hand-peek-handle #peek-label {
+  opacity: 0;
+}
+
+/* Ensure board grid bottom row collapses — pa-bot is now fixed */
+.pa.bot {
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: visible;
+  padding: 0 !important;
+  pointer-events: none !important;
+}
+
 /* ─── COMPACT OPPONENT AREAS ─── */
 /* Top opponent: constrain height so it doesn't eat vertical space */
 .pa.top {
@@ -359,7 +450,19 @@ html, body {
       <div id="tm-right" class="meldrow" style="flex-direction:column;gap:1px;pointer-events:none;"></div>
       <div id="td-right" class="discm" style="flex-direction:column;max-width:46px;pointer-events:none;align-items:center;"></div>
     </div>
-    <div class="pa bot" id="pa-bot">
+    <div class="pa bot" id="pa-bot" onclick="event.stopPropagation()">
+      <!-- Peek handle — always the topmost strip of pa-bot, tappable to toggle -->
+      <div id="hand-peek-handle" onclick="toggleHandPeek(event)">
+        <div class="peek-dots">
+          <div class="peek-dot"></div><div class="peek-dot"></div><div class="peek-dot"></div>
+          <div class="peek-dot"></div><div class="peek-dot"></div>
+        </div>
+        <span id="peek-label">等待 / Waiting…</span>
+        <div class="peek-dots">
+          <div class="peek-dot"></div><div class="peek-dot"></div><div class="peek-dot"></div>
+          <div class="peek-dot"></div><div class="peek-dot"></div>
+        </div>
+      </div>
       <div id="tm-bot" class="meldrow"></div>
       <div id="th-bot" class="handrow"></div>
       <div class="palabel" id="lbl-bot" style="margin-top:2px;"><span class="lz">你 / You</span></div>
@@ -372,6 +475,7 @@ html, body {
       </div>
     </div>
   </div>
+
   <div class="actpanel hidden" id="actpanel"></div>
   <div class="skhint" id="skhint"></div>
 
@@ -2015,6 +2119,7 @@ function launchGame(){
 }
 function initRound(){
   playShuffle();
+  _handManualOpen = false;
   const deck=shuffle(createDeck());
   const hands=[[],[],[],[]];
   for(let i=0;i<13;i++)for(let p=0;p<4;p++)hands[p].push(deck.pop());
@@ -2065,6 +2170,7 @@ function humanDraw(){
   if(G.wall.length===0){endRound(null,'流局 / Draw Game',0);return;}
   G.drawn=G.wall.pop();G.wallUsed++;
   G.phase='discard';G.selIdx=null;G.selDrawn=false;
+  _handManualOpen = false; // let turn logic show it cleanly
   playDraw();updHUD();renderAll();renderWall();
   // Cat pet: 10% chance extra draw
   if(PD.activePet==='cat'&&Math.random()<0.10&&G.wall.length>0){
@@ -2150,6 +2256,7 @@ function doDiscard(idx,isDrawn){
   if(isDrawn){tile=G.drawn;G.drawn=null;}
   else{if(G.drawn){G.hands[0]=sortH([...G.hands[0],G.drawn]);G.drawn=null;}tile=G.hands[0][idx];G.hands[0].splice(idx,1);}
   G.selIdx=null;G.selDrawn=false;G.discards[0].push(tile);G.pending=tile;G.pendingFrom=0;G.phase='action';
+  _handManualOpen = false;
   playDiscard();
   // Sparrow pet: 10% chance +5 coins on discard
   if(PD.activePet==='sparrow'&&Math.random()<0.10){PD.coins+=5;updHUD();floatNotif('🐦 麻雀：弃牌奖励！+5🪙');}
@@ -2247,7 +2354,13 @@ if(a<1||b>9)continue;
 if(G.hands[0].some(t=>t.suit===tile.suit&&t.num===a)&&G.hands[0].some(t=>t.suit===tile.suit&&t.num===b)){acts.push({az:'吃！',ae:'Chi!',cls:'abtn-chi',fn:()=>{hideActs();humanChi(tile,a,b);}});break;}
 }
   }
-  if(acts.length>0){acts.push({az:'过',ae:'Skip',cls:'abtn-skip',fn:()=>{hideActs();checkClaims2(tile,from);}});showActs(acts);}
+  if(acts.length>0){
+    // Reveal hand so player can see their tiles while deciding
+    _handManualOpen = true;
+    updateHandPark();
+    acts.push({az:'过',ae:'Skip',cls:'abtn-skip',fn:()=>{hideActs();_handManualOpen=false;checkClaims2(tile,from);}});
+    showActs(acts);
+  }
   else checkClaims2(tile,from);
 }
 function checkClaims2(tile,from){
@@ -2439,6 +2552,74 @@ function renderRight(){
   renderDisc('td-right',pi,'t-xs');
   updateOpponentLabel(pi);
 }
+// Track manual peek override — player can pull up hand even when not their turn
+let _handManualOpen = false;
+let _boardClickListenerAdded = false;
+
+function _ensureBoardClickListener(){
+  if(_boardClickListenerAdded) return;
+  _boardClickListenerAdded = true;
+  // Any click that bubbles up to scr-game (i.e. not stopped by a button/tile/pa-bot) hides the hand
+  const scr = document.getElementById('scr-game');
+  if(!scr) return;
+  scr.addEventListener('click', function(e){
+    // Ignore if the click originated inside pa-bot itself
+    const pa = document.getElementById('pa-bot');
+    if(pa && pa.contains(e.target)) return;
+    // Ignore if clicking an interactive element (buttons, tiles, overlays)
+    if(e.target.closest('button, .abtn, .nbtn, .btn, .tile, .overlay, .modal, .actpanel, .ai-roster-overlay, #discard-history-overlay')) return;
+    // Hide hand if it's open and it's not the player's active discard turn
+    const isMyTurn = G && G.phase==='discard' && G.cur===0;
+    if(isMyTurn) return;
+    if(_handManualOpen){
+      _handManualOpen = false;
+      updateHandPark();
+    }
+  });
+}
+
+function updateHandPark(){
+  if(!G) return;
+  _ensureBoardClickListener();
+  const isMyTurn = G.phase==='discard' && G.cur===0;
+  const pa = document.getElementById('pa-bot');
+  const peekLabel = document.getElementById('peek-label');
+  if(!pa) return;
+
+  const shouldShow = isMyTurn || _handManualOpen;
+
+  if(shouldShow){
+    pa.classList.remove('hand-parked');
+    pa.classList.add('hand-active');
+    if(peekLabel){
+      peekLabel.textContent = isMyTurn ? '你的回合 / Your turn' : '手牌 / Your hand';
+    }
+  } else {
+    pa.classList.remove('hand-active');
+    pa.classList.add('hand-parked');
+    if(peekLabel){
+      if(G.phase==='action') peekLabel.textContent = '⏳  👆 手牌';
+      else peekLabel.textContent = '👆 手牌 / Tap to peek';
+    }
+  }
+}
+
+// Peek handle tap — toggle open/close
+function toggleHandPeek(e){
+  if(e) e.stopPropagation();
+  const pa = document.getElementById('pa-bot');
+  if(!pa) return;
+  const isOpen = pa.classList.contains('hand-active');
+  if(isOpen){
+    const isMyTurn = G && G.phase==='discard' && G.cur===0;
+    if(isMyTurn) return; // can't hide mid-turn
+    _handManualOpen = false;
+  } else {
+    _handManualOpen = true;
+  }
+  updateHandPark();
+}
+
 function renderBot(){
   const th=document.getElementById('th-bot');th.innerHTML='';
   G.hands[0].forEach((t,i)=>{const isSel=G.selIdx===i&&!G.selDrawn;const el=tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i));el.ondblclick=(e)=>{e.stopPropagation();dblClickHand(i);};addDoubleTap(el,()=>dblClickHand(i));th.appendChild(el);});
@@ -2459,6 +2640,7 @@ th.style.zoom='1';
 th.style.transform='';
 }
   });
+  updateHandPark();
 }
 function renderMelds(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.melds[pi].forEach(m=>{const g=document.createElement('div');g.className='mgrp';m.tiles.forEach(t=>g.appendChild(tileEl(t,sz)));el.appendChild(g);});}
 function renderDisc(id,pi,sz){const el=document.getElementById(id);if(!el)return;el.innerHTML='';G.discards[pi].forEach((t,i)=>{const last=i===G.discards[pi].length-1&&G.pendingFrom===pi;el.appendChild(tileEl(t,sz,last?'clm':''));});}
