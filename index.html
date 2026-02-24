@@ -1625,7 +1625,7 @@ function pinSVG(num, w, h){
   const layouts = {
     1:[[50,50]],
     2:[[50,24],[50,76]],
-    3:[[50,18],[50,50],[50,82]],
+    3:[[28,22],[50,50],[72,78]],
     4:[[30,24],[70,24],[30,76],[70,76]],
     5:[[30,21],[70,21],[50,50],[30,79],[70,79]],
     6:[[30,17],[70,17],[30,50],[70,50],[30,83],[70,83]],
@@ -1656,7 +1656,7 @@ function pinSVG(num, w, h){
   let svg='';
   dots.forEach(([cx,cy],i)=>{
     const px=cx/100*w, py=cy/100*h;
-    const clr=num===7?C7[i]:num===5&&i===2?{f:'#b81010',r:'#780808'}:num===9?[{f:'#1e7d28',r:'#0b5015'},{f:'#1e7d28',r:'#0b5015'},{f:'#1e7d28',r:'#0b5015'},{f:'#b81010',r:'#780808'},{f:'#b81010',r:'#780808'},{f:'#b81010',r:'#780808'},{f:'#1a3db8',r:'#0a1a88'},{f:'#1a3db8',r:'#0a1a88'},{f:'#1a3db8',r:'#0a1a88'}][i]:C[num];
+    const clr=num===3?[{f:'#1a3db8',r:'#0a1a88'},{f:'#b81010',r:'#780808'},{f:'#1a3db8',r:'#0a1a88'}][i]:num===7?C7[i]:num===5&&i===2?{f:'#b81010',r:'#780808'}:num===9?[{f:'#1e7d28',r:'#0b5015'},{f:'#1e7d28',r:'#0b5015'},{f:'#1e7d28',r:'#0b5015'},{f:'#b81010',r:'#780808'},{f:'#b81010',r:'#780808'},{f:'#b81010',r:'#780808'},{f:'#1a3db8',r:'#0a1a88'},{f:'#1a3db8',r:'#0a1a88'},{f:'#1a3db8',r:'#0a1a88'}][i]:C[num];
     if(num===1){
       svg+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(rd).toFixed(1)}" fill="${clr.r}"/>`;
       svg+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(rd*0.82).toFixed(1)}" fill="#f0e8c8"/>`;
@@ -1708,10 +1708,13 @@ function souSVG(num, w, h){
   const sh = Math.min(h*0.88/rowCount - gapY, (h*0.90 - gapY*(rowCount-1)) / rowCount);
   const totalW = colCount*sw + (colCount-1)*gapX;
   const totalH = rowCount*(sh+gapY) - gapY;
-  const startX = (w-totalW)/2;
-  // For 7-sou: shift the 2-row grid down to leave room for red stick above
-  // For 3-sou: shift the 2-stick bottom row down to leave room for top center stick
+  // For 5-sou: push green columns to the far left/right edges, away from center red stick
+  const startX = num===5 ? w*0.04 : (w-totalW)/2;
+  const sh5 = sh; // full height for all tiles
   const startY = num===7 ? (h - totalH)/2 + (sh+gapY)*0.6 : num===3 ? (h - totalH)/2 + (sh+gapY)*0.5 : (h-totalH)/2;
+  const rowStep = num===5 ? (sh+gapY) : (sh+gapY);
+  // For 5-sou: column step pushes right column to far right edge
+  const colStepX = num===5 ? w - w*0.04*2 - sw : (sw+gapX);
   const rx = sw/2; // fully rounded = capsule
   
   const colors = stickColors[num] || [];
@@ -1719,13 +1722,14 @@ function souSVG(num, w, h){
 
   for(let c=0;c<colCount;c++){
     for(let r=0;r<rowCount&&si<renderNum;r++,si++){
-      const x=startX+c*(sw+gapX);
-      const y=startY+r*(sh+gapY);
+      const x=startX+c*(num===5?colStepX:(sw+gapX));
+      const y=startY+r*rowStep;
       const clr=colors[si]||DG;
       const darken=clr===DG?'#1a4a1a':clr===BK?'#0a0a0a':clr===RD?'#881111':'#881111';
-      sticks+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${sw.toFixed(1)}" height="${sh.toFixed(1)}" rx="${rx.toFixed(1)}" fill="${darken}"/>`;
-      sticks+=`<rect x="${(x+1).toFixed(1)}" y="${(y+1).toFixed(1)}" width="${(sw-2).toFixed(1)}" height="${(sh-2).toFixed(1)}" rx="${(rx-0.5).toFixed(1)}" fill="${clr}"/>`;
-      sticks+=`<rect x="${(x+sw*0.12).toFixed(1)}" y="${(y+sh*0.08).toFixed(1)}" width="${(sw*0.22).toFixed(1)}" height="${(sh*0.84).toFixed(1)}" rx="${(sw*0.1).toFixed(1)}" fill="rgba(255,255,255,0.20)"/>`;
+      const sh_=sh;
+      sticks+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${sw.toFixed(1)}" height="${sh_.toFixed(1)}" rx="${rx.toFixed(1)}" fill="${darken}"/>`;
+      sticks+=`<rect x="${(x+1).toFixed(1)}" y="${(y+1).toFixed(1)}" width="${(sw-2).toFixed(1)}" height="${(sh_-2).toFixed(1)}" rx="${(rx-0.5).toFixed(1)}" fill="${clr}"/>`;
+      sticks+=`<rect x="${(x+sw*0.12).toFixed(1)}" y="${(y+sh_*0.08).toFixed(1)}" width="${(sw*0.22).toFixed(1)}" height="${(sh_*0.84).toFixed(1)}" rx="${(sw*0.1).toFixed(1)}" fill="rgba(255,255,255,0.20)"/>`;
     }
   }
 
@@ -1738,10 +1742,10 @@ function souSVG(num, w, h){
     sticks+=`<rect x="${(cx3+sw*0.12).toFixed(1)}" y="${(cy3+sh*0.08).toFixed(1)}" width="${(sw*0.22).toFixed(1)}" height="${(sh*0.84).toFixed(1)}" rx="${(sw*0.1).toFixed(1)}" fill="rgba(255,255,255,0.20)"/>`;
   }
 
-  // Add center red stick for 5-sou
+  // Add center red stick for 5-sou — placed exactly at vertical center
   if(num===5){
     const cx5 = w/2 - sw/2;
-    const cy5 = startY + (totalH - sh)/2;
+    const cy5 = h/2 - sh5/2;
     sticks+=`<rect x="${cx5.toFixed(1)}" y="${cy5.toFixed(1)}" width="${sw.toFixed(1)}" height="${sh.toFixed(1)}" rx="${rx.toFixed(1)}" fill="#881111"/>`;
     sticks+=`<rect x="${(cx5+1).toFixed(1)}" y="${(cy5+1).toFixed(1)}" width="${(sw-2).toFixed(1)}" height="${(sh-2).toFixed(1)}" rx="${(rx-0.5).toFixed(1)}" fill="${RD}"/>`;
     sticks+=`<rect x="${(cx5+sw*0.12).toFixed(1)}" y="${(cy5+sh*0.08).toFixed(1)}" width="${(sw*0.22).toFixed(1)}" height="${(sh*0.84).toFixed(1)}" rx="${(sw*0.1).toFixed(1)}" fill="rgba(255,255,255,0.20)"/>`;
