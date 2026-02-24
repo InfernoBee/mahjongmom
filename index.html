@@ -2329,6 +2329,16 @@ function renderAll(){
   if(!G)return;updHUD();setActivePA();renderTop();renderLeft();renderRight();renderBot();renderCenter();
 }
 function setActivePA(){['top','left','right','bot'].forEach((s,i)=>{const pi=[2,3,1,0][i];const el=document.getElementById('pa-'+s);if(el)el.classList.toggle('active',G.cur===pi);});}
+function tileCountBadge(count, vertical){
+  const d=document.createElement('div');
+  const flexDir = vertical ? 'column' : 'row';
+  d.style.cssText=`display:flex;flex-direction:${flexDir};align-items:center;justify-content:center;gap:3px;
+    background:rgba(0,0,0,0.55);border:1px solid rgba(74,138,204,0.6);border-radius:8px;
+    padding:${vertical?'8px 4px':'4px 10px'};`;
+  d.innerHTML=`<span style="font-size:${vertical?'1.1rem':'1.3rem'};line-height:1;filter:drop-shadow(0 0 4px rgba(74,138,204,0.8));">🀫</span>
+    <span style="font-size:0.75rem;font-weight:900;color:#6aaaee;letter-spacing:0.02em;">×${count}</span>`;
+  return d;
+}
 function renderTop(){
   const pi=2,th=document.getElementById('th-top');
   th.innerHTML='';
@@ -2336,12 +2346,12 @@ function renderTop(){
   th.style.justifyContent='center';
   th.style.maxWidth='100%';
   th.style.gap='2px';
-  G.hands[pi].forEach(()=>th.appendChild(backEl('t-sm')));
+  if(G.hands[pi].length>0) th.appendChild(tileCountBadge(G.hands[pi].length, false));
   renderMelds('tm-top',pi,'t-sm');
   renderDisc('td-top',pi,'t-xs');
 }
-function renderLeft(){const pi=3,th=document.getElementById('th-left');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));renderDisc('td-left',pi,'t-sm');}
-function renderRight(){const pi=1,th=document.getElementById('th-right');th.innerHTML='';G.hands[pi].forEach(()=>th.appendChild(backEl('t-xs')));renderDisc('td-right',pi,'t-sm');}
+function renderLeft(){const pi=3,th=document.getElementById('th-left');th.innerHTML='';if(G.hands[pi].length>0)th.appendChild(tileCountBadge(G.hands[pi].length, true));renderDisc('td-left',pi,'t-sm');}
+function renderRight(){const pi=1,th=document.getElementById('th-right');th.innerHTML='';if(G.hands[pi].length>0)th.appendChild(tileCountBadge(G.hands[pi].length, true));renderDisc('td-right',pi,'t-sm');}
 function renderBot(){
   const th=document.getElementById('th-bot');th.innerHTML='';
   G.hands[0].forEach((t,i)=>{const isSel=G.selIdx===i&&!G.selDrawn;const el=tileEl(t,'t-lg','ck'+(isSel?' sel':''),()=>clickHand(i));el.ondblclick=(e)=>{e.stopPropagation();dblClickHand(i);};addDoubleTap(el,()=>dblClickHand(i));th.appendChild(el);});
