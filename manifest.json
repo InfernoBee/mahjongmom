@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="王丽珠牌侠录：一款中文/英文双语的麻将英雄小游戏，包含英雄选择、宠物系统、老虎机商店与每日奖励。">
+<meta name="theme-color" content="#0b3320">
+<meta property="og:title" content="王丽珠牌侠录 | Records of the Wáng Lìzhū Tile Heroes">
+<meta property="og:description" content="选择英雄、解锁宠物、赢取金币的麻将冒险小游戏。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&display=swap">
+<title>王丽珠牌侠录 | Records of the Wáng Lìzhū Tile Heroes</title>
+
+
+
+<link rel="stylesheet" href="styles.css?v=2026-02-27.1">
+<link rel="manifest" href="manifest.json?v=2026-02-27.1">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+</head>
+<body>
+
+<div id="save-pill" class="save-pill hidden" role="button" aria-label="Save status" onclick="openSettings();">
+  <span id="save-pill-icon">💾</span>
+  <span id="save-pill-text"><span class="lz">存档</span><span class="le">Save</span></span>
+</div>
+
+<div id="scr-title" class="screen">
+  <div class="tdeco">
+    <div class="tdeco-tiles">
+      <div class="ttile t-chun">中</div>
+      <div class="ttile t-hatsu">發</div>
+      <div class="ttile t-haku"><span class="haku-inner"></span></div>
+      <div class="ttile t-man9"><span class="ttile-num" style="color:#1133cc;">九</span><span class="ttile-suit" style="color:#cc1111;">萬</span></div>
+    </div>
+    <div class="title-logo-wrap">
+      <div class="title-logo">王丽珠牌侠录</div>
+      <div class="title-sub">✦ Records of the Wáng Lìzhū Tile Heroes ✦</div>
+    </div>
+  </div>
+  <div class="btnrow">
+    <button class="btn btn-gold" onclick="goHeroSel();playClick()">⚔️ <span class="lz">开始游戏</span><span class="le">Start Game</span></button>
+    <button class="btn btn-out" onclick="openGacha();playClick()">🎰 <span class="lz">老虎机商店</span><span class="le">Slot Shop</span> ・ 🪙 <span id="tcoins">200</span></button>
+    <button class="btn btn-promo" id="title-daily-btn" onclick="claimDaily();playClick()" style="display:none;background:linear-gradient(135deg,#1a6a1a,#2aaa2a,#1a6a1a);color:#aaffaa;border:1.5px solid #44cc44;box-shadow:0 4px 16px rgba(40,200,40,0.35);">🎁 <span class="lz">领取每日奖励</span><span class="le">Daily Bonus!</span><button>
+    <button class="btn btn-promo" onclick="openPromo();playClick()">🎁 <span class="lz">输入礼包码</span><span class="le">Promo Code</span></button>
+    <button class="btn btn-out" onclick="openSettings();playClick()" style="font-size:0.85rem;">⚙️ <span class="lz">设置</span><span class="le">Settings</span></button>
+  </div>
+  <div class="tfooter">选择英雄 · 解锁宠物 · 赢取金币 | 献给王丽珠 · For Wáng Lìzhū &nbsp;·&nbsp; <span onclick="resetSave()" style="cursor:pointer;color:#3a4a3a;text-decoration:underline;">重置存档</span></div>
+</div>
+
+<div id="scr-hero" class="screen hidden" data-scrollable="true">
+  <div class="sec-title">选择你的英雄</div>
+  <div class="sec-sub">CHOOSE YOUR HERO</div>
+  <div class="hgrid" id="hgrid"></div>
+  <div id="hinfo"><span class="lz">点击英雄查看详情</span><span class="le">Click a hero to see details</span></div>
+  <div class="hero-btns">
+    <button class="btn btn-gold" id="btngo" onclick="launchGame();playClick()" disabled style="opacity:0.4;"><span class="lz">出发！</span><span class="le">Let's Go!</span></button>
+    <button class="btn btn-out" onclick="goTitle();playClick()"><span class="lz">返回</span><span class="le">Back</span></button>
+  </div>
+</div>
+
+<div id="scr-versus" class="screen hidden"></div>
+
+<div id="scr-game" class="screen hidden">
+  <div class="hud">
+    <span class="hud-coins">🪙 <span id="hcoins">0</span></span>
+    <span class="hud-round">第 <span id="hround">1</span> 局</span>
+    <span class="hud-pet" id="hud-pet"></span>
+    <span class="hud-hero" id="hhero"></span>
+    <button class="nbtn" onclick="openGacha();playClick()">🎰</button>
+    <button class="nbtn" id="daily-btn" onclick="claimDaily();playClick()" style="display:none;background:rgba(60,200,80,0.25);border-color:rgba(60,220,80,0.6);color:#aaffaa;animation:pulse-label 1s ease-in-out infinite alternate;">🎁 <span class="lz">每日</span><span class="le">Daily</span></button>
+    <button class="nbtn" onclick="showTaiRules();playClick()" style="background:rgba(200,150,26,0.2);border-color:rgba(200,150,26,0.55);color:#ffdd88;">🀄 <span class="lz">台</span><span class="le">Tai</span></button>
+    <button class="nbtn" onclick="openAIRoster();playClick()" style="background:rgba(100,180,100,0.15);border-color:rgba(100,180,100,0.4);color:#aaffaa;">👥 <span class="lz">对手</span><span class="le">Rivals</span></button>
+    <button class="nbtn" onclick="openSettings();playClick()" style="color:#aaddff;">⚙️</button>
+    <button class="nbtn" onclick="goTitle();playClick()" style="color:#aa8888;"><span class="lz">菜单</span><span class="le">Menu</span></button>
+  </div>
+  <div class="tbar" id="tbar">准备中…</div>
+  <div class="board">
+    <div class="pa top" id="pa-top">
+      <div class="palabel" id="lbl-top"><span class="lz" id="ai-name-2"><span class="lz">北</span><span class="le">North</span></span></div>
+      <div id="th-top" class="airow"></div>
+      <div id="tm-top" class="meldrow"></div>
+      <div id="td-top" class="discm" style="margin-top:2px;"></div>
+    </div>
+    <div class="pa left" id="pa-left">
+      <div class="palabel" id="lbl-left"><span class="lz" id="ai-name-3"><span class="lz">西</span><span class="le">West</span></span></div>
+      <div id="th-left" class="aicol"></div>
+      <div id="tm-left" class="meldrow" style="flex-direction:column;gap:1px;"></div>
+      <div id="td-left" class="discm" style="flex-direction:column;max-width:46px;align-items:center;"></div>
+    </div>
+    <div class="center">
+      <div class="wall-strip north" id="wall-n"></div>
+      <div class="wall-strip west" id="wall-w"></div>
+      <div class="wall-inner">
+        <div class="center-info">
+          <div class="cwind" id="cwind">東</div>
+          <div class="cleft" id="cwall">70</div>
+          <div class="clabel"><span class="lz">剩余</span><span class="le">Left</span></div>
+        </div>
+        <div class="ldwrap">
+          <div class="ldlabel" id="cdlbl" style="display:none;">出牌 / Discard</div>
+          <div id="clast" class="center-discard-pile" onclick="openDiscardHistory()" title="点击查看所有弃牌 / Tap to view all discards"></div>
+          <div class="center-discard-hint" id="center-discard-hint" style="display:none;">👆 点击查看</div>
+        </div>
+        <div class="chint" id="chint"></div>
+      </div>
+      <div class="wall-strip east" id="wall-e"></div>
+      <div class="wall-strip south" id="wall-s"></div>
+    </div>
+    <div class="pa right" id="pa-right">
+      <div class="palabel" id="lbl-right"><span class="lz" id="ai-name-1"><span class="lz">东</span><span class="le">East</span></span></div>
+      <div id="th-right" class="aicol" style="pointer-events:none;"></div>
+      <div id="tm-right" class="meldrow" style="flex-direction:column;gap:1px;pointer-events:none;"></div>
+      <div id="td-right" class="discm" style="flex-direction:column;max-width:46px;pointer-events:none;align-items:center;"></div>
+    </div>
+    <div class="pa bot hand-active" id="pa-bot" onclick="handleBotBgClick(event)">
+      <div id="hand-peek-handle" onclick="toggleHandPeek(event)">
+        <div class="peek-dots">
+          <div class="peek-dot"></div><div class="peek-dot"></div><div class="peek-dot"></div>
+          <div class="peek-dot"></div><div class="peek-dot"></div>
+        </div>
+        <span id="peek-label"><span class="lz">等待</span><span class="le">Waiting…</span></span>
+        <div class="peek-dots">
+          <div class="peek-dot"></div><div class="peek-dot"></div><div class="peek-dot"></div>
+          <div class="peek-dot"></div><div class="peek-dot"></div>
+        </div>
+      </div>
+      <div id="tm-bot" class="meldrow"></div>
+      <div id="th-bot" class="handrow"></div>
+      <div class="palabel" id="lbl-bot" style="margin-top:2px;"><span class="lz"><span class="lz">你</span><span class="le">You</span></span></div>
+      <div id="discard-btn-wrap"></div>
+      <div id="skbtn"></div>
+      <div class="player-discard-tray">
+        <div class="pdt-label">🗑️ <span class="lz">你打出的牌</span><span class="le">Your Discards</span></div>
+        <div id="td-bot" class="pdt-tiles"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actpanel hidden" id="actpanel"></div>
+  <div class="skhint" id="skhint"></div>
+
+  <div class="overlay hidden" id="discard-history-overlay" onclick="closeDiscardHistory()">
+    <div class="discard-history-modal" onclick="event.stopPropagation()">
+      <div class="discard-history-header">
+        <span class="discard-history-title">🀄 弃牌记录 / All Discards</span>
+        <button class="discard-history-close" onclick="closeDiscardHistory()">✕</button>
+      </div>
+      <div class="discard-history-body" id="discard-history-body"></div>
+    </div>
+  </div>
+
+  <div class="pet-companion hidden" id="pet-widget" onclick="petActivate()"></div>
+  <div class="pet-tooltip" id="pet-tooltip"></div>
+
+  <div class="win-streak-badge" id="win-streak-badge">🔥 <span id="wstreak-num">0</span> 连胜</div>
+  <div class="streak-bar-wrap" id="streak-bar-wrap">
+    <div class="streak-label" id="streak-label">连胜奖励进度</div>
+    <div class="streak-bar"><div class="streak-fill" id="streak-fill" style="width:0%"></div></div>
+  </div>
+  <div id="ai-bubbles"></div>
+
+  <div class="win-overlay hidden" id="win-overlay">
+    <div class="win-rays" id="win-rays"></div>
+    <div class="win-burst" id="win-burst"></div>
+  </div>
+
+  <div id="tile-preview" aria-hidden="true">
+    <div class="tp-tile-name" id="tp-name"></div>
+    <div class="tp-suit" id="tp-suit"></div>
+    <div class="tp-row"><span class="tp-label">手牌中 / In hand</span><span class="tp-val" id="tp-count"></span></div>
+    <div class="tp-row"><span class="tp-label">已出牌 / Discarded</span><span class="tp-val" id="tp-seen"></span></div>
+    <div class="tp-row"><span class="tp-label">剩余 / Remaining</span><span class="tp-val" id="tp-left"></span></div>
+    <div class="tp-synergy" id="tp-synergy"></div>
+  </div>
+
+  <div class="ability-hint hidden" id="ability-hint">
+    <span class="ahi-close" onclick="document.getElementById('ability-hint').classList.add('hidden')">✕</span>
+    <span class="ahi-icon" id="ahi-icon"></span>
+    <div class="ahi-title" id="ahi-title"></div>
+    <div class="ahi-body" id="ahi-body"></div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="overlay">
+  <div class="modal">
+    <div class="mico" id="mico"></div>
+    <div class="mtitle" id="mtitle"></div>
+    <div class="mbody" id="mbody"></div>
+    <div class="mtiles" id="mtiles"></div>
+    <div class="mbtns" id="mbtns"></div>
+  </div>
+</div>
+
+<div class="promo-overlay hidden" id="promo-overlay">
+  <div class="promo-box">
+    <div class="promo-title">🎁 礼包码 / Promo Code</div>
+    <div class="promo-sub">输入礼包码领取奖励 · Enter code to claim reward</div>
+    <div class="promo-input-wrap">
+      <input class="promo-input" id="promo-input" type="text" maxlength="20"
+        placeholder="输入礼包码…" autocomplete="off" autocorrect="off"
+        autocapitalize="off" spellcheck="false"
+        oninput="promoInputChange()"
+        onkeydown="if(event.key==='Enter')redeemPromo()"/>
+    </div>
+    <div class="promo-result" id="promo-result"></div>
+    <div class="promo-btns">
+      <button class="btn btn-gold" onclick="redeemPromo();playClick()" style="font-size:0.88rem;padding:0.5em 1.6em;">兑换 / Redeem</button>
+      <button class="btn btn-out" onclick="closePromo();playClick()" style="font-size:0.88rem;padding:0.5em 1.2em;">关闭 / Close</button>
+    </div>
+    <div class="promo-history" id="promo-history"></div>
+  </div>
+</div>
+<div class="cfc" id="cfc"></div>
+
+<div id="jackpot-overlay" style="display:none;position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;">
+  <div id="jk-backdrop" style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(0,0,0,0) 0%,rgba(0,0,0,0.92) 100%);opacity:0;transition:opacity 0.3s;"></div>
+
+  <canvas id="jk-beams" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;"></canvas>
+
+  <div id="jk-coins" style="position:absolute;inset:0;pointer-events:none;"></div>
+
+  <div id="jk-dragon" style="position:absolute;left:50%;bottom:-300px;transform:translateX(-50%);width:260px;height:260px;opacity:0;filter:drop-shadow(0 0 40px rgba(255,200,0,0.9)) drop-shadow(0 0 80px rgba(255,140,0,0.7));transition:none;">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;">
+      <defs>
+        <radialGradient id="dgBodyGrad" cx="50%" cy="40%">
+          <stop offset="0%" stop-color="#fff7a0"/>
+          <stop offset="40%" stop-color="#f0c030"/>
+          <stop offset="100%" stop-color="#8a4400"/>
+        </radialGradient>
+        <radialGradient id="dgEyeGrad" cx="35%" cy="35%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="60%" stop-color="#ff4400"/>
+          <stop offset="100%" stop-color="#880000"/>
+        </radialGradient>
+        <filter id="dgGlow">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <ellipse cx="100" cy="130" rx="38" ry="28" fill="url(#dgBodyGrad)" stroke="#c87000" stroke-width="2" filter="url(#dgGlow)"/>
+      <ellipse cx="68" cy="148" rx="22" ry="16" fill="#e8a820" stroke="#c87000" stroke-width="1.5"/>
+      <ellipse cx="134" cy="148" rx="22" ry="16" fill="#e8a820" stroke="#c87000" stroke-width="1.5"/>
+      <ellipse cx="100" cy="135" rx="28" ry="18" fill="#fff0a0" opacity="0.5"/>
+      <path d="M88,105 Q95,85 100,70 Q105,85 112,105 Z" fill="url(#dgBodyGrad)" stroke="#c87000" stroke-width="1.5"/>
+      <ellipse cx="100" cy="62" rx="30" ry="24" fill="url(#dgBodyGrad)" stroke="#c87000" stroke-width="2" filter="url(#dgGlow)"/>
+      <path d="M82,70 Q100,82 118,70 Q112,78 100,80 Q88,78 82,70Z" fill="#e8a820"/>
+      <ellipse cx="93" cy="75" rx="3" ry="2" fill="#8a4400"/>
+      <ellipse cx="107" cy="75" rx="3" ry="2" fill="#8a4400"/>
+      <ellipse cx="88" cy="55" rx="9" ry="9" fill="url(#dgEyeGrad)" stroke="#ffd700" stroke-width="1.5"/>
+      <ellipse cx="112" cy="55" rx="9" ry="9" fill="url(#dgEyeGrad)" stroke="#ffd700" stroke-width="1.5"/>
+      <ellipse cx="88" cy="55" rx="4" ry="5" fill="#1a0000"/>
+      <ellipse cx="112" cy="55" rx="4" ry="5" fill="#1a0000"/>
+      <circle cx="86" cy="53" r="1.5" fill="white"/>
+      <circle cx="110" cy="53" r="1.5" fill="white"/>
+      <path d="M85,44 Q78,22 82,14 Q88,24 88,44Z" fill="#e8a820" stroke="#c87000" stroke-width="1"/>
+      <path d="M115,44 Q122,22 118,14 Q112,24 112,44Z" fill="#e8a820" stroke="#c87000" stroke-width="1"/>
+      <path d="M82,68 Q60,60 42,64" stroke="#ffd700" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M118,68 Q140,60 158,64" stroke="#ffd700" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M82,72 Q58,72 38,76" stroke="#ffd700" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <path d="M118,72 Q142,72 162,76" stroke="#ffd700" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <path d="M68,115 Q30,90 20,110 Q40,115 62,125Z" fill="#f0a820" opacity="0.85" stroke="#c87000" stroke-width="1"/>
+      <path d="M132,115 Q170,90 180,110 Q160,115 138,125Z" fill="#f0a820" opacity="0.85" stroke="#c87000" stroke-width="1"/>
+      <g id="jk-flame" opacity="0">
+        <ellipse cx="100" cy="90" rx="12" ry="20" fill="#ff6600" opacity="0.85">
+          <animate attributeName="ry" values="20;28;18;24;20" dur="0.3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.85;1;0.7;0.9;0.85" dur="0.25s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="100" cy="78" rx="7" ry="14" fill="#ffcc00" opacity="0.9">
+          <animate attributeName="ry" values="14;18;12;16;14" dur="0.25s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="100" cy="66" rx="4" ry="8" fill="#ffffff" opacity="0.8">
+          <animate attributeName="opacity" values="0.8;1;0.6;0.9;0.8" dur="0.2s" repeatCount="indefinite"/>
+        </ellipse>
+      </g>
+    </svg>
+  </div>
+
+  <div id="jk-text" style="position:absolute;top:18%;left:50%;transform:translateX(-50%) scale(0);opacity:0;text-align:center;white-space:nowrap;">
+    <div style="font-family:'Cinzel Decorative','Noto Serif SC',serif;font-size:clamp(2.8rem,9vw,5.5rem);font-weight:700;
+      background:linear-gradient(135deg,#fff7c0 0%,#ffd700 30%,#ff9900 60%,#ffd700 80%,#fff7c0 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      filter:drop-shadow(0 0 30px rgba(255,200,0,1)) drop-shadow(0 0 60px rgba(255,140,0,0.8));
+      letter-spacing:0.05em;line-height:1;">JACKPOT!</div>
+    <div style="font-size:clamp(1.4rem,5vw,2.8rem);font-weight:900;color:#fff;
+      text-shadow:0 0 20px rgba(255,200,0,0.9),0 0 40px rgba(255,140,0,0.7);margin-top:0.2em;">
+      +1000 🪙
+    </div>
+    <div style="font-size:clamp(0.8rem,2.5vw,1.2rem);color:#ffd700;letter-spacing:0.15em;margin-top:0.4em;
+      font-family:'Noto Serif SC',serif;opacity:0.9;">🐲 三龙齐聚 &middot; THREE DRAGONS 🐲</div>
+  </div>
+
+  <div id="jk-dismiss" style="position:absolute;bottom:8%;left:50%;transform:translateX(-50%);opacity:0;
+    font-size:0.8rem;color:rgba(255,220,100,0.7);letter-spacing:0.1em;pointer-events:auto;cursor:pointer;"
+    onclick="dismissJackpot()">TAP TO CONTINUE</div>
+
+  <div id="jk-flash" style="position:absolute;inset:0;background:#fffbe0;opacity:0;pointer-events:none;"></div>
+</div>
+
+<div class="ai-roster-overlay hidden" id="ai-roster-overlay">
+  <div class="ai-roster-box">
+    <div class="ai-roster-title">🀄 选择对手 / Choose Opponents</div>
+    <div class="ai-roster-sub">为每个方位选择 AI 对手 · Pick your opponents for each seat</div>
+    <div class="ai-roster-seats" id="ai-roster-seats"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-gold" onclick="confirmAIRoster();playClick()" style="font-size:0.85rem;padding:0.5em 1.4em;">确认 / Confirm</button>
+      <button class="btn btn-out" onclick="randomizeRoster();playClick()" style="font-size:0.85rem;">🎲 随机 / Random</button>
+      <button class="btn btn-out" onclick="closeAIRoster();playClick()" style="font-size:0.82rem;padding:0.5em 1em;">取消 / Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="settings-overlay hidden" id="settings-overlay">
+  <div class="settings-box">
+    <div class="settings-title">⚙️ <span class="lz">设置</span><span class="le">Settings</span></div>
+
+    <div class="settings-section">
+      <div class="settings-section-label">🌐 语言 / Language</div>
+      <div class="settings-row">
+        <button class="settings-chip" id="lang-zh" onclick="setLang('zh')">
+          <span class="chip-icon">🇨🇳</span>
+          <span class="chip-label">中文</span>
+        </button>
+        <button class="settings-chip" id="lang-both" onclick="setLang('both')">
+          <span class="chip-icon">🌐</span>
+          <span class="chip-label">中 / EN</span>
+        </button>
+        <button class="settings-chip" id="lang-en" onclick="setLang('en')">
+          <span class="chip-icon">🇸🇬</span>
+          <span class="chip-label">English</span>
+        </button>
+      </div>
+    </div>
+
+    <hr class="settings-divider">
+
+    <div class="settings-section">
+      <div class="settings-section-label">🔊 音效 / Sound</div>
+      <div class="settings-row">
+        <button class="settings-chip" id="sound-on" onclick="setSound(true)">
+          <span class="chip-icon">🔊</span>
+          <span class="chip-label">开 On</span>
+        </button>
+        <button class="settings-chip" id="sound-off" onclick="setSound(false)">
+          <span class="chip-icon">🔇</span>
+          <span class="chip-label">关 Off</span>
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="settings-section">
+      <div class="settings-section-label">💾 <span class="lz">存档</span><span class="le">Save</span></div>
+      <div id="save-status" class="save-status">
+        <span class="lz">正在检查存档状态…</span><span class="le">Checking save status…</span>
+      </div>
+      <div class="settings-row wrap" style="margin-top:10px;">
+        <button class="settings-chip" onclick="exportSave();playClick()">
+          <span class="chip-icon">⬇️</span>
+          <span class="chip-label"><span class="lz">导出存档</span><span class="le">Export</span></span>
+        </button>
+        <button class="settings-chip" onclick="triggerImportSave();playClick()">
+          <span class="chip-icon">⬆️</span>
+          <span class="chip-label"><span class="lz">导入存档</span><span class="le">Import</span></span>
+        </button>
+        <button class="settings-chip" onclick="copySaveToClipboard();playClick()">
+          <span class="chip-icon">📋</span>
+          <span class="chip-label"><span class="lz">复制存档</span><span class="le">Copy</span></span>
+        </button>
+        <button class="settings-chip" onclick="pasteSaveFromClipboard();playClick()">
+          <span class="chip-icon">📥</span>
+          <span class="chip-label"><span class="lz">粘贴恢复</span><span class="le">Paste</span></span>
+        </button>
+        <input id="import-save-file" type="file" accept="application/json" style="display:none" onchange="importSaveFile(event)">
+      </div>
+      <div class="save-status" style="margin-top:10px;">
+        <div><strong><span class="lz">提示</span><span class="le">Tip</span></strong></div>
+        <small>
+          <span class="lz">若在“隐私浏览/应用内浏览器”打开，存档可能无法长期保存。建议用 Safari 打开并“添加到主屏幕”。</span>
+          <span class="le">If opened in Private Browsing or an in-app browser, saving may not persist. Use Safari and “Add to Home Screen”.</span>
+        </small>
+      </div>
+    </div>
+
+    <hr class="settings-divider">
+
+<hr class="settings-divider">
+
+    <button class="settings-close-btn" onclick="closeSettings();playClick()">
+      <span class="lz">✓ 完成</span><span class="le">✓ Done</span>
+    </button>
+  </div>
+</div>
+
+<div class="hero-anim-overlay hidden" id="hero-anim-overlay">
+  <div class="hero-anim-burst" id="hero-anim-burst"></div>
+  <div class="hero-anim-text" id="hero-anim-text"></div>
+</div>
+<div id="dushen-anim-overlay" class="hidden">
+  <div id="dushen-burst"></div>
+  <div id="dushen-text"></div>
+</div>
+
+<div id="scr-gacha" class="screen hidden" data-scrollable="true">
+  <div style="text-align:center;margin-bottom:4px;">
+    <div style="font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,#ff4444,#ffcc00,#ff4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 12px rgba(255,80,80,0.6));">🎰 麻将老虎机</div>
+    <div style="font-size:0.7rem;color:#aa6666;letter-spacing:0.1em;">MAHJONG SLOT MACHINE</div>
+  </div>
+  <div id="gacha-daily-wrap" style="width:100%;max-width:420px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+    <button id="gacha-daily-btn" class="btn btn-out" onclick="claimDaily();playClick()" style="display:none;background:linear-gradient(135deg,rgba(30,120,30,0.8),rgba(20,90,20,0.8));border-color:#44cc44;color:#aaffaa;font-size:0.78rem;padding:0.4em 1.2em;">🎁 领取每日奖励 / Claim Daily Bonus!</button>
+  </div>
+  <div id="low-coin-tip" style="display:none;max-width:420px;width:100%;background:rgba(0,80,0,0.4);border:1px solid #44aa44;border-radius:10px;padding:8px 12px;font-size:0.72rem;color:#aaffaa;text-align:center;line-height:1.6;">
+    💡 <strong>金币不够怎么办？/ Running low on coins?</strong><br>
+    🀄 打赢麻将获得金币！<strong>赢牌免费</strong>，奖励直接到账！<br>
+    🀄 Win mahjong rounds to earn coins — <strong>playing is FREE!</strong><br>
+    🎁 <span class="lz">每天领取每日奖励</span><span class="le">Claim your daily bonus every day!</span>
+  </div>
+  <div class="gcbar">🪙 金币 / Coins: <strong id="gcoins">0</strong> &nbsp;|&nbsp; 🔥 连赢: <strong id="gstreak">0</strong></div>
+
+  <div class="dragon-bowl-wrap bowl-stage-0" id="dragon-bowl-wrap">
+    <div class="dragon-bowl-scene">
+      <div class="bowl-coin-rain" id="bowl-coin-rain" style="position:absolute;top:42%;left:50%;transform:translateX(-50%);width:200px;height:120px;pointer-events:none;overflow:visible;z-index:30;"></div>
+
+      <div id="dragon-bowl-svg" style="position:relative;width:100%;max-width:420px;height:340px;display:block;margin:0 auto;">
+  <img src="dragon-bowl.jpg"
+       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:16px;filter:brightness(0.9);"
+       alt="Golden Dragon" loading="lazy" decoding="async" fetchpriority="low"/>
+
+  <div style="position:absolute;inset:0;border-radius:16px;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(255,180,0,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+  <svg id="dragon-bowl-inner-svg" viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg"
+       style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:100%;max-width:420px;height:200px;overflow:visible;">
+    <defs>
+      <linearGradient id="bowlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fff9c8"/>
+        <stop offset="30%" stop-color="#f7cc38"/>
+        <stop offset="60%" stop-color="#c98800"/>
+        <stop offset="100%" stop-color="#6e4200"/>
+      </linearGradient>
+      <linearGradient id="bowlInner" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#5a3000"/>
+        <stop offset="40%" stop-color="#2a1000"/>
+        <stop offset="100%" stop-color="#1a0800"/>
+      </linearGradient>
+      <linearGradient id="coinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#fff0a0"/>
+        <stop offset="50%" stop-color="#f0c030"/>
+        <stop offset="100%" stop-color="#a06010"/>
+      </linearGradient>
+      <radialGradient id="bowlGlow" cx="50%" cy="50%">
+        <stop offset="0%" stop-color="rgba(255,200,0,0.4)"/>
+        <stop offset="100%" stop-color="rgba(255,200,0,0)"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="210" cy="175" rx="120" ry="20" fill="url(#bowlGlow)" opacity="0.7"/>
+    <path d="M90,80 Q90,170 210,170 Q330,170 330,80 Z" fill="url(#bowlGrad)" stroke="#8a5000" stroke-width="2"/>
+    <path d="M100,82 Q100,160 210,160 Q320,160 320,82 Z" fill="url(#bowlInner)"/>
+    <ellipse cx="210" cy="80" rx="120" ry="22" fill="url(#bowlGrad)" stroke="#c89000" stroke-width="2.5"/>
+    <ellipse cx="210" cy="80" rx="108" ry="16" fill="#1a0800"/>
+    <g id="bowl-coins-layer0" opacity="0">
+      <ellipse cx="210" cy="155" rx="90" ry="12" fill="url(#coinGrad)"/>
+      <ellipse cx="210" cy="149" rx="88" ry="10" fill="#f0c030" opacity="0.6"/>
+    </g>
+    <g id="bowl-coins-layer1" opacity="0">
+      <ellipse cx="210" cy="140" rx="86" ry="11" fill="url(#coinGrad)"/>
+      <ellipse cx="210" cy="134" rx="84" ry="9" fill="#f0c030" opacity="0.6"/>
+    </g>
+    <g id="bowl-coins-layer2" opacity="0">
+      <ellipse cx="210" cy="125" rx="80" ry="11" fill="url(#coinGrad)"/>
+      <ellipse cx="210" cy="118" rx="78" ry="9" fill="#f0c030" opacity="0.6"/>
+    </g>
+    <g id="bowl-coins-layer3" opacity="0">
+      <ellipse cx="210" cy="108" rx="72" ry="11" fill="url(#coinGrad)"/>
+      <ellipse cx="210" cy="100" rx="70" ry="9" fill="#fff0a0" opacity="0.7"/>
+      <circle cx="150" cy="75" r="5" fill="#ffe060"><animate attributeName="opacity" values="0;1;0" dur="0.8s" repeatCount="indefinite"/></circle>
+      <circle cx="272" cy="73" r="4" fill="#fffbe0"><animate attributeName="opacity" values="0;1;0" dur="1.1s" begin="0.3s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="65" r="6" fill="#ffd700"><animate attributeName="opacity" values="0;1;0" dur="0.9s" begin="0.6s" repeatCount="indefinite"/></circle>
+    </g>
+    <ellipse id="bowl-rim-glow" cx="210" cy="80" rx="120" ry="22"
+      fill="none" stroke="#ffd700" stroke-width="3" opacity="0.3">
+      <animate attributeName="opacity" values="0.1;0.5;0.1" dur="2s" repeatCount="indefinite"/>
+    </ellipse>
+    <text id="bowl-count-text" x="210" y="192" text-anchor="middle"
+      font-family="'Noto Serif SC',serif" font-size="13" font-weight="700"
+      fill="#f0c040" opacity="0"></text>
+    <g id="bowl-sparkles" opacity="0">
+      <circle cx="165" cy="88" r="3.5" fill="#ffe060"><animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/></circle>
+      <circle cx="258" cy="84" r="3" fill="#fffbe0"><animate attributeName="opacity" values="0;1;0" dur="0.9s" begin="0.4s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="75" r="4" fill="#ffd700"><animate attributeName="opacity" values="0;1;0" dur="1.0s" begin="0.7s" repeatCount="indefinite"/></circle>
+    </g>
+  </svg>
+</div>
+      <div class="dragon-bowl-subtitle" id="bowl-subtitle">
+        💤 金龙安睡…落空则喂盆 / Dragon sleeps… misses feed the bowl
+      </div>
+    </div>
+    <button class="bowl-cashout-btn hidden" id="bowl-cashout-btn" onclick="bowlCashout();playClick()">
+      🐲 唤醒金龙！领取宝盆！/ Awaken Dragon — Collect Bowl!<br>
+      <small id="bowl-cashout-preview" style="font-weight:400;font-size:0.7rem;color:#1a0800"></small>
+    </button>
+  </div>
+
+<div class="slot-machine">
+    <div class="slot-lights" id="slot-lights"></div>
+    <div class="slot-reels" id="slot-reels">
+      <div class="payline-labels">
+        <div class="pl-label" id="pl-top">▶</div>
+        <div class="pl-label" id="pl-mid">▶</div>
+        <div class="pl-label" id="pl-bot">▶</div>
+      </div>
+      <div class="reel-wrap"><div class="reel-track" id="reel-0"></div></div>
+      <div class="reel-wrap"><div class="reel-track" id="reel-1"></div></div>
+      <div class="reel-wrap"><div class="reel-track" id="reel-2"></div></div>
+      <div class="payline-labels">
+        <div class="pl-label" id="pl-top-r">◀</div>
+        <div class="pl-label" id="pl-mid-r">◀</div>
+        <div class="pl-label" id="pl-bot-r">◀</div>
+      </div>
+    </div>
+    <div class="payline-overlay" id="payline-overlay"></div>
+    <div class="slot-result-area" id="slot-result-area"></div>
+    <div class="odds-table">
+      <div style="font-size:0.62rem;color:#886666;text-align:center;margin-bottom:2px;">5条赢线 / 5 PAYLINES: 上中下行 + 两条对角线 ✓</div>
+      <div class="odds-row jackpot"><span>🪙🪙🪙</span><span>JACKPOT +1000🪙 + 宠物! (含对角线)</span></div>
+      <div class="odds-row" style="color:#ffaa00"><span>7 · 7 · 7</span><span>BIG WIN +500🪙 + 道具</span></div>
+      <div class="odds-row" style="color:#cc88ff"><span>🀄🀄🀄</span><span>WIN +200🪙 + 道具</span></div>
+      <div class="odds-row" style="color:#88cc88"><span>任意三同</span><span>+100🪙</span></div>
+      <div class="odds-row"><span>任意两个相同</span><span>+30🪙</span></div>
+      <div class="odds-row" style="color:#ff8800"><span>🪙 任意位置</span><span>🐲 宝盆积金！</span></div>
+    </div>
+    <div class="payline">
+      <span>赔率 / ODDS</span>
+      <span>🪙 稀有</span><span>7 少见</span><span>🀄 普通</span><span>胜率 ~20%</span>
+    </div>
+    <div class="slot-btn-row">
+      <button class="slot-btn slot-btn-spin1" id="btn-spin1" onclick="spinSlots(1)">
+        SPIN × 1<br><small style="font-weight:400;font-size:0.68rem">50 🪙</small>
+      </button>
+      <button class="slot-btn slot-btn-spin3" id="btn-spin3" onclick="spinSlots(3)">
+        SPIN × 3<br><small style="font-weight:400;font-size:0.68rem">120 🪙</small>
+      </button>
+    </div>
+
+      </div>
+
+  <div class="pets-panel">
+    <div class="pets-title">🐾 宠物伙伴 / Pet Companions</div>
+    <div style="font-size:0.62rem;color:#886644;text-align:center;margin-bottom:6px;">三连🐉获得宠物 / Win pets from triple 🐉 jackpot!</div>
+    <div class="pets-grid" id="pets-grid"></div>
+  </div>
+
+  <div style="max-width:420px;width:100%;">
+    <div class="invtitle">🎒 背包 / Inventory</div>
+    <div class="invgrid" id="ginv"></div>
+  </div>
+</div>
+<button id="gacha-back-btn" class="btn btn-out" onclick="closeGacha();playClick()"><span class="lz">返回</span><span class="le">Back</span></button>
+
+
+
+
+
+<script defer src="app.js?v=2026-02-27.1"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("service-worker.js?v=2026-02-27.1").catch(()=>{});});}</script>
+
+</body>
+</html>
