@@ -1,40 +1,8 @@
 'use strict';
 
-
-const APP_VERSION = '2026-02-25.2';
-
-// ── Mobile UX helpers (iPhone-friendly) ────────────────────────────────────
-const UX = {
-  isIOS: () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
-  isStandalone: () => (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || !!navigator.standalone,
-};
-
-function updateInstallTip(){
-  const tip = document.getElementById('ios-install-tip');
-  if(!tip) return;
-  tip.style.display = (UX.isIOS() && !UX.isStandalone()) ? 'block' : 'none';
-}
-
-// Keep screen awake if the browser supports it (best-effort; silently fails)
-var _wakeLock = null;
-function requestWakeLock(){
-  try{
-    if (!('wakeLock' in navigator)) return;
-    if (document.visibilityState !== 'visible') return;
-    if (_wakeLock) return;
-    navigator.wakeLock.request('screen').then(function(lock){
-      _wakeLock = lock;
-      _wakeLock.addEventListener('release', function(){ _wakeLock = null; });
-    }).catch(function(){ _wakeLock = null; });
-  }catch(e){ _wakeLock = null; }
-}
-function releaseWakeLock(){
-  try{ if(_wakeLock){ _wakeLock.release().catch(function(){}); _wakeLock = null; } }catch(e){}
-}
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && document.body.classList.contains('in-game')) requestWakeLock();
-  if (document.visibilityState !== 'visible') releaseWakeLock();
-});
+// Build/version for cache-busting + debugging
+const APP_VERSION = '2026-02-27.2';
+window.APP_VERSION = APP_VERSION;
 
 function addDoubleTap(el, cb) {
   let lastTap = 0;
@@ -45,12 +13,9 @@ function addDoubleTap(el, cb) {
   }, { passive: false });
 }
 document.addEventListener('touchmove', function(e) {
-  // Only lock scroll while actually playing (prevents iOS "rubber-band" + accidental page scroll)
-  if (!document.body.classList.contains('in-game')) return;
-  if (e.target && e.target.closest) {
-    if (e.target.closest('[data-scrollable], input, textarea, select, [contenteditable="true"]')) return;
+  if (e.target.closest && !e.target.closest('[data-scrollable]')) {
+    if (e.cancelable) e.preventDefault();
   }
-  if (e.cancelable) e.preventDefault();
 }, { passive: false });
 
 let AC=null;
@@ -512,27 +477,326 @@ const RPOOL=buildWeightedPool();
 function spinSymbol(){return RPOOL[Math.floor(Math.random()*RPOOL.length)];}
 
 const SAVE_KEY = 'wlz_mahjong_save';
+const SAVE_META_KEY = 'wlz_mahjong_save_meta';
+const SAVE_EXPORT_VERSION = 1;
 
-function savePD() {
+let SAVE = {
+  backend: null,          // 'localStorage' | 'sessionStorage' | 'memory'
+  ok: false,
+  persistentLikely: true, // best-effort heuristic
+  inApp: false,
+  lastError: null,
+  lastSavedAt: 0,
+  persistGranted: null,
+};
+
+const _MEM_STORE = {};
+
+function _isInAppBrowser(){
+  const ua = navigator.userAgent || '';
+  // Common in-app webviews
+  return /FBAN|FBAV|Instagram|Line\/|WhatsApp|MicroMessenger|WeChat|Twitter|TikTok|Snapchat|GSA\/|CriOS(?!\/)|EdgiOS/i.test(ua);
+}
+
+function _testStorage(obj){
+  try{
+    const k = '__wlz_test__' + Math.random().toString(16).slice(2);
+    obj.setItem(k,'1');
+    obj.removeItem(k);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+function _storageObj(){
+  if(SAVE.backend === 'localStorage') return window.localStorage;
+  if(SAVE.backend === 'sessionStorage') return window.sessionStorage;
+  return null;
+}
+
+function storageGet(key){
+  try{
+    const o = _storageObj();
+    if(o) return o.getItem(key);
+    return _MEM_STORE[key] ?? null;
+  }catch(e){
+    SAVE.lastError = e;
+    return null;
+  }
+}
+
+function storageSet(key, value){
+  try{
+    const o = _storageObj();
+    if(o) { o.setItem(key, value); return true; }
+    _MEM_STORE[key] = value;
+    return true;
+  }catch(e){
+    SAVE.lastError = e;
+    return false;
+  }
+}
+
+function storageRemove(key){
+  try{
+    const o = _storageObj();
+    if(o) { o.removeItem(key); return true; }
+    delete _MEM_STORE[key];
+    return true;
+  }catch(e){
+    SAVE.lastError = e;
+    return false;
+  }
+}
+
+async function initSaveSystem(){
+  SAVE.inApp = _isInAppBrowser();
+
+  // Prefer localStorage; fall back to sessionStorage; else in-memory
+  if(_testStorage(window.localStorage)){
+    SAVE.backend = 'localStorage';
+    SAVE.ok = true;
+  }else if(_testStorage(window.sessionStorage)){
+    SAVE.backend = 'sessionStorage';
+    SAVE.ok = true;
+    SAVE.persistentLikely = false;
+  }else{
+    SAVE.backend = 'memory';
+    SAVE.ok = false;
+    SAVE.persistentLikely = false;
+  }
+
+  // Heuristic: in-app browsers often behave like "not persistent"
+  if(SAVE.inApp) SAVE.persistentLikely = false;
+
+  // Best-effort: ask for persistent storage (where supported)
+  try{
+    if(navigator.storage && navigator.storage.persist){
+      const granted = await navigator.storage.persist();
+      SAVE.persistGranted = granted;
+      // If granted, persistence likelihood improves.
+      if(granted && SAVE.backend === 'localStorage') SAVE.persistentLikely = true;
+    }
+  }catch(e){
+    // ignore
+  }
+
+  // Store a probe to detect "wiped on close" situations (heuristic)
+  try{
+    const metaRaw = storageGet(SAVE_META_KEY);
+    const meta = metaRaw ? JSON.parse(metaRaw) : {};
+    meta.lastSeenAt = Date.now();
+    meta.probe = (meta.probe || 0) + 1;
+    storageSet(SAVE_META_KEY, JSON.stringify(meta));
+  }catch(e){}
+
+  updateSaveStatusUI();
+}
+
+function updateSaveStatusUI(){
+  const pill = document.getElementById('save-pill');
+  const pillText = document.getElementById('save-pill-text');
+  const pillIcon = document.getElementById('save-pill-icon');
+  const status = document.getElementById('save-status');
+
+  const isOk = (SAVE.backend === 'localStorage') && SAVE.ok && SAVE.persistentLikely;
+  const isWarn = SAVE.ok && (!SAVE.persistentLikely || SAVE.backend !== 'localStorage');
+
+  const zh = {
+    ok: '✅ 自动存档已开启（稳定）',
+    warn: '⚠️ 存档可能不稳定（隐私浏览/应用内浏览器）',
+    bad: '⛔ 无法使用浏览器存档（将仅在本次会话有效）'
+  };
+  const en = {
+    ok: '✅ Auto-save is ON (stable)',
+    warn: '⚠️ Saving may not persist (Private / in-app browser)',
+    bad: '⛔ Storage unavailable (session-only)'
+  };
+
+  if(pill){
+    pill.classList.remove('ok','warn','bad','hidden');
+    if(isOk){ pill.classList.add('ok'); pillIcon.textContent='💾'; }
+    else if(isWarn){ pill.classList.add('warn'); pillIcon.textContent='⚠️'; }
+    else { pill.classList.add('bad'); pillIcon.textContent='⛔'; }
+  }
+
+  const backendLabel = SAVE.backend || 'unknown';
+  const last = SAVE.lastSavedAt ? new Date(SAVE.lastSavedAt).toLocaleString() : '-';
+
+  if(status){
+    status.innerHTML = `
+      <div>${PD.lang==='en' ? en[isOk?'ok':(isWarn?'warn':'bad')] : (PD.lang==='zh' ? zh[isOk?'ok':(isWarn?'warn':'bad')] : (zh[isOk?'ok':(isWarn?'warn':'bad')] + ' / ' + en[isOk?'ok':(isWarn?'warn':'bad')]))}</div>
+      <small>
+        ${PD.lang==='en' ? `Backend: <strong>${backendLabel}</strong> · Last save: <strong>${last}</strong>` :
+          (PD.lang==='zh' ? `存储方式: <strong>${backendLabel}</strong> · 上次存档: <strong>${last}</strong>` :
+          `存储方式: <strong>${backendLabel}</strong> · 上次存档: <strong>${last}</strong> / Backend: <strong>${backendLabel}</strong> · Last save: <strong>${last}</strong>`)}
+        ${SAVE.persistGranted===null ? '' : (PD.lang==='en' ? ` · Persist: <strong>${SAVE.persistGranted?'granted':'not granted'}</strong>` :
+          (PD.lang==='zh' ? ` · 持久化: <strong>${SAVE.persistGranted?'已允许':'未允许'}</strong>` :
+          ` · 持久化: <strong>${SAVE.persistGranted?'已允许':'未允许'}</strong> / Persist: <strong>${SAVE.persistGranted?'granted':'not granted'}</strong>`))}
+      </small>
+    `;
+  }
+
+  if(pillText){
+    // Keep it short on the pill
+    pillText.textContent = (PD.lang==='en' ? (isOk?'Saved':'Save') : (PD.lang==='zh' ? (isOk?'已存档':'存档') : (isOk?'已存档/Saved':'存档/Save')));
+  }
+}
+
+/** Save PD (best-effort). If force=true, attempt even when storage is risky. */
+function savePD(force=false) {
   try {
-const toSave = Object.assign({}, PD, { hero: PD.hero ? PD.hero.id : null });
-localStorage.setItem(SAVE_KEY, JSON.stringify(toSave));
-  } catch(e) {}
+    const toSave = Object.assign({}, PD, { hero: PD.hero ? PD.hero.id : null });
+    const ok = storageSet(SAVE_KEY, JSON.stringify(toSave));
+    if(!ok){
+      SAVE.ok = false;
+      SAVE.persistentLikely = false;
+      updateSaveStatusUI();
+      return false;
+    }
+    SAVE.lastSavedAt = Date.now();
+    // Keep a lightweight meta record too
+    try{
+      const metaRaw = storageGet(SAVE_META_KEY);
+      const meta = metaRaw ? JSON.parse(metaRaw) : {};
+      meta.lastSavedAt = SAVE.lastSavedAt;
+      meta.backend = SAVE.backend;
+      meta.inApp = !!SAVE.inApp;
+      storageSet(SAVE_META_KEY, JSON.stringify(meta));
+    }catch(e){}
+    updateSaveStatusUI();
+    return true;
+  } catch(e) {
+    SAVE.lastError = e;
+    SAVE.ok = false;
+    SAVE.persistentLikely = false;
+    updateSaveStatusUI();
+    return false;
+  }
 }
 
 function loadPD() {
   try {
-const raw = localStorage.getItem(SAVE_KEY);
-if (!raw) return;
-const saved = JSON.parse(raw);
-Object.assign(PD, saved);
-if (saved.hero) PD.hero = HEROES.find(h => h.id === saved.hero) || null;
-if (PD.unlockedDushen) {
-const dh = HEROES.find(h => h.id === 'dushen');
-if (dh) dh.locked = false;
+    const raw = storageGet(SAVE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    Object.assign(PD, saved);
+    if (saved.hero) PD.hero = HEROES.find(h => h.id === saved.hero) || null;
+    if (PD.unlockedDushen) {
+      const dh = HEROES.find(h => h.id === 'dushen');
+      if (dh) dh.locked = false;
+    }
+  } catch(e) {
+    // ignore
+  }
 }
-  } catch(e) {}
+
+function resetSave() {
+  if (!confirm('重置存档？/ Reset all progress?')) return;
+  storageRemove(SAVE_KEY);
+  storageRemove(SAVE_META_KEY);
+  location.reload();
 }
+
+// Save on background/close — critical for iPhone Safari.
+function hookSaveLifecycle(){
+  window.addEventListener('pagehide', ()=>{ try{ savePD(true); }catch(e){} }, { capture:true });
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.visibilityState === 'hidden'){ try{ savePD(true); }catch(e){} }
+  }, { capture:true });
+  window.addEventListener('beforeunload', ()=>{ try{ savePD(true); }catch(e){} }, { capture:true });
+}
+
+function exportSave(){
+  try{
+    const payload = {
+      exportVersion: SAVE_EXPORT_VERSION,
+      createdAt: Date.now(),
+      saveKey: SAVE_KEY,
+      data: JSON.parse(storageGet(SAVE_KEY) || JSON.stringify(Object.assign({}, PD, { hero: PD.hero ? PD.hero.id : null }))),
+      meta: { backend: SAVE.backend, inApp: SAVE.inApp }
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+    a.download = `wlz-save-${ts}.json`;
+    a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }catch(e){
+    alert('导出失败 / Export failed');
+  }
+}
+
+function triggerImportSave(){
+  const inp = document.getElementById('import-save-file');
+  if(inp) inp.click();
+}
+
+function importSaveFile(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const obj = JSON.parse(String(reader.result || ''));
+      const data = obj && obj.data ? obj.data : obj; // allow raw PD too
+      if(!confirm(`导入存档会覆盖当前进度。\nImport will overwrite current progress.\n\n继续？ / Continue?`)) return;
+      // Minimal schema guard
+      if(typeof data !== 'object' || data === null) throw new Error('invalid');
+      // Save and reload
+      storageSet(SAVE_KEY, JSON.stringify(data));
+      location.reload();
+    }catch(e){
+      alert('存档文件无效 / Invalid save file');
+    }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+
+function copySaveToClipboard(){
+  try{
+    const raw = storageGet(SAVE_KEY) || JSON.stringify(Object.assign({}, PD, { hero: PD.hero ? PD.hero.id : null }));
+    navigator.clipboard.writeText(raw).then(()=>{
+      alert('已复制存档到剪贴板 / Save copied to clipboard');
+    }).catch(()=>{
+      // Fallback
+      prompt('复制存档 / Copy save:', raw);
+    });
+  }catch(e){
+    alert('复制失败 / Copy failed');
+  }
+}
+
+function pasteSaveFromClipboard(){
+  // Prefer clipboard API; fallback to prompt
+  const doImport = (raw)=>{
+    try{
+      const data = JSON.parse(raw);
+      if(!confirm(`粘贴恢复会覆盖当前进度。\nPaste restore will overwrite current progress.\n\n继续？ / Continue?`)) return;
+      storageSet(SAVE_KEY, JSON.stringify(data));
+      location.reload();
+    }catch(e){
+      alert('粘贴内容不是有效 JSON / Invalid JSON');
+    }
+  };
+  if(navigator.clipboard && navigator.clipboard.readText){
+    navigator.clipboard.readText().then(txt=>{
+      if(!txt) return alert('剪贴板为空 / Clipboard empty');
+      doImport(txt);
+    }).catch(()=>{
+      const raw = prompt('粘贴存档 JSON / Paste save JSON:');
+      if(raw) doImport(raw);
+    });
+  }else{
+    const raw = prompt('粘贴存档 JSON / Paste save JSON:');
+    if(raw) doImport(raw);
+  }
+}
+
 
 let PD={coins:200,hero:null,inv:{},coinMult:1.0,round:1,pets:{},activePet:null,slotStreak:0,
   bowlCoins:0,
@@ -541,323 +805,19 @@ let PD={coins:200,hero:null,inv:{},coinMult:1.0,round:1,pets:{},activePet:null,s
   unlockedDushen:false,
   lang:'both',
   sound:true,
-  minTai:1,
 };
 
-// ── i18n (single dictionary + helpers) ─────────────────────────────────────
-const i18n = {
-  en: {
-    DOC_TITLE: "Records of the Wang Lizhu Tile Heroes",
-    DOC_DESC: "A mini Mahjong adventure: choose heroes, unlock pets, and win coins.",
-    APP_SHORT: "Tile Heroes"
-  },
-  zh: {
-    DOC_TITLE: "王丽珠牌侠录",
-    DOC_DESC: "选择英雄、解锁宠物、赢取金币的麻将冒险小游戏。",
-    APP_SHORT: "王丽珠牌侠录"
-  }
-};
-
-const _I18N_ALLOWED_CJK = new Set(['東','南','西','北','中','發','白','萬','筒','索']);
-function _hasCJK(s){ return /[\u3400-\u9fff]/.test(String(s||'')); }
-function _hasLatin(s){ return /[A-Za-z]/.test(String(s||'')); }
-
-function getLang(){ return PD.lang || 'both'; }
-
-function parseBilingual(s){
-  if(!s) return null;
-  const raw = String(s).trim();
-  // Only treat as bilingual when it looks like "中文 / English" or "English / 中文"
-  const parts = raw.split(/\s*\/\s*/);
-  if(parts.length !== 2) return null;
-  const a = parts[0].trim(), b = parts[1].trim();
-  if(_hasCJK(a) && _hasLatin(b)) return { zh: a, en: b };
-  if(_hasCJK(b) && _hasLatin(a)) return { zh: b, en: a };
-  return null;
-}
-
-function _interpolate(str, vars){
-  const s = String(str != null ? str : '');
-  if(!vars) return s;
-  return s.replace(/\{(\w+)\}/g, (_,k)=> (k in vars) ? String(vars[k]) : `{${k}}`);
-}
-
-function tLang(lang, key, vars){
-  const table = i18n[lang] || {};
-  let s = table[key];
-  if(s == null){
-    // Fallback: if "key" is itself a bilingual string, select its side
-    const bi = parseBilingual(key);
-    if(bi) s = (lang === 'zh') ? bi.zh : bi.en;
-    else if(i18n.en && i18n.en[key] != null) s = i18n.en[key];
-    else s = String(key);
-    if(table[key] == null && i18n.en[key] == null && String(key).length <= 40){
-      // Don’t spam for long strings
-      console.warn('[i18n] Missing key:', key);
-    }
-  }
-  return _interpolate(s, vars);
-}
-
-function tb(key, vars){
-  const zh = tLang('zh', key, vars);
-  const en = tLang('en', key, vars);
-  return `${zh} / ${en}`;
-}
-
-function t(key, vars){
-  const lang = getLang();
-  return (lang === 'both') ? tb(key, vars) : tLang(lang, key, vars);
-}
-
-function bi(zh, en, vars){
-  const lang = getLang();
-  const z = _interpolate(zh, vars);
-  const e = _interpolate(en, vars);
-  if(lang === 'both') return `${z} / ${e}`;
-  return (lang === 'zh') ? z : e;
-}
-
-function _stripCJKExceptAllowed(s){
-  return String(s||'').replace(/[\u3400-\u9fff]/g, ch => _I18N_ALLOWED_CJK.has(ch) ? ch : '');
-}
-function _stripLatin(s){
-  // Keep digits, punctuation, emojis; remove ASCII words.
-  return String(s||'').replace(/[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]+/g,'').replace(/\s{2,}/g,' ').trim();
-}
-
-function localizeText(raw){
-  const lang = getLang();
-  const s = String(raw != null ? raw : '');
-  const biParts = parseBilingual(s);
-  if(biParts){
-    if(lang === 'both') return `${biParts.zh} / ${biParts.en}`;
-    return (lang === 'zh') ? biParts.zh : biParts.en;
-  }
-  if(lang === 'en') return _stripCJKExceptAllowed(s);
-  if(lang === 'zh') return _stripLatin(s);
-  return s;
-}
-
-function _isInAllowedCjkArea(node){
-  let el = node && node.parentElement;
-  while(el){
-    // Never touch script or style elements — stripping Latin from JS/CSS breaks them
-    const tag = el.tagName;
-    if(tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'OPTION' || tag === 'NOSCRIPT') return true;
-    if(el.dataset && el.dataset.allowCjk === 'true') return true;
-    if(el.classList && (el.classList.contains('tile') || el.classList.contains('tc'))) return true;
-    // Never mutate translation spans (we toggle visibility via CSS)
-    if(el.classList && (el.classList.contains('lz') || el.classList.contains('le'))) return true;
-    // Tutorial overlay manages its own bilingual display — never strip its text
-    if(el.id === 'tutorial-overlay') return true;
-    el = el.parentElement;
-  }
-  return false;
-}
-
-function localizeDOM(root){
-  if(!root) return;
-  // Localize text nodes (excluding tiles + i18n spans)
-  try{
-    const _ignTags = new Set(['SCRIPT','STYLE','TEXTAREA','INPUT','OPTION','NOSCRIPT']);
-    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      acceptNode: function(node){
-        // Skip text nodes inside script/style/form elements
-        let p = node.parentElement;
-        while(p){ if(_ignTags.has(p.tagName)) return NodeFilter.FILTER_REJECT; p = p.parentElement; }
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    });
-    const nodes = [];
-    while(w.nextNode()) nodes.push(w.currentNode);
-    nodes.forEach(n=>{
-      if(!n.nodeValue || !n.nodeValue.trim()) return;
-      if(_isInAllowedCjkArea(n)) return;
-      const v = localizeText(n.nodeValue);
-      if(v !== n.nodeValue) n.nodeValue = v;
-    });
-  }catch(e){}
-
-  // Localize common attributes (title / placeholder) using a preserved original value
-  try{
-    const scope = (root.querySelectorAll) ? root : document;
-    (scope.querySelectorAll ? scope.querySelectorAll('[title]') : []).forEach(el=>{
-      if(el.dataset && el.dataset._title0 == null) el.dataset._title0 = el.getAttribute('title') || '';
-      el.setAttribute('title', localizeText(el.dataset._title0));
-    });
-    (scope.querySelectorAll ? scope.querySelectorAll('input[placeholder],textarea[placeholder]') : []).forEach(el=>{
-      if(el.dataset && el.dataset._ph0 == null) el.dataset._ph0 = el.getAttribute('placeholder') || '';
-      el.setAttribute('placeholder', localizeText(el.dataset._ph0));
-    });
-  }catch(e){}
-}
-
-function localizeHTMLString(html){
-  const d = document.createElement('div');
-  d.innerHTML = html || '';
-  localizeDOM(d);
-  return d.innerHTML;
-}
-
-function bootstrapI18nFromDOM(){
-  // Convert simple "中文 / English" text nodes into .lz/.le pairs (so everything is controlled by language mode)
-  const IGN = new Set(['SCRIPT','STYLE','TEXTAREA','INPUT','OPTION','NOSCRIPT']);
-  const all = document.querySelectorAll('body *');
-  all.forEach(el=>{
-    if(IGN.has(el.tagName)) return;
-    if(el.children && el.children.length === 0){
-      const txt = (el.textContent || '').trim();
-      const biParts = parseBilingual(txt);
-      if(biParts && txt.length <= 120){
-        el.textContent = '';
-        const z = document.createElement('span'); z.className = 'lz'; z.textContent = biParts.zh;
-        const e = document.createElement('span'); e.className = 'le'; e.textContent = biParts.en;
-        el.appendChild(z); el.appendChild(e);
-      }
-    }
-  });
-
-  // Harvest all direct sibling .lz/.le pairs into the dictionary, then clear hardcoded text in DOM.
-  const used = new Set();
-  let auto = 1;
-  document.querySelectorAll('.lz').forEach(lz=>{
-    const p = lz.parentElement;
-    if(!p) return;
-    const le = p.querySelector(':scope > .le');
-    if(!le) return;
-    if(p.dataset && p.dataset.i18nKey) return;
-
-    const zhText = (lz.textContent || '').trim();
-    const enText = (le.textContent || '').trim();
-    if(!zhText && !enText) return;
-
-    let base = (p.id || lz.id || '');
-    base = String(base).replace(/[^a-zA-Z0-9_]/g,'_').toUpperCase();
-    let key = base || `AUTO_${String(auto).padStart(4,'0')}`;
-    while(used.has(key)) { auto += 1; key = `AUTO_${String(auto).padStart(4,'0')}`; }
-    used.add(key);
-    if(!base) auto += 1;
-
-    i18n.zh[key] = zhText;
-    i18n.en[key] = enText;
-
-    if(p.dataset) p.dataset.i18nKey = key;
-    // Clear the DOM text so runtime always pulls from i18n
-    lz.textContent = '';
-    le.textContent = '';
-  });
-}
-
-function applyI18n(root){
-  const scope = root || document;
-  try{
-    (scope.querySelectorAll ? scope.querySelectorAll('[data-i18n-key]') : []).forEach(p=>{
-      const key = p.dataset.i18nKey;
-      const lz = p.querySelector(':scope > .lz');
-      const le = p.querySelector(':scope > .le');
-      if(lz) lz.textContent = (i18n.zh[key] != null ? i18n.zh[key] : '');
-      if(le) le.textContent = (i18n.en[key] != null ? i18n.en[key] : '');
-    });
-  }catch(e){}
-  localizeDOM(scope);
-  updateDocumentMeta();
-  if(getLang() === 'en') scanForCJKInEnglishMode(true);
-}
-
-function updateDocumentMeta(){
-  const lang = getLang();
-  const tZh = i18n.zh.DOC_TITLE || '王丽珠牌侠录';
-  const tEn = i18n.en.DOC_TITLE || 'Tile Heroes';
-  const title = (lang === 'zh') ? tZh : (lang === 'en') ? tEn : `${tZh} | ${tEn}`;
-  try{ document.title = title; }catch(e){}
-  try{
-    const md = document.querySelector('meta[name="description"]');
-    if(md){
-      const dZh = i18n.zh.DOC_DESC || '';
-      const dEn = i18n.en.DOC_DESC || '';
-      md.setAttribute('content', (lang === 'zh') ? dZh : (lang === 'en') ? dEn : `${dZh} / ${dEn}`);
-    }
-    const at = document.querySelector('meta[name="apple-mobile-web-app-title"]');
-    if(at){
-      at.setAttribute('content', (lang === 'zh') ? (i18n.zh.APP_SHORT||tZh) : (i18n.en.APP_SHORT||tEn));
-    }
-  }catch(e){}
-}
-
-function scanForCJKInEnglishMode(autoFix){
-  // DEV safety: ensure no stray CJK appears in English-only mode (excluding tiles)
-  if(getLang() !== 'en') return;
-  try{
-    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
-    const bad = [];
-    while(w.nextNode()){
-      const n = w.currentNode;
-      if(!n.nodeValue || !n.nodeValue.trim()) continue;
-      if(_isInAllowedCjkArea(n)) continue;
-      const has = /[\u3400-\u9fff]/.test(n.nodeValue.replace(/[東南西北中發白萬筒索]/g,''));
-      if(has) bad.push(n);
-    }
-    bad.slice(0, 25).forEach(n=>{
-      console.warn('[i18n] CJK visible in EN mode:', n.nodeValue.trim(), n.parentElement);
-      if(autoFix) n.nodeValue = _stripCJKExceptAllowed(n.nodeValue);
-    });
-  }catch(e){}
-}
-
-let _i18nObs=null;
-function startI18nObserver(){
-  if(_i18nObs) return;
-  _i18nObs = new MutationObserver((muts)=>{
-    const lang = getLang();
-    if(lang === 'both') return; // bilingual is already explicit
-    for(const m of muts){
-      if(m.type === 'characterData'){
-        const n = m.target;
-        if(!n || !n.nodeValue || !n.nodeValue.trim()) continue;
-        if(_isInAllowedCjkArea(n)) continue;
-        const v = localizeText(n.nodeValue);
-        if(v !== n.nodeValue) n.nodeValue = v;
-      } else if(m.type === 'childList'){
-        m.addedNodes && m.addedNodes.forEach(node=>{
-          if(node.nodeType === Node.TEXT_NODE){
-            if(_isInAllowedCjkArea(node)) return;
-            const v = localizeText(node.nodeValue);
-            if(v !== node.nodeValue) node.nodeValue = v;
-          } else if(node.nodeType === Node.ELEMENT_NODE){
-            localizeDOM(node);
-          }
-        });
-      }
-    }
-  });
-  _i18nObs.observe(document.body, {subtree:true, childList:true, characterData:true});
-}
-
-function resetSave() {
-  if (!confirm(bi('重置存档？','Reset all progress?'))) return;
-  try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
-  location.reload();
-}
-
+initSaveSystem();
+hookSaveLifecycle();
 loadPD();
-updateInstallTip();
 
 // ── SETTINGS ──────────────────────────────────────────────────────────────
 function applySettings(){
   // Language
   document.body.classList.remove('lang-zh','lang-en','lang-both');
   document.body.classList.add('lang-'+(PD.lang||'both'));
-
-  // Update <html lang> (iOS/Accessibility)
-  try{ document.documentElement.lang = (PD.lang==='zh') ? 'zh' : 'en'; }catch(e){}
-
-  // Sound
+  // Sound: patch all playTone/playNoise calls silently
   window._soundEnabled = (PD.sound !== false);
-
-  // i18n: populate UI from dictionary and enforce strict language mode
-  try{ applyI18n(document); }catch(e){}
-  try{ startI18nObserver(); }catch(e){}
 }
 function openSettings(){
   const ov = document.getElementById('settings-overlay');
@@ -872,19 +832,14 @@ function openSettings(){
     const el=document.getElementById('sound-'+s);
     if(el) el.classList.toggle('active', s==='on' ? (PD.sound!==false) : (PD.sound===false));
   });
-
-  // Rules (minimum tai)
-  const mode = (getMinTai()<=0) ? 'casual' : 'sg';
-  ['sg','casual'].forEach(r=>{
-    const el=document.getElementById('rule-'+r);
-    if(el) el.classList.toggle('active', r===mode);
-  });
 }
 function closeSettings(){
   const ov = document.getElementById('settings-overlay');
   if(ov) ov.classList.add('hidden');
 }
 function setLang(lang){
+  try{ document.documentElement.lang = (lang==='en'?'en':'zh'); }catch(e){}
+
   PD.lang = lang;
   applySettings();
   savePD();
@@ -906,25 +861,7 @@ function setSound(on){
   if(on){ resumeAC(); playClick(); }
   HX.tap();
 }
-function setMinTaiMode(mode){
-  // mode: 'sg' (min tai) or 'casual' (no minimum)
-  if(mode === 'casual'){
-    PD.minTai = 0;
-    floatNotif(bi('🎲 轻松模式：无台数门槛','🎲 Casual: no minimum tai'));
-  }else{
-    PD.minTai = DEFAULT_MIN_TAI; // SG rules
-    floatNotif(bi('🇸🇬 新加坡规则：至少 1 台','🇸🇬 SG rules: minimum 1 tai'));
-  }
-  savePD();
-  // Update chip states
-  ['sg','casual'].forEach(r=>{
-    const el=document.getElementById('rule-'+r);
-    if(el) el.classList.toggle('active', r===mode);
-  });
-}
-
 // Apply settings on load
-bootstrapI18nFromDOM();
 applySettings();
 
 // Patch sound functions to respect _soundEnabled
@@ -972,15 +909,8 @@ function updTitleCoins(){
 let G=null,prevScr='scr-title';
 let slotSpinning=false;
 
-function showScr(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  if(id!=='scr-game'){
-    document.body.classList.remove('in-game');
-    releaseWakeLock();
-  }
-}
-function goTitle(){updTitleCoins();checkDaily();showScr('scr-title');updateInstallTip();}
+function showScr(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id!=='scr-game')document.body.classList.remove('in-game');}
+function goTitle(){updTitleCoins();checkDaily();showScr('scr-title');}
 function goHeroSel(){
   buildHeroes();
   showScr('scr-hero');
@@ -996,7 +926,7 @@ document.getElementById('hinfo').innerHTML=`<strong>${h.emoji} <span class="lz">
 setGoBtn();
   }
 }
-function openGacha(){var _qs=document.querySelector('.screen:not(.hidden)');prevScr=(_qs&&_qs.id)||'scr-title';renderSlotGacha();showScr('scr-gacha');document.getElementById('gacha-back-btn').style.display='block';}
+function openGacha(){prevScr=document.querySelector('.screen:not(.hidden)')?.id||'scr-title';renderSlotGacha();showScr('scr-gacha');document.getElementById('gacha-back-btn').style.display='block';}
 function closeGacha(){document.getElementById('gacha-back-btn').style.display='none';renderSlotGacha();showScr(prevScr);}
 
 const PROMO_CODES = {
@@ -1074,7 +1004,7 @@ function buildHeroes(){
   const g=document.getElementById('hgrid');g.innerHTML='';
   HEROES.forEach(h=>{
 const el=document.createElement('div');
-el.className='hcard'+(PD.hero&&PD.hero.id===h.id?' sel':'');
+el.className='hcard'+(PD.hero?.id===h.id?' sel':'');
 el.innerHTML=`<div class="hemoji">${h.emoji}</div><div class="hnamez lz">${h.zh}</div><div class="hnamez le" style="font-size:1rem;font-weight:700;color:var(--gold-lt);">${h.en}</div><div class="hdesc lz">${h.dz}</div><div class="hdesc le" style="font-size:0.63rem;color:#8ab0c8;line-height:1.4;">${h.de}</div>`;
 el.onclick=()=>{pickHero(h.id,el);playClick();};
 g.appendChild(el);
@@ -1333,8 +1263,7 @@ function tileEl(t,sz,extra,onclick){
   const full=tzh(t);
   const d=document.createElement('div');
   d.className=`tile ${sz} ${tileCls(t)} ${extra||''}`;
-  d.dataset.allowCjk='true';
-  d.title=localizeText(`${full} / ${ten(t)}`);
+  d.title=`${full} / ${ten(t)}`;
   if(t.suit==='honor'){
 if(t.num==='haku'){
   d.innerHTML='';
@@ -1387,12 +1316,7 @@ function isWin(hand,melds){
   return false;
 }
 
-const DEFAULT_MIN_TAI = 1;
-const SEAT_WINDS = ['east','south','west','north'];
-function getMinTai(){
-  const v = (typeof PD !== 'undefined' && PD && Number.isFinite(PD.minTai)) ? PD.minTai : DEFAULT_MIN_TAI;
-  return Math.max(0, Math.min(16, v));
-}
+const MIN_TAI = 1;
 
 function calcTai(hand, melds, method, roundWind, seatWind){
   melds = melds||[];
@@ -1480,9 +1404,9 @@ function calcCoins(winner,method){
   const {tai,reasons} = calcTai(h,m,method,G.roundWind,seatWind);
   let base = taiToCoins(tai);
   let mult = 1;
-  if(PD.hero&&PD.hero.passive==='fortune')mult*=1.5;
-  if(PD.hero&&PD.hero.passive==='dragon'){const drg=h.filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));if(drg.length>=3)mult*=2;else if(drg.length>0)base+=50;}
-  if(PD.hero&&PD.hero.passive==='bamboo'){if(h.filter(t=>t.suit==='sou').length>=5)base+=30;}
+  if(PD.hero?.passive==='fortune')mult*=1.5;
+  if(PD.hero?.passive==='dragon'){const drg=h.filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));if(drg.length>=3)mult*=2;else if(drg.length>0)base+=50;}
+  if(PD.hero?.passive==='bamboo'){if(h.filter(t=>t.suit==='sou').length>=5)base+=30;}
   if(G.starBoost){mult*=2;G.starBoost=false;}
   if(G.luckyRound)mult*=1.2;
   mult*=PD.coinMult;
@@ -1545,10 +1469,10 @@ function updPetHUD(){
   if(PD.activePet&&G){
 const p=PETS.find(x=>x.id===PD.activePet);
 pw.classList.remove('hidden');
-if(p&&p.svgAvatar){
+if(p?.svgAvatar){
 pw.innerHTML=`<div style="width:36px;height:36px;overflow:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;">${p.svgAvatar.replace('width="80" height="80"','width="44" height="44"').replace('viewBox="0 0 80 80"','viewBox="10 20 60 55"')}</div>`;
 } else {
-pw.textContent=(p&&p.emoji)||'🐾';
+pw.textContent=p?.emoji||'🐾';
 }
 if(pt&&p)pt.innerHTML=`<strong>${p.zh}</strong><br>${p.dz}`;
   } else pw.classList.add('hidden');
@@ -1574,7 +1498,6 @@ function launchGame(){
   showVersusScreen(()=>{
     showScr('scr-game');
     document.body.classList.add('in-game');
-    requestWakeLock();
     document.getElementById('hhero').textContent=PD.hero.emoji+' '+PD.hero.zh;
     updPetHUD();
     _initBoardTapListener();
@@ -1604,7 +1527,7 @@ function initRound(){
   if(PD.activePet==='bryan'){PD.coins+=20;floatNotif('👓 Bryan 在场！+20🪙 & 金币×2！/ Bryan is here! +20🪙 & ×2 coins!');}
   if(PD.activePet==='golden_dragon'){floatNotif('🌟 金龙神加持！金币×1.2！/ Golden Dragon: ×1.2 coins!');}
   updHUD();renderWall();
-  if(PD.hero&&PD.hero.passive==='bamboo'&&G.wall.length>0){
+  if(PD.hero?.passive==='bamboo'&&G.wall.length>0){
 heroAbilityAnim('bamboo');
 const pk=G.wall[G.wall.length-1];
 setTimeout(()=>showModal('🎋','竹仙特技 / Bamboo Sage Peek',`<strong style="color:#88ffaa">你偷看了墙顶！/ You peeked!</strong><br><br><span style="font-size:1.4rem;font-weight:900">${tzh(pk)}</span><br><span style="font-size:0.8rem;color:#88ccff">${ten(pk)}</span>`,[{lz:'明白了',le:'Got it!',fn:()=>{hideModal();phaseDraw();}}]),700);
@@ -1656,9 +1579,8 @@ renderAll();renderWall();updHUD();
 acts.push({az:'🀄 和牌！',ae:'Win! (Tsumo)',cls:'abtn-win',fn:()=>{
 hideActs();G.hands[0]=sortH(full);G.drawn=null;
 const {coins,tai,reasons}=calcCoins(0,'tsumo');
-const min=getMinTai();
-if(tai<min){
-showModal('⚠️','台数不足 / Too Few Tai',`<strong style="color:#ffaa44">需要至少 ${min} 台才能和牌！/ Need at least ${min} tai to win!</strong><br><br>你现在有 <strong style="color:#ff8888">${tai} 台</strong><br>${reasons.join('<br>')||'无台数役种'}`,[{lz:'继续打牌',le:'Keep Playing',fn:()=>{
+if(tai<MIN_TAI){
+showModal('⚠️','台数不足 / Too Few Tai',`<strong style="color:#ffaa44">需要至少 ${MIN_TAI} 台才能和牌！/ Need at least ${MIN_TAI} tai to win!</strong><br><br>你现在有 <strong style="color:#ff8888">${tai} 台</strong><br>${reasons.join('<br>')||'无台数役种'}`,[{lz:'继续打牌',le:'Keep Playing',fn:()=>{
 hideModal();
 // Restore drawn tile so player can discard it
 const restoredFull = sortH(full);
@@ -1716,26 +1638,16 @@ showActs(acts);
   } else {
 setTurn('🃏 你的回合 — 点选牌，再点打出 / Your turn — tap to select, tap again to discard');
   }
-  if(PD.hero&&PD.hero.passive==='thunder'&&!G.thunderUsed){
+  if(PD.hero?.passive==='thunder'&&!G.thunderUsed){
 document.getElementById('skbtn').innerHTML=`<button class="nbtn" style="background:rgba(100,60,220,0.65);border-color:#8860ee;color:#d0c0ff;font-size:0.75rem;padding:4px 12px;" onclick="useThunder()">⚡ 雷击换牌 / Thunder Redraw ← 点我！</button>`;
 setTimeout(()=>showAbilityHint('thunder'),2000);
   }
 }
-function doDiscard(idx,isDrawn,_tileRef){
+function doDiscard(idx,isDrawn){
   if(G.phase!=='discard'||G.cur!==0)return;
   let tile;
   if(isDrawn){tile=G.drawn;G.drawn=null;}
-  else{
-    // Capture the tile object BEFORE merging/re-sorting the drawn tile into the hand,
-    // because sortH will shift indices and idx may point to the wrong tile afterwards.
-    const tileToDiscard = _tileRef || G.hands[0][idx];
-    if(G.drawn){G.hands[0]=sortH([...G.hands[0],G.drawn]);G.drawn=null;}
-    let newIdx = G.hands[0].indexOf(tileToDiscard);
-    if(newIdx === -1) newIdx = G.hands[0].findIndex(x=>teq(x,tileToDiscard));
-    if(newIdx === -1) newIdx = idx; // last-resort fallback
-    tile = G.hands[0][newIdx];
-    G.hands[0].splice(newIdx,1);
-  }
+  else{if(G.drawn){G.hands[0]=sortH([...G.hands[0],G.drawn]);G.drawn=null;}tile=G.hands[0][idx];G.hands[0].splice(idx,1);}
   G.selIdx=null;G.selDrawn=false;G.discards[0].push(tile);G.pending=tile;G.pendingFrom=0;G.phase='action';
   _handPeekState = 'auto';
   playDiscard();
@@ -1752,7 +1664,7 @@ function clickHand(i){
   if(G.phase!=='discard'||G.cur!==0)return;
   HX.select();G.selIdx=i;G.selDrawn=false;_selTime=Date.now();playClick();renderAll();updSelHint();
 }
-function dblClickHand(i){if(G.phase!=='discard'||G.cur!==0)return;HX.discard();const _ref=G.hands[0][i];G.selIdx=i;G.selDrawn=false;doDiscard(i,false,_ref);}
+function dblClickHand(i){if(G.phase!=='discard'||G.cur!==0)return;HX.discard();G.selIdx=i;G.selDrawn=false;doDiscard(i,false);}
 function clickDrawn(){
   if(G.phase!=='discard'||G.cur!==0)return;
   HX.select();G.selDrawn=true;G.selIdx=null;_selTime=Date.now();playClick();renderAll();updSelHint();
@@ -1761,7 +1673,7 @@ function dblClickDrawn(){if(G.phase!=='discard'||G.cur!==0)return;HX.discard();G
 function confirmDiscard(){
   if(G.phase!=='discard'||G.cur!==0)return;
   if(G.selDrawn){doDiscard(null,true);}
-  else if(G.selIdx!==null){const _ref=G.hands[0][G.selIdx];doDiscard(G.selIdx,false,_ref);}
+  else if(G.selIdx!==null){doDiscard(G.selIdx,false);}
 }
 function updSelHint(){
   const hint=document.getElementById('skhint');
@@ -1777,7 +1689,6 @@ function updSelHint(){
   // Capture the discard identity NOW, not at click time, to prevent wrong-tile bug on mobile
   const _discardIsDrawn = G.selDrawn;
   const _discardIdx = G.selIdx;
-  const _discardTileRef = (!G.selDrawn && G.selIdx !== null) ? G.hands[0][G.selIdx] : null;
   const _discardTileName = tzh(t);
   wrap.innerHTML='';
   const btn = document.createElement('button');
@@ -1804,7 +1715,7 @@ function updSelHint(){
     if(G.phase!=='discard'||G.cur!==0) return;
     HX.discard();
     if(_discardIsDrawn) doDiscard(null, true);
-    else if(_discardIdx !== null) doDiscard(_discardIdx, false, _discardTileRef);
+    else if(_discardIdx !== null) doDiscard(_discardIdx, false);
   });
   wrap.appendChild(btn);
 }
@@ -1815,14 +1726,7 @@ function aiTurn(pi){
   if(G.wall.length===0){endRound(null,'流局 / Draw Game',0);return;}
   const t=G.wall.pop();G.wallUsed++;
   G.hands[pi]=sortH([...G.hands[pi],t]);renderAll();updHUD();renderWall();
-  if(isWin(G.hands[pi],G.melds[pi])){
-  const min=getMinTai();
-  if(min<=0){ endRound(pi,'自摸 / Tsumo!',0); return; }
-  try{
-    const {tai}=calcTai(G.hands[pi],G.melds[pi],'tsumo',G.roundWind,SEAT_WINDS[pi]||'east');
-    if(tai>=min){ endRound(pi,'自摸 / Tsumo!',0); return; }
-  }catch(e){}
-}
+  if(isWin(G.hands[pi],G.melds[pi])){endRound(pi,'自摸 / Tsumo!',0);return;}
   const dc=aiDiscard(pi);
   G.hands[pi].splice(G.hands[pi].findIndex(x=>teq(x,dc)),1);
   G.discards[pi].push(dc);G.pending=dc;G.pendingFrom=pi;G.phase='action';
@@ -1833,20 +1737,7 @@ function aiTurn(pi){
 function checkClaims(from){
   if(!G||G.phase==='end')return;
   const tile=G.pending;if(!tile)return;
-  for(let p=1;p<=3;p++){
-    if(p===from)continue;
-    const full=[...G.hands[p],tile];
-    if(isWin(full,G.melds[p])){
-      const min=getMinTai();
-      if(min<=0){
-        G.hands[p]=sortH(full); playRon(); endRound(p,'荣和 / Ron!',0); return;
-      }
-      try{
-        const {tai}=calcTai(full,G.melds[p],'ron',G.roundWind,SEAT_WINDS[p]||'east');
-        if(tai>=min){ G.hands[p]=sortH(full); playRon(); endRound(p,'荣和 / Ron!',0); return; }
-      }catch(e){}
-    }
-  }
+  for(let p=1;p<=3;p++){if(p===from)continue;if(isWin([...G.hands[p],tile],G.melds[p])){G.hands[p]=sortH([...G.hands[p],tile]);playRon();endRound(p,'荣和 / Ron!',0);return;}}
   for(let p=1;p<=3;p++){if(p===from)continue;if(aiWantPong(p,tile)){aiDoPong(p,tile,from);return;}}
   for(let p=1;p<=3;p++){const pair=aiWantChi(p,tile,from);if(pair){aiDoChi(p,tile,from,pair);return;}}
   nextPlayer();
@@ -1856,9 +1747,8 @@ function checkHumanClaim(tile,from){
   if(isWin(full,G.melds[0]))acts.push({az:'🀄 和牌！',ae:'Win! (Ron)',cls:'abtn-win',fn:()=>{
 hideActs();G.hands[0]=sortH(full);
 const {coins,tai,reasons}=calcCoins(0,'ron');
-const min=getMinTai();
-if(tai<min){
-showModal('⚠️','台数不足 / Too Few Tai',`<strong style="color:#ffaa44">需要至少 ${min} 台才能和牌！/ Need at least ${min} tai to win!</strong><br><br>你现在有 <strong style="color:#ff8888">${tai} 台</strong><br>${reasons.join('<br>')||'无台数役种'}`,[{lz:'继续打牌',le:'Keep Playing',fn:()=>{
+if(tai<MIN_TAI){
+showModal('⚠️','台数不足 / Too Few Tai',`<strong style="color:#ffaa44">需要至少 ${MIN_TAI} 台才能和牌！/ Need at least ${MIN_TAI} tai to win!</strong><br><br>你现在有 <strong style="color:#ff8888">${tai} 台</strong><br>${reasons.join('<br>')||'无台数役种'}`,[{lz:'继续打牌',le:'Keep Playing',fn:()=>{
 hideModal();
 // Remove the claimed tile from hand, restore action phase, skip to next player
 G.hands[0] = sortH(full.slice(0, -1));
@@ -1890,20 +1780,7 @@ if(G.hands[0].some(t=>t.suit===tile.suit&&t.num===a)&&G.hands[0].some(t=>t.suit=
 }
 function checkClaims2(tile,from){
   if(!G||G.phase==='end')return;
-  for(let p=1;p<=3;p++){
-    if(p===from)continue;
-    const full=[...G.hands[p],tile];
-    if(isWin(full,G.melds[p])){
-      const min=getMinTai();
-      if(min<=0){
-        G.hands[p]=sortH(full); playRon(); endRound(p,'荣和 / Ron!',0); return;
-      }
-      try{
-        const {tai}=calcTai(full,G.melds[p],'ron',G.roundWind,SEAT_WINDS[p]||'east');
-        if(tai>=min){ G.hands[p]=sortH(full); playRon(); endRound(p,'荣和 / Ron!',0); return; }
-      }catch(e){}
-    }
-  }
+  for(let p=1;p<=3;p++){if(p===from)continue;if(isWin([...G.hands[p],tile],G.melds[p])){G.hands[p]=sortH([...G.hands[p],tile]);playRon();endRound(p,'荣和 / Ron!',0);return;}}
   for(let p=1;p<=3;p++){if(p===from)continue;if(aiWantPong(p,tile)){aiDoPong(p,tile,from);return;}}
   nextPlayer();
 }
@@ -1940,8 +1817,8 @@ function humanPong(tile){
   for(let i=0;i<nh.length&&rm<2;i++)if(teq(nh[i],tile)){nh.splice(i,1);i--;rm++;}
   G.hands[0]=sortH(nh);G.melds[0].push({type:'pong',tiles:[tile,tile,tile]});
   G.pending=null;G.cur=0;G.phase='discard';G.selIdx=null;G.selDrawn=false;G.drawn=null;
-  if(PD.hero&&PD.hero.passive==='fortune'){heroAbilityAnim('fortune');PD.coins+=10;updHUD();floatNotif('💰 财神碰牌奖励！+10🪙');}
-  if(PD.hero&&PD.hero.passive==='wind'&&tile.suit==='honor'&&HONORS.slice(0,4).includes(tile.num)){heroAbilityAnim('wind');floatNotif('🌪️ 风神碰牌！风牌加成激活！');}
+  if(PD.hero?.passive==='fortune'){heroAbilityAnim('fortune');PD.coins+=10;updHUD();floatNotif('💰 财神碰牌奖励！+10🪙');}
+  if(PD.hero?.passive==='wind'&&tile.suit==='honor'&&HONORS.slice(0,4).includes(tile.num)){heroAbilityAnim('wind');floatNotif('🌪️ 风神碰牌！风牌加成激活！');}
   if(PD.activePet==='fox'&&Math.random()<0.25&&G.wall.length>0){setTimeout(()=>{const extra=G.wall.pop();G.wallUsed++;G.hands[0]=sortH([...G.hands[0],extra]);floatNotif('🦊 九尾狐：碰后摸牌！/ Fox Pong Bonus!');renderAll();renderWall();updHUD();},600);}
   renderAll();setTurn('碰牌！选牌打出 / Pong! Select a tile to discard');
 }
@@ -1980,12 +1857,12 @@ function useThunder(){
 function endRound(winner,label,coins,tai,reasons){
   hideActs();hideAbilityHint();G.phase='end';let body='';
   if(winner===0){
-if(PD.hero&&PD.hero.passive==='dragon'){
+if(PD.hero?.passive==='dragon'){
 const drg=G.hands[0].filter(t=>t.suit==='honor'&&['haku','hatsu','chun'].includes(t.num));
 if(drg.length>0)heroAbilityAnim('dragon');
 }
 PD.coins+=coins;PD.slotStreak=0;
-if(PD.hero&&PD.hero.passive==='thunder')for(let p=1;p<=3;p++)PD.coins+=10;
+if(PD.hero?.passive==='thunder')for(let p=1;p<=3;p++)PD.coins+=10;
 playWinBig();spawnConfetti();
 const taiStr = tai!=null?`<div style="margin:4px 0;padding:4px 8px;background:rgba(200,150,26,0.15);border-radius:8px;font-size:0.72rem;color:#ffdd88;line-height:1.6;"><strong>🀄 台数: ${tai} 台</strong><br>${(reasons||[]).join(' · ')}</div>`:'';
 body=`${taiStr}<strong>获得 / Gained: 🪙 ${coins} 金币</strong><br>总计 / Total: ${PD.coins} 金币`;
@@ -2249,36 +2126,10 @@ function showActs(acts){const p=document.getElementById('actpanel');p.innerHTML=
 function hideActs(){document.getElementById('actpanel').classList.add('hidden');}
 
 function showModal(ico,title,body,btns,tiles){
-  const mico = document.getElementById('mico');
-  const mtitle = document.getElementById('mtitle');
-  const mbody = document.getElementById('mbody');
-  if(mico) mico.textContent = ico;
-  if(mtitle) mtitle.textContent = localizeText(title);
-  if(mbody) mbody.innerHTML = localizeHTMLString(body);
-
-  const mt=document.getElementById('mtiles');
-  if(mt){
-    mt.innerHTML='';
-    (tiles||[]).forEach(t=>mt.appendChild(tileEl(t,'t-sm')));
-  }
-
-  const mb=document.getElementById('mbtns');
-  if(mb){
-    mb.innerHTML='';
-    (btns||[]).forEach(b=>{
-      const el=document.createElement('button');
-      el.className='btn btn-gold';
-      const label = (b && (b.key||b.i18nKey)) ? t(b.key||b.i18nKey)
-        : (b && (b.lz!=null || b.le!=null)) ? bi(b.lz||'', b.le||'')
-        : localizeText(String(b||''));
-      el.textContent = label;
-      el.onclick=()=>{playClick(); b && b.fn && b.fn();};
-      mb.appendChild(el);
-    });
-  }
-
+  document.getElementById('mico').textContent=ico;document.getElementById('mtitle').textContent=title;document.getElementById('mbody').innerHTML=body;
+  const mt=document.getElementById('mtiles');mt.innerHTML='';(tiles||[]).forEach(t=>mt.appendChild(tileEl(t,'t-sm')));
+  const mb=document.getElementById('mbtns');mb.innerHTML='';btns.forEach(b=>{const el=document.createElement('button');el.className='btn btn-gold';el.innerHTML=`${b.lz} / ${b.le}`;el.onclick=()=>{playClick();b.fn();};mb.appendChild(el);});
   document.getElementById('overlay').classList.remove('hidden');
-  try{ applyI18n(document.getElementById('overlay')); }catch(e){}
 }
 function hideModal(){document.getElementById('overlay').classList.add('hidden');}
 
@@ -2286,7 +2137,7 @@ function showTaiRules(){
   const rulesHTML=`
 <div style="text-align:left;font-size:0.75rem;line-height:1.8;color:#aaccdd;">
 <div style="font-size:0.82rem;font-weight:700;color:#ffdd88;margin-bottom:6px;">🇸🇬 新加坡麻将 台数规则</div>
-<div style="color:#ff9966;font-weight:700;margin-bottom:4px;">${getMinTai()<=0 ? '轻松模式：无台数门槛 / Casual: no minimum tai' : ('最低 '+getMinTai()+' 台才能和牌！/ Minimum '+getMinTai()+' Tai to Win!')}</div>
+<div style="color:#ff9966;font-weight:700;margin-bottom:4px;">最低 1 台才能和牌！/ Minimum 1 Tai to Win!</div>
 <table style="width:100%;border-collapse:collapse;font-size:0.72rem;">
 <tr style="color:#ffdd88"><td style="padding:1px 4px;"><strong>役种 Yaku</strong></td><td style="text-align:right;padding:1px 4px;"><strong>台数</strong></td></tr>
 <tr><td>自摸 Tsumo</td><td style="text-align:right;color:#88ff88">+1</td></tr>
@@ -2312,13 +2163,10 @@ function updLiveTai(){
   if(!G||G.cur!==0)return;
   const full=[...G.hands[0],...(G.drawn?[G.drawn]:[])];
   if(isWin(full,G.melds[0])){
-    const method=G.drawn?'tsumo':'ron';
-    const {tai}=calcTai(full,G.melds[0],method,G.roundWind,SEAT_WINDS[0]||'east');
-    const min=getMinTai();
-    const ok = (min<=0) ? true : (tai>=min);
-    const col = ok ? '#88ff88' : '#ff8888';
-    const tail = (min>0) ? (ok ? ' ✓' : ` (需${min}台)`) : ' ✓';
-    return `<span style="color:${col};font-weight:700;margin-left:8px;">⬡ ${tai}台${tail}</span>`;
+const method=G.drawn?'tsumo':'ron';
+const {tai,reasons}=calcTai(full,G.melds[0],method,G.roundWind,'east');
+const col=tai>=MIN_TAI?'#88ff88':'#ff8888';
+return `<span style="color:${col};font-weight:700;margin-left:8px;">⬡ ${tai}台${tai<MIN_TAI?' (需'+MIN_TAI+'台)':' ✓'}</span>`;
   }
   return '';
 }
@@ -2733,34 +2581,31 @@ item.style.zIndex = '6';
 });
   });
 
-    const overlay = document.getElementById('payline-overlay');
-  if(overlay) overlay.innerHTML = '';
-  // Payline lines disabled: symbols already glow/pulse on match (prevents misaligned line artifacts).
-
+  const overlay = document.getElementById('payline-overlay');
+  if(!overlay) return;
+  const reelW = 72, reelH = 288;
+  const rowCY = [48, 144, 240];
+  const reelCX = [36, 108+4, 180+8];
+  const lines = plIndices.map(pli=>{
+const pl = PAYLINES[pli];
+const pts = pl.cells.map(([r,row])=>`${reelCX[r]},${rowCY[row]}`);
+return `<line x1="${reelCX[pl.cells[0][0]]}" y1="${rowCY[pl.cells[0][1]]}" x2="${reelCX[pl.cells[2][0]]}" y2="${rowCY[pl.cells[2][1]]}" stroke="${pl.color}" stroke-width="3" stroke-linecap="round" opacity="0.75" stroke-dasharray="6 4"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="0.8s" repeatCount="indefinite"/></line>`;
+  }).join('');
+  const totalW = reelCX[2] + 36;
+  overlay.innerHTML = `<svg viewBox="0 0 ${totalW} ${reelH}" preserveAspectRatio="none" style="position:absolute;top:0;left:32px;width:calc(100% - 64px);height:${reelH}px;pointer-events:none;z-index:8;">${lines}</svg>`;
 }
 
 function updFreeSpinBtn(){
   const fs=PD.freeSpins||0;
   const b1=document.getElementById('btn-spin1');
   const b3=document.getElementById('btn-spin3');
-
-  const smallStyleFree = `font-weight:400;font-size:0.68rem;color:#aaffaa`;
-  const smallStylePaid = `font-weight:400;font-size:0.68rem`;
-
   if(b1){
-    if(fs>=1){
-      b1.innerHTML = `🎁 <span class="lz">免费旋转 × 1</span><span class="le">FREE SPIN × 1</span><br><small style="${smallStyleFree}"><span class="lz">剩余 ${fs}</span><span class="le">Remaining ${fs}</span></small>`;
-    } else {
-      b1.innerHTML = `<span class="lz">旋转 × 1</span><span class="le">SPIN × 1</span><br><small style="${smallStylePaid}">50 🪙</small>`;
-    }
+if(fs>=1){ b1.innerHTML=`🎁 FREE SPIN × 1<br><small style="font-weight:400;font-size:0.68rem;color:#aaffaa">免费旋转 剩余${fs}</small>`; }
+else { b1.innerHTML=`SPIN × 1<br><small style="font-weight:400;font-size:0.68rem">50 🪙</small>`; }
   }
-
   if(b3){
-    if(fs>=3){
-      b3.innerHTML = `🎁 <span class="lz">免费旋转 × 3</span><span class="le">FREE SPIN × 3</span><br><small style="${smallStyleFree}"><span class="lz">剩余 ${fs}</span><span class="le">Remaining ${fs}</span></small>`;
-    } else {
-      b3.innerHTML = `<span class="lz">旋转 × 3</span><span class="le">SPIN × 3</span><br><small style="${smallStylePaid}">120 🪙</small>`;
-    }
+if(fs>=3){ b3.innerHTML=`🎁 FREE SPIN × 3<br><small style="font-weight:400;font-size:0.68rem;color:#aaffaa">免费旋转 剩余${fs}</small>`; }
+else { b3.innerHTML=`SPIN × 3<br><small style="font-weight:400;font-size:0.68rem">120 🪙</small>`; }
   }
 }
 
@@ -3012,7 +2857,7 @@ taunt_winning:[
 let AI_ASSIGNMENTS = { 1: 0, 2: 1, 3: 2 };
 
 function getPersona(pi) {
-  const idx = (AI_ASSIGNMENTS[pi] != null ? AI_ASSIGNMENTS[pi] : (pi - 1));
+  const idx = AI_ASSIGNMENTS[pi] ?? (pi - 1);
   return AI_ROSTER[idx % AI_ROSTER.length];
 }
 
@@ -3215,7 +3060,7 @@ aiWantPong = function(pi, tile) {
   const matches = G.hands[pi].filter(t=>teq(t,tile)).length;
   if (matches<2) return false;
   const rates = {aggressive:0.92, chaotic:0.75, defensive:0.25, methodical:0.55, strategic:0.65, calculated:0.6, bluffer:0.8, slow:0.7, lucky:0.8, unpredictable:0.55};
-  const r = (rates[persona.style] != null ? rates[persona.style] : 0.6);
+  const r = rates[persona.style]??0.6;
   if (persona.style==='defensive') {
 const isDragon=tile.suit==='honor'&&['haku','hatsu','chun'].includes(tile.num);
 return isDragon||G.hands[pi].length<=5||Math.random()<0.2;
@@ -3553,7 +3398,7 @@ dushenAnim('🀄','赌神胜利！<br><small style="font-size:0.85rem;color:#ff8
 const _origCalcCoins = calcCoins;
 calcCoins = function(winner, method) {
   const result = _origCalcCoins(winner, method);
-  if(winner !== 0 || (PD.hero&&PD.hero.passive) !== 'dushen') return result;
+  if(winner !== 0 || PD.hero?.passive !== 'dushen') return result;
   if(Math.random() < 0.15) {
 const stolen = 3 * 15;
 result.coins += stolen;
@@ -3566,7 +3411,7 @@ setTimeout(()=>floatNotif(`🃏 命运之眼发动！偷取 +${stolen}🪙 / Eye
 const _origInitRoundDushen = initRound;
 initRound = function() {
   _origInitRoundDushen();
-  if(PD.hero&&PD.hero.passive === 'dushen' && Math.random() < 0.20 && G) {
+  if(PD.hero?.passive === 'dushen' && Math.random() < 0.20 && G) {
 setTimeout(()=>{
 const oppSeat = [1,2,3][Math.floor(Math.random()*3)];
 const oppHand = G.hands[oppSeat];
@@ -3592,7 +3437,7 @@ buildHeroes = function() {
   HEROES.forEach(h => {
 const isLocked = h.locked && !PD.unlockedDushen;
 const el = document.createElement('div');
-el.className = 'hcard' + (PD.hero&&PD.hero.id===h.id?' sel':'') + (h.id==='dushen'?' dushen-hcard':'');
+el.className = 'hcard' + (PD.hero?.id===h.id?' sel':'') + (h.id==='dushen'?' dushen-hcard':'');
 el.style.position = 'relative';
 el.innerHTML = `<div class="hemoji">${h.emoji}</div>
 <div class="hnamez lz">${h.zh}</div>
@@ -3647,7 +3492,7 @@ const unlocked=!!PD.pets[p.id];
 const isActive=PD.activePet===p.id;
 const rarityColors={common:'#44aacc',rare:'#aa44ff',legendary:'#ffd700'};
 const rarityGlow={common:'rgba(68,170,204,0.4)',rare:'rgba(170,68,255,0.45)',legendary:'rgba(255,215,0,0.55)'};
-const rarityLabel={common:'<span class="lz">普通</span><span class="le">Common</span>',rare:'<span class="lz">稀有</span><span class="le">Rare</span>',legendary:'<span class="lz">传说</span><span class="le">Legendary</span>'};
+const rarityLabel={common:'普通 Common',rare:'稀有 Rare',legendary:'传说 Legendary'};
 const d=document.createElement('div');
 d.className='pet-card'+(unlocked?'':' locked')+(isActive?' active-pet':'');
 d.style.borderColor=unlocked?rarityColors[p.r]:'#2a3a2a';
@@ -3656,24 +3501,16 @@ if(unlocked && p.r==='rare') d.style.boxShadow=`0 0 12px ${rarityGlow[p.r]}`;
 const avatarHTML = p.svgAvatar
 ? `<div class="pet-svg-avatar"${!unlocked?' style="filter:grayscale(1) brightness(0.35) sepia(0);opacity:0.4;"':''}>${p.svgAvatar}</div>`
 : `<span class="pet-emoji" style="${!unlocked?'filter:grayscale(0.8);opacity:0.45;':''}">${p.emoji}</span>`;
-const unlockTipZh = (p.unlockHint||'🎰 三连🐉 解锁');
-const unlockHintMapEn = {
-  triple7: '🎰 Unlock with triple 7',
-  triple_mj: '🀄 Unlock with triple Mahjong',
-  any_pair: '🎰 Unlock with any pair',
-  jackpot: '🎰 Unlock via 🐉 JACKPOT',
-  promo: '🎁 Unlock via promo code'
-};
-const unlockTipEn = unlockHintMapEn[p.lockedBy] || 'Unlock';
-const unlockTip = `<span class="lz">${unlockTipZh}</span><span class="le">${unlockTipEn}</span>`;
+const unlockTip = p.unlockHint||'🎰 JACKPOT解锁';
 d.innerHTML=`
 <span class="lock-badge">${unlocked?(isActive?'✅':''):'🔒'}</span>
 ${avatarHTML}
-<div class="pet-name" style="color:${unlocked?rarityColors[p.r]:'#4a6a4a'}">${`<span class="lz">${p.zh}</span><span class="le">${p.en}</span>`}</div>
-<div class="pet-desc" style="color:${unlocked?'#88aabb':'#3a5a3a'}">${`<span class="lz">${p.dz}</span><span class="le">${p.de}</span>`}</div>
+<div class="pet-name" style="color:${unlocked?rarityColors[p.r]:'#4a6a4a'}">${p.zh}</div>
+<div style="font-size:0.52rem;color:${unlocked?'#668899':'#3a5a3a'};margin-bottom:1px;">${p.en}</div>
+<div class="pet-desc" style="color:${unlocked?'#88aabb':'#3a5a3a'}">${p.dz}</div>
 <div class="pet-rarity" style="color:${unlocked?rarityColors[p.r]:'#3a5a3a'};font-size:0.52rem;letter-spacing:0.04em;margin-top:2px;">${rarityLabel[p.r]}</div>
 ${unlocked
-? `<button style="margin-top:5px;font-size:0.55rem;padding:3px 8px;border:1px solid ${rarityColors[p.r]};border-radius:6px;background:rgba(0,0,0,0.5);color:${rarityColors[p.r]};cursor:pointer;font-family:inherit;" onclick="equipPet('${isActive?null:p.id}')">${isActive?'<span class="lz">卸下</span><span class="le">Unequip</span>':'<span class="lz">装备</span><span class="le">Equip</span>'}</button>`
+? `<button style="margin-top:5px;font-size:0.55rem;padding:3px 8px;border:1px solid ${rarityColors[p.r]};border-radius:6px;background:rgba(0,0,0,0.5);color:${rarityColors[p.r]};cursor:pointer;font-family:inherit;" onclick="equipPet('${isActive?null:p.id}')">${isActive?'卸下 Unequip':'装备 Equip'}</button>`
 : `<div style="font-size:0.55rem;color:#4a6a4a;margin-top:4px;line-height:1.4;">${unlockTip}</div>`}
 `;
 pg.appendChild(d);
@@ -3682,7 +3519,7 @@ pg.appendChild(d);
   Object.entries(PD.inv).forEach(([id,cnt])=>{
 if(!cnt)return;const item=IPOOL.find(x=>x.id===id);if(!item)return;
 const d=document.createElement('div');d.className='invitem';
-d.innerHTML=`<span>${item.emoji}</span><span><span class="lz">${item.zh}</span><span class="le">${item.en}</span><br><span style="color:#6a8899;font-size:0.6rem"><span class="lz">${item.dz}</span><span class="le">${item.de}</span></span></span><span class="invcount">${cnt}</span>`;
+d.innerHTML=`<span>${item.emoji}</span><span>${item.zh}<br><span style="color:#6a8899;font-size:0.6rem">${item.en}</span></span><span class="invcount">${cnt}</span>`;
 gi.appendChild(d);
   });
 }
@@ -4093,7 +3930,7 @@ function handleBotBgClick(e) {
   document.head.appendChild(s);
 })();
 
-// ---- extracted from index(1).html ----
+
 
 // ── VERSUS SCREEN ───────────────────────────────────────────────────────────
 (function(){
@@ -4415,364 +4252,3 @@ window.showVersusScreen = function(onComplete){
 };
 
 })();
-
-// ---- extracted from index(1).html ----
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   TUTORIAL MODULE  –  no game-logic changes, pure UI
-   ═══════════════════════════════════════════════════════════════════════════ */
-(function(){
-'use strict';
-
-/* ── 1. Content Data ─────────────────────────────────────────────────────── */
-const TUT_SECTIONS = [
-  {
-    id:'start', icon:'🎮',
-    zh:'如何开始', en:'How to Start',
-    items:[
-      { type:'steps', items:[
-        { zh:'点击主菜单上的 <strong>⚔️ 开始游戏</strong>。', en:'Tap <strong>⚔️ Start Game</strong> on the main menu.' },
-        { zh:'从英雄网格中 <strong>选择你的英雄</strong>。每位英雄都有独特技能——点击查看详情。', en:'<strong>Choose a Hero</strong> from the grid. Each hero has a unique skill — tap to see details.' },
-        { zh:'准备好后，点击 <strong>出发！</strong> 开始对局。', en:"When ready, tap <strong>Let's Go!</strong> to begin the round." },
-        { zh:'游戏开始时你会收到 <strong>13张牌</strong>。你的目标是凑成胡牌的组合（3+3+3+2）并胡牌。', en:'You start with <strong>13 tiles</strong>. Your goal: form a winning hand (3+3+3+2) and declare victory.' },
-      ]},
-      { type:'tip', zh:'第一次玩？选择王丽珠（🏮）——她的技能最直接、最容易理解。', en:"First time? Pick Wang Lizhu (🏮) — her skill is the most straightforward to understand." },
-    ]
-  },
-  {
-    id:'matching', icon:'🀄',
-    zh:'如何配牌胡牌', en:'How Matching Works',
-    items:[
-      { type:'card', icon:'🃏', zh:'基本牌型', en:'Basic Hand Structure',
-        body_zh:'胡牌需要：<strong>4组面子</strong>（顺子/刻子）+ <strong>1对将牌</strong>（两张相同的牌）。<br><br>• <strong>顺子</strong>：同一花色的3张连续牌（如 2、3、4 万）<br>• <strong>刻子</strong>：3张相同的牌（如 3张发）',
-        body_en:'To win you need: <strong>4 melds</strong> (sequences/triplets) + <strong>1 pair</strong> (two identical tiles).<br><br>• <strong>Sequence (Chi)</strong>: 3 consecutive tiles in the same suit (e.g. 2, 3, 4 of Circles)<br>• <strong>Triplet (Pong)</strong>: 3 identical tiles (e.g. 3× Green Dragon)' },
-      { type:'card', icon:'🔄', zh:'轮流摸牌', en:'Taking Turns',
-        body_zh:'每回合轮流从牌墙摸一张牌，然后打出一张不需要的牌。被打出的牌其他玩家可以碰（刻子）或吃（顺子）。',
-        body_en:'Each turn, draw one tile from the wall and discard one you do not need. Discarded tiles can be claimed by other players for a Pong (triplet) or Chi (sequence).' },
-      { type:'card', icon:'✋', zh:'如何打牌', en:'How to Discard',
-        body_zh:'<strong>点击</strong>你手牌中的一张牌将其选中（它会弹起高亮）。然后点击屏幕右下角出现的红色 <strong>🀄 打出</strong> 按钮来打出该牌。<br><br>或者 <strong>双击/双触</strong> 一张牌可以立即打出，无需确认。',
-        body_en:'<strong>Tap</strong> a tile in your hand to select it (it lifts up and highlights). Then tap the red <strong>🀄 Discard</strong> button that appears at the bottom-right to discard it.<br><br>Or <strong>double-tap</strong> a tile to discard instantly with no confirmation.' },
-      { type:'card', icon:'🏆', zh:'宣告胡牌', en:'Declaring a Win',
-        body_zh:'当你手牌凑成完整牌型时，<strong>荣和</strong>（吃别人的牌）或 <strong>自摸</strong>（摸自己的牌）按钮会自动弹出。点击它即可赢得该局！',
-        body_en:'When your hand completes, the <strong>Ron</strong> (win off another\'s discard) or <strong>Tsumo</strong> (self-draw win) button appears automatically. Tap it to win the round!' },
-      { type:'tip', zh:'不确定要打哪张牌？试试把最难凑组的孤立单张先打出去。', en:"Not sure which tile to discard? Try discarding isolated tiles that don't connect to anything." },
-    ]
-  },
-  {
-    id:'shop', icon:'🎰',
-    zh:'老虎机商店：买什么', en:'Slot Shop: What to Buy',
-    items:[
-      { type:'card', icon:'🪙', zh:'如何获得金币', en:'How to Earn Coins',
-        body_zh:'赢得牌局可获得金币。每次胜利奖励约 <strong>20–60金币</strong>，具体取决于英雄加成和宠物技能。',
-        body_en:'Win mahjong rounds to earn coins. Each victory rewards roughly <strong>20–60 coins</strong> depending on hero bonuses and pet skills.' },
-      { type:'card', icon:'🎰', zh:'老虎机怎么玩', en:'How the Slot Machine Works',
-        body_zh:'进入 <strong>🎰 老虎机商店</strong>，消耗金币旋转三个卷轴。连成一线即可赢取道具。<br><br>• <strong>单次旋转</strong>：花费较少，单次机会<br>• <strong>三连旋转</strong>：消耗更多金币，但胜率更高',
-        body_en:'Visit the <strong>🎰 Slot Shop</strong> and spend coins to spin three reels. Match symbols across a payline to win items.<br><br>• <strong>Spin ×1</strong>: Lower cost, one shot<br>• <strong>Spin ×3</strong>: More coins spent, but better odds overall' },
-      { type:'card', icon:'🛍️', zh:'推荐购买的道具', en:'Recommended Items to Buy',
-        body_zh:'• <strong>⭐ 星光加成</strong>：提高下一局奖励倍率<br>• <strong>🍀 幸运符</strong>：增加摸到好牌的概率<br>• <strong>🐉 宠物蛋</strong>：解锁新宠物',
-        body_en:'• <strong>⭐ Star Boost</strong>: Multiplies rewards for the next round<br>• <strong>🍀 Lucky Charm</strong>: Increases the odds of drawing useful tiles<br>• <strong>🥚 Pet Egg</strong>: Unlocks a new pet' },
-      { type:'tip', zh:'当金币余额超过300时，再去旋转老虎机——这样即使连续不中也不会破产。', en:'Spin the slots when your coin balance exceeds 300 — so a losing streak will not wipe you out.' },
-    ]
-  },
-  {
-    id:'pets', icon:'🐾',
-    zh:'宠物与英雄：功能说明', en:'Pets & Heroes: What They Do',
-    items:[
-      { type:'card', icon:'🏮', zh:'英雄技能', en:'Hero Skills',
-        body_zh:'每位英雄都有一个 <strong>主动或被动技能</strong>，在游戏中触发：<br><br>• 有些英雄增加赢牌奖励<br>• 有些英雄可以在关键时刻额外摸牌<br>• 独孤神（🔴）是高难度角色，技能强大但限制较多',
-        body_en:'Each hero has one <strong>active or passive skill</strong> that triggers during play:<br><br>• Some heroes boost win rewards<br>• Some heroes let you draw extra tiles at key moments<br>• Dúgū Shén (🔴) is a high-skill character with powerful but restricted abilities' },
-      { type:'card', icon:'🐦', zh:'宠物系统', en:'The Pet System',
-        body_zh:'在 <strong>🎰 老虎机商店</strong> 页面下方可以看到你的宠物收藏。点击一只宠物将其设为<strong>当前伴侣</strong>。<br><br>激活的宠物会跟随你出现在游戏屏幕右侧，并在对局中提供持续加成。',
-        body_en:'Find your pet collection at the bottom of the <strong>🎰 Slot Shop</strong> screen. Tap a pet to set it as your <strong>active companion</strong>.<br><br>The active pet follows you into games (shown on the right side) and provides ongoing bonuses during rounds.' },
-      { type:'card', icon:'🐱', zh:'各宠物能力举例', en:'Example Pet Abilities',
-        body_zh:'• <strong>🐦 麻雀</strong>：每次打牌10%概率额外获得+5金币<br>• <strong>🐉 神龙</strong>：提高大奖胡牌的金币奖励<br>• <strong>🐼 熊猫</strong>：每局开始时提供防御加成',
-        body_en:'• <strong>🐦 Sparrow</strong>: 10% chance to earn +5 coins on each discard<br>• <strong>🐉 Dragon</strong>: Boosts jackpot round payouts<br>• <strong>🐼 Panda</strong>: Gives a defensive bonus at the start of each round' },
-      { type:'tip', zh:'宠物图标出现在游戏右侧。点击它可以触发一个特殊动作！', en:'Your pet icon appears on the right during a game. Tap it to trigger a special action!' },
-    ]
-  },
-  {
-    id:'daily', icon:'🎁',
-    zh:'每日奖励与连胜', en:'Daily Bonus & Streaks',
-    items:[
-      { type:'card', icon:'📅', zh:'每日奖励', en:'Daily Bonus',
-        body_zh:'每24小时，主菜单会出现一个 <strong>🎁 领取每日奖励</strong> 绿色按钮。点击即可免费领取金币！连续签到天数越多，奖励越丰厚。',
-        body_en:'Every 24 hours a green <strong>🎁 Daily Bonus!</strong> button appears on the main menu. Tap it for free coins! The longer your consecutive log-in streak, the bigger the reward.' },
-      { type:'card', icon:'🔥', zh:'胜利连胜加成', en:'Win Streak Bonus',
-        body_zh:'连续赢牌会积累 <strong>连胜条</strong>（显示在屏幕左上角）。连胜越高，每局奖励倍率越大。如果输掉一局，连胜会重置。',
-        body_en:'Winning consecutive rounds builds your <strong>streak bar</strong> (top-left of screen). Higher streaks multiply your per-round payout. Losing a round resets the streak.' },
-      { type:'tip', zh:'即使不想玩，每天也记得打开游戏领一下每日奖励——金币会慢慢积累！', en:'Even on days you don\'t want to play, open the game just to collect the daily bonus — coins add up fast!' },
-    ]
-  },
-  {
-    id:'mistakes', icon:'😬',
-    zh:'常见错误', en:'Common Mistakes',
-    items:[
-      { type:'warn', zh:'<strong>误触打牌</strong>：手牌中的牌被点击后会弹起，但不会立刻打出——你必须再按一次右下角的红色 🀄 打出 按钮才会真正打出。双击可跳过确认步骤。',
-        en:'<strong>Accidental selects</strong>: Tapping a tile lifts it but does NOT immediately discard — you still need to tap the red 🀄 Discard button. Double-tap skips the confirm step.' },
-      { type:'warn', zh:'<strong>金币不足</strong>：老虎机旋转需要金币，金币不够就无法旋转。先多赢几局再来。',
-        en:'<strong>Not enough coins</strong>: The slot machine requires coins to spin. Win more rounds first if you are low on coins.' },
-      { type:'warn', zh:'<strong>错过碰/吃机会</strong>：当别人打出一张牌后，底部会短暂弹出碰/吃/荣和的按钮。要快点点！过了时间窗口就会消失。',
-        en:'<strong>Missing Pong/Chi/Ron</strong>: When someone discards, action buttons briefly appear at the bottom. Tap fast — the window expires automatically.' },
-      { type:'warn', zh:'<strong>忘记宠物</strong>：宠物必须在英雄选择界面之前就选好。进入对局后无法更换宠物。',
-        en:'<strong>Forgetting to equip a pet</strong>: Pets must be selected before you start a round. You cannot swap pets mid-game.' },
-      { type:'tip', zh:'如果你选错了英雄，请在英雄选择界面点击"返回"重新来过——不会消耗金币。',
-        en:'If you chose the wrong hero, tap "Back" on the hero screen to restart — no coins are lost.' },
-    ]
-  },
-  {
-    id:'troubleshoot', icon:'🔧',
-    zh:'常见问题与解决方法', en:'Troubleshooting',
-    items:[
-      { type:'card', icon:'🔇', zh:'没有声音', en:'No Sound',
-        body_zh:'进入 <strong>⚙️ 设置</strong>，确认音效已开启。如果仍然无声，请检查手机静音开关，并确保浏览器未静音该标签页。在 Safari 中，某些版本需要<strong>先点击屏幕</strong>才能触发音效。',
-        body_en:'Open <strong>⚙️ Settings</strong> and make sure sound is On. If still silent, check your phone\'s mute switch and ensure the browser tab is not muted. In Safari, some versions require a <strong>first user tap</strong> before audio can play.' },
-      { type:'card', icon:'🐢', zh:'游戏卡顿 / 掉帧', en:'Lag or Slowdown',
-        body_zh:'• 关闭其他浏览器标签页以释放内存<br>• 如果是 iPhone，尝试从多任务中彻底关闭 Safari 再重新打开<br>• 刷新页面（见下方说明）',
-        body_en:'• Close other browser tabs to free memory<br>• On iPhone, fully close Safari from the app switcher and reopen<br>• Refresh the page (see below)' },
-      { type:'card', icon:'📲', zh:'iPhone Safari 建议', en:'iPhone Safari Tips',
-        body_zh:'• <strong>添加到主屏幕</strong>：点击 Safari 底部 <strong>分享</strong> 按钮 → "添加到主屏幕"。之后从主屏幕图标打开，体验更流畅、更像原生应用。<br>• 添加到主屏幕后会以全屏模式运行，没有浏览器地址栏，也不会意外退出。',
-        body_en:'• <strong>Add to Home Screen</strong>: Tap the <strong>Share</strong> button at the bottom of Safari → "Add to Home Screen." Launch from there for a smoother, app-like experience.<br>• When added to Home Screen it runs full-screen with no address bar and no accidental exits.' },
-      { type:'card', icon:'🔄', zh:'如何强制刷新缓存', en:'How to Force-Refresh the Cache',
-        body_zh:'如果游戏更新后仍显示旧版本：<br><br>• <strong>iPhone Safari</strong>：长按地址栏 → "重新载入而不使用内容阻止程序"；或到 设置 → Safari → 高级 → 网站数据 → 删除本站数据。<br>• <strong>Android Chrome</strong>：地址栏输入 URL 后拉下刷新，或长按 ⟳ → "强制重新加载"。',
-        body_en:'If you still see an old version after an update:<br><br>• <strong>iPhone Safari</strong>: Long-press the address bar → "Reload Without Content Blockers"; or go to Settings → Safari → Advanced → Website Data → Remove data for this site.<br>• <strong>Android Chrome</strong>: Pull down to refresh, or long-press ⟳ → "Hard Reload".' },
-      { type:'card', icon:'💾', zh:'我的存档还在吗', en:'Is My Save Data Safe?',
-        body_zh:'存档保存在你的 <strong>浏览器本地存储</strong> 中。清除浏览器缓存、重装浏览器或切换不同设备会导致存档丢失。建议定期截图记录金币和宠物进度。',
-        body_en:'Progress is saved in your browser\'s <strong>local storage</strong>. Clearing browser data, reinstalling the browser, or switching devices will lose your save. Consider screenshotting your coins and pet progress occasionally.' },
-      { type:'tip', zh:'将游戏"添加到主屏幕"是在 iPhone 上获得最佳体验的最快方法，而且完全免费！',
-        en:'"Add to Home Screen" is the single fastest way to improve the experience on iPhone — and it\'s free!' },
-    ]
-  },
-];
-
-/* ── 2. Build UI ─────────────────────────────────────────────────────────── */
-function buildTutorial(){
-  buildNav();
-  buildContent();
-}
-
-function _lz(zh, en){
-  // Respect the game's current language setting
-  const lang = (typeof getLang === 'function') ? getLang() : 'both';
-  if(lang === 'zh') return zh;
-  if(lang === 'en') return en;
-  return zh + ' / ' + en;
-}
-
-function buildNav(){
-  const nav = document.getElementById('tut-nav');
-  if(!nav) return;
-  nav.innerHTML = '';
-  TUT_SECTIONS.forEach((sec, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'tut-nav-btn' + (idx === 0 ? ' tut-nav-active' : '');
-    btn.dataset.secId = sec.id;
-    btn.setAttribute('aria-label', sec.en);
-    btn.innerHTML =
-      `<span class="tut-nav-icon">${sec.icon}</span>` +
-      `<span class="tut-nav-label lz">${sec.zh}</span>` +
-      `<span class="tut-nav-label le">${sec.en}</span>`;
-    btn.addEventListener('click', () => scrollToSection(sec.id));
-    btn.addEventListener('touchend', (e) => { e.preventDefault(); scrollToSection(sec.id); });
-    nav.appendChild(btn);
-  });
-}
-
-function buildContent(){
-  const container = document.getElementById('tut-content');
-  if(!container) return;
-  // Keep the no-results div
-  const noResults = document.getElementById('tut-no-results');
-  container.innerHTML = '';
-  if(noResults) container.appendChild(noResults);
-
-  TUT_SECTIONS.forEach(sec => {
-    const section = document.createElement('div');
-    section.className = 'tut-section';
-    section.id = 'tut-sec-' + sec.id;
-    section.dataset.secId = sec.id;
-
-    // Section heading
-    section.innerHTML =
-      `<div class="tut-sec-head">` +
-        `<span class="tut-sec-icon">${sec.icon}</span>` +
-        `<div class="tut-sec-title"><span class="lz">${sec.zh}</span><span class="le">${sec.en}</span></div>` +
-      `</div>`;
-
-    // Items
-    sec.items.forEach(item => {
-      if(item.type === 'steps'){
-        item.items.forEach((step, i) => {
-          const el = document.createElement('div');
-          el.className = 'tut-step';
-          el.innerHTML =
-            `<div class="tut-step-num">${i+1}</div>` +
-            `<div class="tut-step-body">` +
-              `<span class="lz">${step.zh}</span>` +
-              `<span class="le">${step.en}</span>` +
-            `</div>`;
-          section.appendChild(el);
-        });
-      } else if(item.type === 'card'){
-        const el = document.createElement('div');
-        el.className = 'tut-card';
-        el.innerHTML =
-          `<div class="tut-card-title">${item.icon} ` +
-            `<span class="lz">${item.zh}</span>` +
-            `<span class="le">${item.en}</span>` +
-          `</div>` +
-          `<div class="tut-card-body">` +
-            `<span class="lz">${item.body_zh}</span>` +
-            `<span class="le">${item.body_en}</span>` +
-          `</div>`;
-        section.appendChild(el);
-      } else if(item.type === 'tip'){
-        const el = document.createElement('div');
-        el.className = 'tut-tip';
-        el.innerHTML = `<span class="lz">${item.zh}</span><span class="le">${item.en}</span>`;
-        section.appendChild(el);
-      } else if(item.type === 'warn'){
-        const el = document.createElement('div');
-        el.className = 'tut-warn';
-        el.innerHTML = `<span class="lz">${item.zh}</span><span class="le">${item.en}</span>`;
-        section.appendChild(el);
-      }
-    });
-
-    container.appendChild(section);
-  });
-}
-
-/* ── 3. Open / Close ─────────────────────────────────────────────────────── */
-window.openTutorial = function(){
-  const ov = document.getElementById('tutorial-overlay');
-  if(!ov) return;
-  // Rebuild to pick up current language
-  buildTutorial();
-  ov.classList.add('tut-open');
-  // Trap focus
-  ov.setAttribute('tabindex','-1');
-  setTimeout(()=>{ ov.focus(); }, 100);
-  // Scroll content to top
-  const content = document.getElementById('tut-content');
-  if(content) content.scrollTop = 0;
-  // Highlight first nav item
-  setActiveNav(TUT_SECTIONS[0].id);
-  // Clear any search
-  tutClearSearch();
-};
-
-window.closeTutorial = function(){
-  const ov = document.getElementById('tutorial-overlay');
-  if(ov) ov.classList.remove('tut-open');
-};
-
-// Close on backdrop click (the overlay itself, not its children)
-document.getElementById('tutorial-overlay').addEventListener('click', function(e){
-  if(e.target === this) closeTutorial();
-});
-
-// Close on Escape key
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape'){
-    const ov = document.getElementById('tutorial-overlay');
-    if(ov && ov.classList.contains('tut-open')) closeTutorial();
-  }
-});
-
-/* ── 4. Scroll-spy & nav highlight ──────────────────────────────────────── */
-function scrollToSection(id){
-  const content = document.getElementById('tut-content');
-  const target  = document.getElementById('tut-sec-' + id);
-  if(!content || !target) return;
-  const offset = target.offsetTop - 8;
-  content.scrollTo({ top: offset, behavior: 'smooth' });
-  setActiveNav(id);
-}
-
-function setActiveNav(id){
-  document.querySelectorAll('.tut-nav-btn').forEach(btn => {
-    btn.classList.toggle('tut-nav-active', btn.dataset.secId === id);
-  });
-}
-
-// Passive scroll-spy: update nav as user scrolls
-(function attachScrollSpy(){
-  const content = document.getElementById('tut-content');
-  if(!content) return;
-  let _spyRaf = null;
-  content.addEventListener('scroll', () => {
-    if(_spyRaf) return;
-    _spyRaf = requestAnimationFrame(() => {
-      _spyRaf = null;
-      const sections = content.querySelectorAll('.tut-section:not(.tut-hidden)');
-      let current = null;
-      sections.forEach(sec => {
-        if(sec.offsetTop - content.scrollTop <= content.clientHeight * 0.35){
-          current = sec.dataset.secId;
-        }
-      });
-      if(current) setActiveNav(current);
-    });
-  }, { passive: true });
-})();
-
-/* ── 5. Search / Filter ─────────────────────────────────────────────────── */
-window.tutSearch = function(query){
-  const q = query.trim().toLowerCase();
-  const clearBtn = document.getElementById('tut-search-clear');
-  if(clearBtn) clearBtn.classList.toggle('visible', q.length > 0);
-
-  const noResults = document.getElementById('tut-no-results');
-  let anyVisible = false;
-
-  document.querySelectorAll('.tut-section').forEach(sec => {
-    if(!q){
-      sec.classList.remove('tut-hidden');
-      // Remove previous highlights
-      sec.querySelectorAll('.tut-highlight').forEach(el => {
-        el.outerHTML = el.textContent;
-      });
-      anyVisible = true;
-      return;
-    }
-    // Search in all text content
-    const text = sec.textContent.toLowerCase();
-    if(text.includes(q)){
-      sec.classList.remove('tut-hidden');
-      anyVisible = true;
-    } else {
-      sec.classList.add('tut-hidden');
-    }
-  });
-
-  if(noResults) noResults.style.display = anyVisible ? 'none' : 'block';
-};
-
-window.tutClearSearch = function(){
-  const input = document.getElementById('tut-search');
-  if(input){ input.value = ''; }
-  const clearBtn = document.getElementById('tut-search-clear');
-  if(clearBtn) clearBtn.classList.remove('visible');
-  tutSearch('');
-};
-
-/* ── 6. Language sync ───────────────────────────────────────────────────── */
-// Rebuild nav labels whenever setLang is called, so the sidebar stays in sync.
-// We patch window.setLang safely: capture the original reference AFTER the IIFE
-// runs (deferred via setTimeout 0) so we never fight the function declaration.
-setTimeout(function(){
-  var _orig = window.setLang;
-  if(typeof _orig !== 'function') return;
-  window.setLang = function(lang){
-    _orig.apply(this, arguments);
-    try{
-      var ov = document.getElementById('tutorial-overlay');
-      if(ov && ov.classList.contains('tut-open')) buildNav();
-    }catch(e){}
-  };
-}, 0);
-
-// Initial build (hidden) so it's ready on first open
-buildTutorial();
-
-})(); // end IIFE

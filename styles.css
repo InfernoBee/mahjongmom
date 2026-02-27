@@ -607,3 +607,48 @@ button, .tile, .hcard, .pet-card, .pet-companion, .slot-btn, .abtn, .nbtn { -web
     scroll-behavior: auto !important;
   }
 }
+
+
+/* ── Save pill + save status (moved from inline CSS) ─────────────────── */
+.save-pill{
+  position:fixed;
+  top:calc(env(safe-area-inset-top) + 10px);
+  right:10px;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border-radius:999px;
+  font-size:0.82rem;
+  line-height:1;
+  background:rgba(0,0,0,0.28);
+  border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  cursor:pointer;
+  user-select:none;
+}
+.save-pill.hidden{display:none !important;}
+.save-pill.ok{background:rgba(20,110,55,0.28); border-color:rgba(120,255,170,0.22);}
+.save-pill.warn{background:rgba(150,70,0,0.28); border-color:rgba(255,210,120,0.22);}
+.save-pill.bad{background:rgba(150,20,20,0.30); border-color:rgba(255,150,150,0.22);}
+.save-pill:active{transform:scale(0.99);}
+
+.save-status{
+  font-size:0.82rem;
+  opacity:0.9;
+  margin-top:6px;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.20);
+}
+.save-status small{display:block;opacity:0.85;margin-top:6px;line-height:1.25;}
+.settings-row.wrap{flex-wrap:wrap;}
+.settings-chip.full{flex:1 1 100%;}
+
+
+/* Force-disable payline line overlay (symbols already glow/pulse) */
+.payline-overlay{display:none !important;}
